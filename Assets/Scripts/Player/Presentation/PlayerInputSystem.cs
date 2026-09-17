@@ -16,7 +16,7 @@ public sealed class PlayerInputSystem : MonoBehaviour, ITickable
         _intent = intent;
     }
 
-    public void Tick()
+    public void Tick(float deltaTime)
     {
         _intent.SetMovement(_input.Move, _input.SprintHeld);
 
@@ -27,5 +27,8 @@ public sealed class PlayerInputSystem : MonoBehaviour, ITickable
 
         if (_input.JumpPressedThisFrame)
             _intent.RequestJump();
+
+        _intent.SetInteraction(_input.InteractPressedThisFrame,_input.InteractHeld,_input.InteractReleasedThisFrame);
+        _intent.SetDrop(_input.DropPressedThisFrame);
     }
 }

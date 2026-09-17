@@ -76,6 +76,7 @@ Unity 6000.5.4f1
 - архитектуру вокруг generated ECS-кода;
 - старый `UnityEngine.Input`;
 - прямой gameplay-polling через `Keyboard.current`, `Mouse.current` и т.п.;
+- `CharacterController` для движения Player без отдельного пересмотра принятого решения;
 - обязательную физическую Rigidbody-модель движения танка.
 
 ---
@@ -407,10 +408,14 @@ Player movement уже реализован.
 Для движения используется:
 
 ```text
-CharacterController
+Rigidbody
++
+CapsuleCollider
 ```
 
-Не заменять его без прямой задачи.
+Движение и физический поворот Player выполняются через существующий центральный `GameLoop` в `FixedTick`.
+
+Не заменять `Rigidbody` на `CharacterController` без отдельного пересмотра этого решения.
 
 Player должен строиться через композицию.
 
@@ -453,12 +458,18 @@ InputActionAsset
         ↓
 PlayerInput
         ↓
-Input adapter
+InputService
         ↓
-IPlayerInput
+PlayerInputSystem
+        ↓
+PlayerIntentBuffer
         ↓
 Gameplay
 ```
+
+`InputService` является Unity-specific reader для `PlayerInput`. `PlayerInputSystem` преобразует считанные значения в намерения игрока, а gameplay зависит только от `PlayerIntentBuffer`.
+
+Отдельный `IPlayerInput` не вводится, пока существует только один реальный источник локального ввода. Если позже понадобятся replay, сетевые команды или другие источники намерений, абстракцию следует вводить на уровне источника намерений (`IPlayerIntentSource`), а не маскировать их под локальный ввод.
 
 Gameplay-код не должен напрямую читать:
 
@@ -526,6 +537,183 @@ Cooperative
 ```
 
 Не создавать отдельную систему взаимодействия под каждый объект.
+
+## 12.1. Базовый поток
+
+```text
+InputService
+        ↓
+PlayerInputSystem
+        ↓
+PlayerIntentBuffer
+        ↓
+PlayerInteraction
+        ├── IInteractionTargetFinder
+        ├── IInteractable
+        └── read-only interaction state
+                    ↓
+        InteractionHudPresenter
+                    ↓
+        InteractionHudView
+```
+
+- `InputService` сообщает сырые состояния кнопки: pressed, held и released;
+- тип взаимодействия и длительность Hold задаются interactable, а не `InputAction`;
+- `PlayerInteraction` владеет текущей целью, прогрессом и жизненным циклом Begin / Complete / Cancel;
+- Unity Physics используется только реализацией `IInteractionTargetFinder`;
+- gameplay не изменяет Canvas напрямую: `InteractionHudPresenter` читает состояние `PlayerInteraction`, а `InteractionHudView` отображает его через uGUI;
+- состояние Interaction создаётся отдельно для каждого Player в его Zenject subcontainer.
+
+Для HUD используется MVP: `PlayerInteraction` выступает Model, `InteractionHudPresenter` является обычным C#-классом, а `InteractionHudView` — единственным `MonoBehaviour`, работающим с Canvas, TMP и `Image`. Отдельный интерфейс View пока не вводится, так как существует только одна реализация.
+
+Hold прерывается при отпускании кнопки, потере цели, выходе из дистанции, появлении препятствия, недоступности цели или смене gameplay-контекста. Прогресс не переносится между целями.
+
+## 12.2. Контракты и границы ответственности
+
+`Interact` в `InputActionAsset` должен быть обычным `Button` без встроенного `Hold interaction`. `InputService` считывает три независимых состояния:
+
+```text
+PressedThisFrame
+Held
+ReleasedThisFrame
+```
+
+`PlayerInputSystem` переносит эти состояния в `PlayerIntentBuffer`. Таймер Hold не хранится ни в `InputService`, ни в `PlayerIntentBuffer`.
+
+`IInteractable` предоставляет текущее предложение взаимодействия и поддерживает жизненный цикл:
+
+```text
+GetInteractionInfo
+Begin
+Complete
+Cancel
+```
+
+`InteractionInfo` должен содержать как минимум:
+
+```text
+доступность
+режим Press / Hold
+длительность Hold
+данные для UI prompt
+```
+
+Контекст взаимодействия должен идентифицировать игрока, выполняющего действие. Это необходимо для будущей проверки занятости станций и cooperative interaction, но не должно зависеть от выбранной network-библиотеки.
+
+`PlayerInteraction` — обычный C# application-класс без собственного `Update`. Он обновляется существующим `GameplayPhase` после обработки `PlayerLook` и отвечает за:
+
+- текущую цель;
+- начало взаимодействия;
+- накопление Hold-прогресса;
+- повторную проверку доступности цели;
+- завершение или отмену;
+- предоставление read-only состояния фокуса и времени активного Hold для Presenter.
+
+`IInteractionTargetFinder` только ищет цель и не выполняет взаимодействие. Unity-реализация использует луч из точки взгляда, настраиваемую дистанцию и маску слоёв. Препятствие должно блокировать цель: нельзя искать interactable отдельной маской так, чтобы луч проходил сквозь стены. Для коллайдеров на дочерних объектах используется явная ссылка на корневой interactable, например `InteractionTargetLink`.
+
+`InteractionHudPresenter` читает `PlayerInteraction` в presentation-фазе и передаёт View готовые команды `Hide`, `ShowPress` и `ShowHold`. Gameplay не должен напрямую изменять Canvas или конкретные UI-компоненты.
+
+Логическая структура feature:
+
+```text
+Interaction/
+├── Abstraction/
+│   ├── IInteractable
+│   ├── IInteractionTargetFinder
+│   └── IPickupReceiver
+├── Domain/
+│   ├── InteractionInfo
+│   ├── InteractionContext
+│   ├── InteractionMode
+│   └── InteractionCancelReason
+├── Application/
+│   ├── PlayerInteraction
+│   └── HoldInteractionSession
+├── Infrastructure/
+│   ├── InteractionInstaller
+│   ├── PhysicsInteractionTargetFinder
+│   └── InteractionTargetLink
+├── Presentation/
+│   ├── InteractionHudPresenter
+│   └── InteractionHudView
+└── Sandbox/
+    ├── ToggleInteractable
+    ├── TimedInteractable
+    └── PickupInteractable
+```
+
+`PlayerInteraction`, его finder и runtime state создаются отдельно для каждого Player внутри его Zenject subcontainer. Scene-level interactable не должен зависеть от конкретного локального `PlayerInput`.
+
+## 12.3. Проверка без готового танка
+
+Фундамент проверяется в sandbox на простых Unity-примитивах:
+
+- [x] Toggle — Press-переключатель для двери или рычага;
+- [x] Timed — Hold-взаимодействие для люка;
+- [x] Pickup — подбор предмета, присоединение к `HeldItemSlot`, блокировка других взаимодействий и выброс;
+- [ ] Occupancy — отложен до появления реального `Tank` / `Station`.
+
+Проверено вручную:
+
+- Press на `ToggleInteractable` срабатывает;
+- Hold на `TimedInteractable` завершается корректно;
+- фактическое время Hold при настройке `2 секунды` составило `1,994 секунды`, что находится в пределах кадровой погрешности;
+- `PickupInteractable` подбирается и присоединяется к точке удержания игрока.
+
+`Occupancy` намеренно не проверяется на искусственном кресле. Механика занятости будет реализована вместе с реальными `DriverStation` и другими местами экипажа на этапах `Tank Core` / `Stations`.
+
+На этом этапе не реализуются полноценные `TankRoot`, `DriverStation`, Inventory или предметная система. Будущие игровые объекты должны подключаться как новые реализации `IInteractable`, не меняя общий процесс взаимодействия.
+
+## 12.4. Порядок реализации
+
+1. [x] Убрать встроенный `Hold interaction` у action `Interact`, сохранив привязки клавиатуры и gamepad.
+2. [x] Добавить сырые состояния Interact в `InputService`, `PlayerInputSystem` и `PlayerIntentBuffer`.
+3. [x] Создать базовые контракты Interaction без Unity-зависимостей в их данных.
+4. [x] Реализовать `PhysicsInteractionTargetFinder` и явное разрешение дочернего коллайдера в корневой interactable.
+5. [x] Реализовать state machine `PlayerInteraction` для Press, Hold, Complete и Cancel.
+6. [x] Подключить `PlayerInteraction` к существующему `GameplayPhase` после `PlayerLook`.
+7. [x] Подключить базовый UI prompt через MVP и presentation-фазу.
+   - [x] Созданы `InteractionHudPresenter`, `InteractionHudView` и `PresentationPhase`.
+   - [x] В `Player.prefab` подготовлены `PromptText` и `HoldProgress` с `Background` и `Fill`.
+   - [x] Завершены Zenject-binding и вызов `PresentationPhase` из `GameLoop`.
+   - [ ] Провести финальный ручной UI-тест.
+8. [ ] Завершить sandbox-проверки.
+   - [x] Press.
+   - [x] Hold.
+   - [x] Pickup и присоединение к `HeldItemSlot`.
+   - [ ] Полный цикл Drop: `Q`, восстановление физики и повторный подбор.
+   - [ ] Потеря цели и выход из дистанции.
+   - [ ] Препятствие между игроком и целью.
+   - [ ] Отпускание кнопки до завершения Hold.
+   - [ ] Недоступная или занятая цель.
+   - [ ] Occupancy — отложен до этапов `Tank Core` / `Stations` и не блокирует завершение текущего среза.
+
+На этапе 2 не реализовывать `Continuous`, полноценный `Cooperative`, систему станций, Inventory или игровые предметы. Для них сохраняются точки расширения, но конкретная логика добавляется на соответствующих следующих этапах.
+
+## 12.5. Pickup и предмет в руках
+
+Подбор предмета использует общий режим `Press` и не создаёт отдельную систему взаимодействия.
+
+```text
+PickupInteractable
+        ↓
+InteractionContext.PickupReceiver
+        ↓
+HeldItemSlot
+        ↓
+RightHandAnchor
+```
+
+- `IPickupReceiver` определяет занятость слота, приём и выброс предмета;
+- `HeldItemSlot` принадлежит конкретному Player и передаётся через его `InteractionInstaller`;
+- `PlayerFacade` продолжает хранить только игровые фазы и не предоставляет слот предмета;
+- во время удержания `PickupInteractable` отключает `Rigidbody` и world-коллайдеры;
+- занятый слот блокирует поиск и запуск других взаимодействий;
+- action `Drop` проходит через `InputService`, `PlayerInputSystem` и `PlayerIntentBuffer`;
+- выброс по `Q` освобождает слот, восстанавливает физику и добавляет импульс вперёд;
+- `RightHandAnchor` не должен наследовать вертикальный pitch камеры, если предмет должен оставаться вертикальным.
+
+Текущая обработка `Drop` остаётся в `PlayerInteraction`. Выделение отдельного `PlayerHeldItemController` отложено до момента, когда управление предметом в руках станет самостоятельной развивающейся механикой.
 
 ---
 
@@ -1135,34 +1323,37 @@ Presentation
 
 ## Этап 1 — Player + Input
 
+**Статус: завершён.**
+
 ### Цель
 
 Интегрировать уже готовый Player Movement в новую архитектуру.
 
 ### Текущий статус
 
-Частично выполнено: локальный игрок создаётся через Zenject-фабрику, его фазы регистрируются и обновляются центральным `GameLoop`. Действия `PlayerInput` преобразуются в `PlayerIntentBuffer`, который использует движение.
+Выполнено: локальный игрок создаётся через Zenject-фабрику, его фазы регистрируются и обновляются центральным `GameLoop`. Действия `PlayerInput` через `InputService` и `PlayerInputSystem` преобразуются в `PlayerIntentBuffer`, который используют движение и вращение камеры.
 
-Открыто: вращение камеры, `IPlayerInput` и согласование указанного ниже `CharacterController movement` с текущей реализацией движения на `Rigidbody`.
+Зафиксировано: Player использует `Rigidbody`; отдельный `IPlayerInput` не требуется, пока gameplay изолирован от Unity Input через `PlayerIntentBuffer`.
 
 ### Сделать
 
-- CharacterController movement;
-- IPlayerInput;
-- InputActionAsset;
-- PlayerInput;
-- Action Maps;
-- переход Player input через abstraction.
+- [x] Rigidbody movement;
+- [x] InputActionAsset;
+- [x] PlayerInput;
+- [x] Action Maps;
+- [x] переход Player input в gameplay через `PlayerIntentBuffer`.
 
 ### Готово, если
 
-- игрок ходит;
-- вращает камеру;
-- gameplay не читает клавиатуру напрямую.
+- [x] игрок ходит;
+- [x] вращает камеру;
+- [x] gameplay не читает клавиатуру напрямую.
 
 ---
 
 ## Этап 2 — Interaction
+
+**Статус: основной фундамент реализован. Остались финальные ручные проверки UI, отмены Hold и полного цикла Drop. `Occupancy` отложен до появления реального танка и станций.**
 
 ### Цель
 
@@ -1170,12 +1361,26 @@ Presentation
 
 ### Сделать
 
-- поиск interactable;
-- Press;
-- Hold;
-- interrupt interaction;
-- базовый UI prompt;
-- подготовку к Cooperative interaction.
+- [x] поиск interactable;
+- [x] Press;
+- [x] Hold;
+- [x] базовый interrupt interaction через `Cancel`;
+- [x] базовый UI prompt подключён через View, Presenter и presentation-фазу;
+- [x] sandbox-подбор предмета через `PickupInteractable` и `HeldItemSlot`;
+- [x] выброс предмета через action `Drop`;
+- [x] базовую подготовку к Cooperative interaction через `InteractionContext`, идентификатор игрока и причины отмены.
+
+### Проверено
+
+- [x] `ToggleInteractable` изменяет состояние по Press;
+- [x] `TimedInteractable` завершается по Hold;
+- [x] длительность Hold соответствует настройке с кадровой погрешностью;
+- [x] `PickupInteractable` присоединяется к слоту игрока;
+- [ ] UI отображает Press prompt;
+- [ ] UI отображает и заполняет Hold progress;
+- [ ] полный цикл Drop восстанавливает физику и позволяет повторный подбор;
+- [ ] взаимодействие корректно отменяется во всех предусмотренных сценариях;
+- [ ] `Occupancy` для кресла — отложен до этапов `Tank Core` / `Stations`.
 
 ### Готово, если
 
@@ -1184,8 +1389,9 @@ Presentation
 - дверь;
 - рычаг;
 - предмет;
-- кресло;
 - люк.
+
+Кресло временно исключено из критерия готовности этапа 2. Его `Occupancy` будет проверяться на реальной станции экипажа, а не на отдельном sandbox-прототипе.
 
 ---
 

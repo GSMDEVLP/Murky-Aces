@@ -2,5 +2,5 @@
 
 public interface IFixedTickable 
 {
-    void FixedTick();
+    void FixedTick(float fixedDeltaTime);
 }

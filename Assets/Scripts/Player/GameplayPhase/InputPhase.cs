@@ -7,5 +7,5 @@ public sealed class InputPhase
         _playerInputSystem = playerInputSystem;
     }
 
-    public void Tick() => _playerInputSystem.Tick();
+    public void Tick(float deltaTime) => _playerInputSystem.Tick(deltaTime);
 }

@@ -1,5 +1,5 @@
 
 public interface ITickable 
 {
-    void Tick();
+    void Tick(float deltaTime);
 }

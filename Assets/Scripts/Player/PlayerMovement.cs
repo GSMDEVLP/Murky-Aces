@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour, IFixedTickable
         _look = look;
     }
 
-    public void FixedTick()
+    public void FixedTick(float fixedDeltaTime)
     {
         Vector3 velocity = PlayerMove();
         velocity = PlayerJump(velocity);

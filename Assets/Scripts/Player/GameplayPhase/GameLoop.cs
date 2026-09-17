@@ -32,16 +32,23 @@ public sealed class GameLoop : MonoBehaviour
 
     private void Update()
     {
+        float deltaTime = Time.deltaTime;
         foreach (var player in _registry.Players)
-            player.Input.Tick();
+            player.Input.Tick(deltaTime);
 
+        
         foreach (var player in _registry.Players)
-            player.Gameplay.Tick();
+            player.Gameplay.Tick(deltaTime);
+
+        foreach (PlayerFacade player in _registry.Players)
+            player.Presentation.Tick();
     }
 
     private void FixedUpdate()
     {
+        float fixedDeltaTime = Time.fixedDeltaTime;
+
         foreach (var player in _registry.Players)
-            player.Gameplay.FixedTick();
+            player.Gameplay.FixedTick(fixedDeltaTime);
     }
 }

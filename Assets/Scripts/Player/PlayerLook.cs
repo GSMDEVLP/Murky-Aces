@@ -27,7 +27,7 @@ public sealed class PlayerLook : MonoBehaviour, ITickable, IFixedTickable
         _intent = intent;
     }
 
-    public void Tick()
+    public void Tick(float deltaTime)
     {
         EnsureInitialized();
 
@@ -38,7 +38,7 @@ public sealed class PlayerLook : MonoBehaviour, ITickable, IFixedTickable
         _cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
     }
 
-    public void FixedTick()
+    public void FixedTick(float fixedDeltaTime)
     {
         _body.MoveRotation(Heading);
     }
