@@ -984,6 +984,25 @@ Player-specific `DrivingIntentBuffer` остаётся в Player subcontainer. T
 Каждый этап выполняется отдельно. После каждого этапа проект должен
 компилироваться, а соответствующая проверка — проходить.
 
+## Текущий прогресс
+
+- [x] Stage 3.0 — Foundation audit
+- [x] Stage 3.1 — Generalized GameLoop registration
+- [x] Stage 3.2 — Tank movement contracts and config
+- [x] Stage 3.3 — Flat-ground kinematic prototype
+- [ ] Stage 3.4 — Grounding
+- [ ] Stage 3.5 — Collision-safe motion
+- [ ] Stage 3.6 — Final Tank prefab composition
+- [ ] Stage 3.7 — Interaction actor and Player station capability
+- [ ] Stage 3.8 — DriverStation state and Interaction
+- [ ] Stage 3.9 — Camera anchor switching
+- [ ] Stage 3.10 — Driving input context
+- [ ] Stage 3.11 — Validated exit flow
+- [ ] Stage 3.12 — Lifecycle and failure recovery
+- [ ] Stage 3.13 — Tests and acceptance scene
+
+Следующий этап: **Stage 3.4 — Grounding**.
+
 ## Stage 3.0 — Foundation audit
 
 Статус:
@@ -1007,6 +1026,12 @@ Completed by document audit
 ---
 
 ## Stage 3.1 — Generalized GameLoop registration
+
+Статус:
+
+```text
+Completed
+```
 
 Сделать:
 
@@ -1033,6 +1058,12 @@ Completed by document audit
 ---
 
 ## Stage 3.2 — Tank movement contracts and config
+
+Статус:
+
+```text
+Completed
+```
 
 Создать:
 
@@ -1067,6 +1098,12 @@ TankMovement
 
 ## Stage 3.3 — Flat-ground kinematic prototype
 
+Статус:
+
+```text
+Completed
+```
+
 Создать:
 
 ```text
@@ -1091,6 +1128,8 @@ prototype Tank prefab
 - используется kinematic Rigidbody;
 - `AddForce` и `AddTorque` отсутствуют;
 - Tank обновляется только центральным GameLoop.
+
+Ручная проверка движения через временный inspector/debug source пройдена.
 
 ---
 
