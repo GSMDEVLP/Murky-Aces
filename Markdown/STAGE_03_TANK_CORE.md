@@ -8,6 +8,50 @@
 > Этот документ уточняет только Stage 3. При конфликте приоритет имеет
 > `CODEX_Murky_Aces.md`.
 
+## Как используется donor implementation
+
+Дополнительный источник для реализации этапа:
+
+```text
+TANK_GAMEPLAY_CORE (2).md
+```
+
+Он описывает уже реализованный кооперативный Tank Core из другого проекта на
+основе `CoopTank`, Mirror и компонентов из `Assets/CoopTest`.
+
+Donor implementation используется в этом документе как:
+
+- источник уже реализованных gameplay-сценариев и инвариантов, которые нужно
+  повторно проверить в архитектуре Murky Aces;
+- источник алгоритмов, числовых настроек и prefab-решений для повторной оценки;
+- указатель на код, который стоит изучить перед реализацией соответствующего
+  этапа;
+- референс для будущих систем экипажа, оружия, ресурсов и повреждений.
+
+Donor implementation не изменяет архитектурные решения Murky Aces:
+
+- `STAGE_03_TANK_CORE.md` и `CODEX_Murky_Aces.md` остаются authoritative;
+- наличие готовой механики в donor-проекте не означает завершение этапа;
+- `CoopTank` не переносится целиком и не становится новым монолитным
+  `TankController`;
+- Mirror Commands, `SyncVar`, `netId` и server-authoritative ветки не
+  переносятся в Stage 3;
+- donor-код адаптируется к существующим `GameLoop`, Input, Interaction и
+  Zenject boundaries текущего проекта;
+- перед переносом необходимо проверить исходный код, prefab и scene settings:
+  donor-документ был составлен чтением исходников без полной Play Mode проверки.
+
+В каждом implementation stage ниже блок `Donor reference` фиксирует допустимый
+способ повторного использования. Возможные решения:
+
+```text
+Reuse       — код можно перенести после минимальной адаптации
+Adapt       — переносится алгоритм или presentation-компонент, но не архитектура
+Reference   — используется только ожидаемое поведение и набор проверок
+None        — подходящего donor-кода для этапа нет
+Deferred    — реализация полезна, но относится к более позднему Stage
+```
+
 ---
 
 # 1. Цель этапа
@@ -989,19 +1033,24 @@ Player-specific `DrivingIntentBuffer` остаётся в Player subcontainer. T
 - [x] Stage 3.0 — Foundation audit
 - [x] Stage 3.1 — Generalized GameLoop registration
 - [x] Stage 3.2 — Tank movement contracts and config
-- [x] Stage 3.3 — Flat-ground kinematic prototype
-- [ ] Stage 3.4 — Grounding
-- [ ] Stage 3.5 — Collision-safe motion
-- [ ] Stage 3.6 — Final Tank prefab composition
-- [ ] Stage 3.7 — Interaction actor and Player station capability
-- [ ] Stage 3.8 — DriverStation state and Interaction
+- [x] Stage 3.3 — Flat-ground dynamic Rigidbody prototype
+- [x] Stage 3.4 — Grounding
+- [x] Stage 3.5 — Collision-safe motion
+- [x] Stage 3.6 — Final Tank prefab composition
+- [x] Stage 3.7 — Interaction actor and Player station capability
+- [ ] Stage 3.8 — DriverStation state and Interaction — **Current**
 - [ ] Stage 3.9 — Camera anchor switching
 - [ ] Stage 3.10 — Driving input context
 - [ ] Stage 3.11 — Validated exit flow
 - [ ] Stage 3.12 — Lifecycle and failure recovery
 - [ ] Stage 3.13 — Tests and acceptance scene
 
-Следующий этап: **Stage 3.4 — Grounding**.
+Текущий этап: **Stage 3.8 — DriverStation state and Interaction**.
+
+Текущая задача: создать чистые `DriverStationState` и `DriverStation`, затем
+добавить `DriverStationView`, `DriverStationController` и
+`DriverStationInteractable` поверх существующих Interaction и
+`IStationOccupant` contracts.
 
 ## Stage 3.0 — Foundation audit
 
@@ -1020,6 +1069,17 @@ Completed by document audit
 - station/camera API отсутствуют;
 - Interaction feature переиспользуется;
 - Tank code ещё не создан.
+
+Donor reference — **Reference**:
+
+- использовать `TANK_GAMEPLAY_CORE (2).md` как inventory уже существующих
+  механик и зависимостей Tank;
+- зафиксировать компоненты-доноры: `CoopTank`, `CoopTestPlayer`,
+  `TankInterior`, `TankProjectile`, `CombatDamage`, `NetworkHealth`,
+  `TankDriverDashboard` и визуальные animators;
+- разделить функции donor-системы на текущий Stage 3 и будущие stages;
+- не считать классы из `Assets/CoopTest` частью текущего foundation и не
+  переносить их до появления соответствующего target contract.
 
 Результат этапа — этот документ.
 
@@ -1046,6 +1106,15 @@ Completed
 - отдельный Tank runner;
 - Zenject `ITickable` как параллельный gameplay loop;
 - unrelated refactor Player logic.
+
+Donor reference — **Reference**:
+
+- lifecycle регистрации `CoopTank` в `ICoopEntityRegistry` можно использовать
+  как напоминание о симметричных register/unregister paths;
+- `CoopEntityRegistry` не переносится как scheduler: в donor-проекте движение
+  выполняется непосредственно из Unity `FixedUpdate`;
+- `CoopTank.Update` и `CoopTank.FixedUpdate` не копируются, потому что текущий
+  проект сохраняет один центральный `GameLoop`.
 
 Готово, если:
 
@@ -1087,6 +1156,18 @@ TankMovement
 - direction switch delay;
 - zero-input settling.
 
+Donor reference — **Adapt**:
+
+- из `CoopTank` можно извлечь исходные значения скорости, поворота и timeout
+  устаревшего driving input как стартовые tuning references;
+- использование `Rigidbody.MovePosition` / `MoveRotation` подтверждает базовый
+  способ применения рассчитанного движения, но относится к motion adapter, а не
+  к pure `TankMovement`;
+- проверки топлива, driver `netId`, `disabled` и Mirror authority не входят в
+  movement rules Stage 3;
+- формулы должны быть перенесены в терминах `TankDrivingInput`,
+  `TankMotionState` и `TankMovementConfig`, без зависимости от `CoopTank`.
+
 Готово, если:
 
 - проект компилируется;
@@ -1096,7 +1177,7 @@ TankMovement
 
 ---
 
-## Stage 3.3 — Flat-ground kinematic prototype
+## Stage 3.3 — Flat-ground dynamic Rigidbody prototype
 
 Статус:
 
@@ -1120,6 +1201,18 @@ prototype Tank prefab
 Для теста input snapshot может задаваться временным inspector/debug source,
 который удаляется до Stage 3.10. Не читать клавиатуру напрямую.
 
+Donor reference — **Adapt**:
+
+- изучить движение корпуса в `CoopTank.FixedUpdate` и способ применения
+  `MovePosition` / `MoveRotation`;
+- при наличии доступа к donor prefab сверить массу, interpolation, collision
+  detection, constraints и размеры основного collider, но не копировать
+  настройки без проверки kinematic prototype;
+- `CoopTank` не использовать как временный controller и не подключать к новому
+  `GameLoop`;
+- fuel consumption и engine module multiplier оставить отложенными, даже если
+  donor-код уже содержит их.
+
 Готово, если:
 
 - Tank движется вперёд и назад;
@@ -1134,6 +1227,16 @@ prototype Tank prefab
 ---
 
 ## Stage 3.4 — Grounding
+
+Статус:
+
+```text
+Completed — Dynamic Rigidbody / Unity PhysX
+```
+
+Реализация скорректирована после выбора динамической физической модели: контакт
+с поверхностью, изменение высоты и ориентация корпуса обеспечиваются динамическим
+`Rigidbody` и коллайдерами Unity. Отдельный `TankGroundProbe` не используется.
 
 Создать:
 
@@ -1153,6 +1256,15 @@ TankGroundProbe
 Перед реализацией зафиксировать в коде и Inspector выбранную probe-схему. Её
 можно изменить внутри `TankGroundProbe`, не меняя `TankMovement`.
 
+Donor reference — **None / Reference**:
+
+- donor-архитектура не выделяет `ITankGroundProbe` и не содержит переносимого
+  grounding contract;
+- геометрию donor Hull можно использовать только для оценки footprint, высоты
+  корпуса и позиций probe anchors;
+- обычное перемещение `CoopTank` по плоскости не считать готовой реализацией
+  ground alignment или slope handling.
+
 Готово, если Tank проходит тестовую сцену с:
 
 - flat ground;
@@ -1164,6 +1276,16 @@ TankGroundProbe
 
 ## Stage 3.5 — Collision-safe motion
 
+Статус:
+
+```text
+Completed — Dynamic Rigidbody / Unity PhysX
+```
+
+Реализация скорректирована после выбора динамической физической модели: collision
+resolution выполняется Unity PhysX для динамического `Rigidbody`. Ручные
+`cast-and-stop` и `cast-and-slide` не добавлялись.
+
 Добавить collision resolution в `KinematicTankMotionBody`.
 
 Первая версия:
@@ -1173,6 +1295,17 @@ cast-and-stop
 ```
 
 `cast-and-slide` добавляется только при необходимости после ручной проверки.
+
+Donor reference — **None / Reference**:
+
+- collision `TankProjectile` не относится к collision-safe движению корпуса и
+  не используется как основа resolver-а;
+- основной collider donor prefab можно использовать для подбора формы и
+  размеров нового `HullCollider`;
+- прямое применение движения из `CoopTank.FixedUpdate` не заменяет
+  cast-and-stop pipeline и не переносится в `KinematicTankMotionBody` без новой
+  проверки;
+- любые Physics queries должны остаться внутри Unity motion adapter.
 
 Готово, если:
 
@@ -1186,6 +1319,16 @@ cast-and-stop
 
 ## Stage 3.6 — Final Tank prefab composition
 
+Статус:
+
+```text
+Completed
+```
+
+Собраны отдельные `TankRoot_Prototype` и `TankHull_Prototype`; основной collider,
+динамический `Rigidbody`, Hull visual и DriverStation anchors разделены по своим
+ролям.
+
 Собрать:
 
 - Tank Root prefab;
@@ -1198,6 +1341,21 @@ cast-and-stop
 - InteractionPoint;
 - ground probe anchors, если они нужны реализации.
 
+Donor reference — **Reuse / Adapt**:
+
+- это основной Stage 3 candidate для повторного использования donor assets;
+- допускается перенести Hull visual, materials, LOD, подходящую collider shape,
+  размеры и проверенные относительные позиции водительских anchors;
+- `TankDriverDashboard`, `SanyaTrackAnimator` и `TankPistonAnimator` можно
+  оценить как отдельные presentation-компоненты, но подключать только если они
+  не расширяют scope Stage 3;
+- из donor prefab удалить или не переносить `CoopTank`, Mirror components,
+  `TankInterior`, оружие, ресурсы, health и runtime-поиск точек по именам;
+- после переноса явно разделить `Tank Root Prefab` и `Hull Prefab`, даже если в
+  donor-проекте они были объединены;
+- все обязательные anchors и ссылки назначить сериализованно и проверить через
+  Zenject validation.
+
 Готово, если:
 
 - Hull visual можно заменить без изменения movement;
@@ -1208,6 +1366,52 @@ cast-and-stop
 ---
 
 ## Stage 3.7 — Interaction actor and Player station capability
+
+Статус:
+
+```text
+Completed
+```
+
+Actor foundation:
+
+- [x] создан минимальный `IInteractionActor`;
+- [x] создан per-player `PlayerInteractionActor`;
+- [x] actor передаётся через `InteractionContext`;
+- [x] Pickup/Drop сохранены через явную проверку `IPickupReceiver` capability;
+- [x] проверены компиляция и существующие Press/Hold/Pickup/Drop interactions.
+
+Player station capability:
+
+- [x] создан `IStationOccupant`;
+- [x] создан `PlayerStationController` внутри Player feature;
+- [x] добавлены минимальные enable/disable APIs в Player Movement, Look и
+      Interaction;
+- [x] переключение Movement, Look и Interaction собрано в
+      `PlayerStationCapabilities`;
+- [x] создан порт `IPlayerStationBody` и Unity adapter
+      `UnityPlayerStationBody`;
+- [x] реализованы cache/restore Player Rigidbody и Collider state;
+- [x] реализованы attach/detach к тестовым seat/exit anchors;
+- [x] выполнена повторная ручная проверка Enter → Exit.
+
+Архитектурное разделение:
+
+```text
+PlayerStationController          application orchestration
+        ├── PlayerStationCapabilities
+        └── IPlayerStationBody
+                    ↓
+            UnityPlayerStationBody   Unity adapter
+```
+
+`UnityPlayerStationBody` хранит Unity references на отдельном дочернем
+`StationSystem`; `Rigidbody` и `CapsuleCollider` не регистрируются в Zenject как
+самостоятельные services.
+
+Во время ручной проверки исправлен exit teleport: после снятия parent Player
+pose устанавливается через `Transform.SetPositionAndRotation`, затем вызывается
+`Physics.SyncTransforms()` до восстановления dynamic Rigidbody и Collider.
 
 Сделать:
 
@@ -1223,6 +1427,20 @@ cast-and-stop
 
 Не переписывать Player Movement.
 
+Donor reference — **Adapt**:
+
+- `CoopTestPlayer` и `CoopTestPlayer.Interior.cs` использовать как референс
+  состояний игрока при входе, нахождении в танке и выходе;
+- перенести инварианты: игрок не управляет пешим телом из станции, принадлежит
+  не более чем одному Tank и после cleanup возвращается в безопасный walking
+  state;
+- не переносить `currentTankNetId`, `currentTankSeat`, Mirror Commands,
+  `SyncVar` hooks, инвентарь и танковые действия общего класса игрока;
+- donor-поведение разложить между `IInteractionActor`, `IStationOccupant`,
+  `PlayerInteractionActor` и `PlayerStationController`;
+- состояние Rigidbody и Collider кэшировать через новый Player API, а не
+  повторять сетевую модель donor Player.
+
 Готово, если:
 
 - `InteractionContext` получает actor с корректным id;
@@ -1236,6 +1454,19 @@ cast-and-stop
 
 ## Stage 3.8 — DriverStation state and Interaction
 
+Статус:
+
+```text
+In Progress
+```
+
+Текущая подзадача:
+
+- [ ] создать `DriverStationState`;
+- [ ] создать чистый runtime-state `DriverStation`;
+- [ ] проверить переходы `Free → Entering → Occupied → Exiting → Free`;
+- [ ] проверить rollback `Entering → Free` и `Exiting → Occupied`.
+
 Сделать:
 
 - создать `DriverStation`;
@@ -1244,6 +1475,19 @@ cast-and-stop
 - создать `DriverStationController`;
 - создать `DriverStationInteractable`;
 - подключить существующий `IInteractable` lifecycle.
+
+Donor reference — **Adapt**:
+
+- изучить `CoopTank.TryEnter`, `CoopTank.Exit` и seat-related ветки
+  `CoopTank.Interior.cs` как источник проверок занятости, состояния Tank и
+  принадлежности actor;
+- сохранить gameplay-инвариант «одно место — один occupant»;
+- повторно использовать значения дистанции взаимодействия только как начальные
+  tuning references после проверки масштаба текущего prefab;
+- не переносить `TankSeat`, массив `passengerSeats`, `driverNetId` и остальные
+  сетевые seat ids в `DriverStation`;
+- donor-код не содержит требуемой state machine
+  `Free → Entering → Occupied → Exiting`, поэтому rollback реализуется заново.
 
 Готово, если:
 
@@ -1265,6 +1509,17 @@ cast-and-stop
 ```text
 Player.CameraPivot ↔ DriverCameraAnchor
 ```
+
+Donor reference — **Adapt**:
+
+- из `TankDriverDashboard` и V3 interior можно взять положение водительской
+  камеры, orientation, near clip/FOV references и требования к обзору;
+- не переносить создание дополнительной gameplay Camera, RenderTextures,
+  radar, приборные экраны или управление камерой из Tank component;
+- donor camera pose должен быть представлен `DriverCameraAnchor`, а
+  переключение выполняет только `PlayerCameraController`;
+- визуальные приборы считаются `Deferred` и не добавляются ради завершения
+  Stage 3.9.
 
 Готово, если:
 
@@ -1295,6 +1550,18 @@ DrivingIntentBuffer
 
 `PlayerStationController` передаёт snapshot только текущей станции.
 
+Donor reference — **Reference**:
+
+- раскладку водителя `WASD` и правило обнуления устаревшего ввода в
+  `CoopTank` использовать как UX/safety reference;
+- timeout donor-проекта `0.3` секунды не переносить как скрытую константу: если
+  он остаётся нужен без networking, оформить его явно в подходящем target
+  contract или config;
+- не переносить чтение input из `CoopTestPlayer`, `CmdSetTankDrive`, Mirror
+  authorization и прямую передачу значений в `CoopTank`;
+- новый путь обязан оставаться
+  `InputService → PlayerInputSystem → DrivingIntentBuffer → TankDrivingInput`.
+
 Готово, если:
 
 - `Player` map активен вне станции;
@@ -1314,6 +1581,17 @@ DrivingIntentBuffer
 Реализовать проверку свободного места в `DriverExitAnchor`.
 
 Проверка должна учитывать объём Player CapsuleCollider, а не только одну точку.
+
+Donor reference — **Adapt**:
+
+- donor enter/exit flow использовать как источник правил освобождения seat и
+  восстановления player ownership;
+- положение существующих выходов V3 можно использовать как reference для
+  `DriverExitAnchor`, если оно находится вне нового Hull collider;
+- освобождение места в donor-коде не считается достаточной exit validation:
+  текущая реализация обязана отдельно проверить объём `CapsuleCollider`;
+- passenger seat switching, hatch transitions и переход в моторный отсек
+  имеют статус `Deferred`.
 
 Готово, если:
 
@@ -1346,6 +1624,19 @@ Player не должен остаться без walking input,
 если Tank или DriverStation исчезли.
 ```
 
+Donor reference — **Adapt**:
+
+- изучить очистку мест и высадку экипажа в `CoopTank` при отключении Tank, а
+  также unregister paths `OnStopServer` / `OnStopClient`;
+- перенести общий safety invariant: исчезновение или disable Tank освобождает
+  station и не оставляет Player в частично отключённом состоянии;
+- не переносить Mirror lifecycle, `NetworkServer.Destroy`, автоматический
+  `RepairTank` через 5 секунд, health depletion и `Invoke`;
+- cleanup должен выполняться через lifecycle текущих `TankRoot`,
+  `DriverStationController`, `PlayerStationController` и общего `GameLoop`;
+- повторный cleanup должен быть безопасным и не зависеть от порядка уничтожения
+  Player и Tank.
+
 Готово, если все cleanup paths освобождают station и восстанавливают Player или
 безопасно завершают его lifecycle.
 
@@ -1376,6 +1667,18 @@ blocked exit volume
 Enter → Drive → Stop → Exit
 ```
 
+Donor reference — **Reference**:
+
+- сценарии donor-проверки сократить до scope Stage 3: вход водителя, движение,
+  остановка, выход и восстановление Player capabilities;
+- host/client, gunner, ручная зарядка, топливо, урон и восстановление не
+  включать в acceptance scene Stage 3;
+- геометрию donor Tank можно использовать для дополнительного regression pass,
+  но обязательная acceptance scene должна оставаться минимальной и
+  воспроизводимой;
+- результаты donor-документа не заменяют EditMode, PlayMode и manual tests
+  текущего проекта.
+
 Готово, если выполнен checklist из раздела 13.
 
 ---
@@ -1391,12 +1694,12 @@ Enter → Drive → Stop → Exit
 
 ## 13.2. Existing Player and Interaction
 
-- [ ] Существующий Player Movement не сломан.
-- [ ] Player Look не сломан вне станции.
-- [ ] Press interaction работает.
-- [ ] Hold interaction работает.
-- [ ] Pickup и Drop продолжают работать.
-- [ ] Interaction HUD работает вне станции.
+- [x] Существующий Player Movement не сломан.
+- [x] Player Look не сломан вне станции.
+- [x] Press interaction работает.
+- [x] Hold interaction работает.
+- [x] Pickup и Drop продолжают работать.
+- [x] Interaction HUD работает вне станции.
 
 ## 13.3. Enter
 
@@ -1471,6 +1774,8 @@ Enter → Drive → Stop → Exit
 - [ ] Tank не зависит от конкретного Player instance.
 - [ ] Используется существующая Interaction feature.
 - [ ] DI выполняется через Zenject без runtime resolve.
+- [ ] В runtime-код Stage 3 не перенесены зависимости от Mirror, `CoopTank` или
+      `CoopTestPlayer`.
 
 ---
 
@@ -1594,6 +1899,9 @@ Stage 4 — Stations / Crew Roles
 Как вручную проверить
 Какие automated tests запущены
 Какие TBD остались
+Какие donor-файлы и prefab изучены
+Что из donor implementation переиспользовано, адаптировано или отклонено
+Почему перенос не нарушает target architecture и scope текущего stage
 ```
 
 Не переходить к следующему этапу, пока текущий не компилируется и не проходит

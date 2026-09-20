@@ -6,6 +6,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
 {
     public sealed class TankMovement : IFixedGameplayTickable
     {
+        private const float StopSpeedEpsilon = 0.05f;
+
         private readonly TankMovementConfig _config;
         private readonly TankMotionState _state;
         private readonly ITankMotionBody _motionBody;
@@ -45,12 +47,34 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             if (fixedDeltaTime <= 0f)
                 return;
 
-            UpdateForwardSpeed(fixedDeltaTime);
-            UpdateTurnSpeed();
-            ApplyMotion(fixedDeltaTime);
+            SynchronizeStateFromBody();
+            UpdateDrive(fixedDeltaTime);
+            UpdateSteering(fixedDeltaTime);
         }
 
-        private void UpdateForwardSpeed(float fixedDeltaTime)
+        private void SynchronizeStateFromBody()
+        {
+            Quaternion rotation = _motionBody.Rotation;
+
+            Vector3 forward =
+                rotation * Vector3.forward;
+
+            Vector3 up =
+                rotation * Vector3.up;
+
+            _state.CurrentForwardSpeed =
+                Vector3.Dot(
+                    _motionBody.LinearVelocity,
+                    forward);
+
+            _state.CurrentTurnSpeed =
+                Vector3.Dot(
+                    _motionBody.AngularVelocity,
+                    up) *
+                Mathf.Rad2Deg;
+        }
+
+        private void UpdateDrive(float fixedDeltaTime)
         {
             _state.IsBraking = _input.IsBraking;
 
@@ -58,10 +82,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             {
                 CancelDirectionChange();
 
-                _state.CurrentForwardSpeed = Mathf.MoveTowards(
-                    _state.CurrentForwardSpeed,
-                    0f,
-                    _config.BrakeDeceleration * fixedDeltaTime);
+                ApplyLongitudinalDeceleration(
+                    _config.BrakeDeceleration,
+                    fixedDeltaTime);
 
                 return;
             }
@@ -73,10 +96,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             {
                 CancelDirectionChange();
 
-                _state.CurrentForwardSpeed = Mathf.MoveTowards(
-                    _state.CurrentForwardSpeed,
-                    0f,
-                    _config.Deceleration * fixedDeltaTime);
+                ApplyLongitudinalDeceleration(
+                    _config.Deceleration,
+                    fixedDeltaTime);
 
                 return;
             }
@@ -91,22 +113,23 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             }
 
             int currentDirection =
-                _state.CurrentDirection;
+                GetDirection(
+                    _state.CurrentForwardSpeed,
+                    StopSpeedEpsilon);
 
             if (currentDirection != 0 &&
                 currentDirection != requestedDirection)
             {
                 BeginDirectionChange(requestedDirection);
 
-                _state.CurrentForwardSpeed = Mathf.MoveTowards(
-                    _state.CurrentForwardSpeed,
-                    0f,
-                    _config.Deceleration * fixedDeltaTime);
+                ApplyLongitudinalDeceleration(
+                    _config.Deceleration,
+                    fixedDeltaTime);
 
                 return;
             }
 
-            Accelerate(requestedDirection, fixedDeltaTime);
+            ApplyThrottle(requestedDirection);
         }
 
         private void UpdateDirectionChange(
@@ -117,29 +140,30 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
                 _state.PendingDirection)
             {
                 int currentDirection =
-                    _state.CurrentDirection;
+                    GetDirection(
+                        _state.CurrentForwardSpeed,
+                        StopSpeedEpsilon);
 
                 if (currentDirection != 0 &&
                     requestedDirection == currentDirection)
                 {
                     CancelDirectionChange();
-                    Accelerate(
-                        requestedDirection,
-                        fixedDeltaTime);
-
+                    ApplyThrottle(requestedDirection);
                     return;
                 }
 
                 BeginDirectionChange(requestedDirection);
             }
 
-            _state.CurrentForwardSpeed = Mathf.MoveTowards(
-                _state.CurrentForwardSpeed,
-                0f,
-                _config.Deceleration * fixedDeltaTime);
+            ApplyLongitudinalDeceleration(
+                _config.Deceleration,
+                fixedDeltaTime);
 
-            if (_state.CurrentForwardSpeed != 0f)
+            if (Mathf.Abs(_state.CurrentForwardSpeed) >
+                StopSpeedEpsilon)
+            {
                 return;
+            }
 
             _state.RemainingDirectionSwitchDelay =
                 Mathf.Max(
@@ -154,76 +178,109 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
                 _state.PendingDirection;
 
             CancelDirectionChange();
-            Accelerate(pendingDirection, fixedDeltaTime);
+            ApplyThrottle(pendingDirection);
         }
 
-        private void Accelerate(
-            int requestedDirection,
-            float fixedDeltaTime)
+        private void ApplyThrottle(int requestedDirection)
         {
-            float targetSpeed;
+            float maximumSpeed;
             float acceleration;
 
             if (requestedDirection > 0)
             {
-                targetSpeed =
-                    _input.Throttle *
-                    _config.ForwardMaxSpeed;
-
-                acceleration =
-                    _config.ForwardAcceleration;
+                maximumSpeed = _config.ForwardMaxSpeed;
+                acceleration = _config.ForwardAcceleration;
             }
             else
             {
-                targetSpeed =
-                    _input.Throttle *
-                    _config.ReverseMaxSpeed;
-
-                acceleration =
-                    _config.ReverseAcceleration;
+                maximumSpeed = _config.ReverseMaxSpeed;
+                acceleration = _config.ReverseAcceleration;
             }
 
-            _state.CurrentForwardSpeed =
-                Mathf.MoveTowards(
-                    _state.CurrentForwardSpeed,
-                    targetSpeed,
-                    acceleration * fixedDeltaTime);
-        }
+            float speedInRequestedDirection =
+                _state.CurrentForwardSpeed *
+                requestedDirection;
 
-        private void UpdateTurnSpeed()
-        {
-            _state.CurrentTurnSpeed =
-                _input.Steering *
-                _config.TurnSpeed;
-        }
-
-        private void ApplyMotion(float fixedDeltaTime)
-        {
-            Quaternion currentRotation =
-                _motionBody.Rotation;
-
-            float turnAngle =
-                _state.CurrentTurnSpeed *
-                fixedDeltaTime;
-
-            Quaternion desiredRotation =
-                Quaternion.AngleAxis(
-                    turnAngle,
-                    Vector3.up) *
-                currentRotation;
+            if (speedInRequestedDirection >= maximumSpeed)
+                return;
 
             Vector3 forward =
-                desiredRotation *
+                _motionBody.Rotation *
                 Vector3.forward;
 
-            Vector3 desiredDisplacement =
+            Vector3 requestedAcceleration =
                 forward *
-                _state.CurrentForwardSpeed *
-                fixedDeltaTime;
+                requestedDirection *
+                acceleration *
+                Mathf.Abs(_input.Throttle);
 
-            _motionBody.ResolveAndApplyMotion(
-                desiredDisplacement,
-                desiredRotation);
+            _motionBody.ApplyLinearAcceleration(
+                requestedAcceleration);
+        }
+
+        private void ApplyLongitudinalDeceleration(
+            float deceleration,
+            float fixedDeltaTime)
+        {
+            float currentSpeed =
+                _state.CurrentForwardSpeed;
+
+            if (Mathf.Abs(currentSpeed) <=
+                StopSpeedEpsilon)
+            {
+                return;
+            }
+
+            float requiredAcceleration =
+                Mathf.Min(
+                    deceleration,
+                    Mathf.Abs(currentSpeed) /
+                    fixedDeltaTime);
+
+            Vector3 forward =
+                _motionBody.Rotation *
+                Vector3.forward;
+
+            Vector3 brakingAcceleration =
+                -Mathf.Sign(currentSpeed) *
+                requiredAcceleration *
+                forward;
+
+            _motionBody.ApplyLinearAcceleration(
+                brakingAcceleration);
+        }
+
+        private void UpdateSteering(float fixedDeltaTime)
+        {
+            float targetTurnSpeed =
+                _input.Steering *
+                _config.TurnSpeed;
+
+            float turnSpeedError =
+                targetTurnSpeed -
+                _state.CurrentTurnSpeed;
+
+            float angularAcceleration =
+                Mathf.Clamp(
+                    turnSpeedError / fixedDeltaTime,
+                    -_config.TurnAcceleration,
+                    _config.TurnAcceleration);
+
+            if (Mathf.Approximately(
+                    angularAcceleration,
+                    0f))
+            {
+                return;
+            }
+
+            Vector3 up =
+                _motionBody.Rotation *
+                Vector3.up;
+
+            _motionBody.ApplyAngularAcceleration(
+                up *
+                angularAcceleration *
+                Mathf.Deg2Rad);
         }
 
         private void BeginDirectionChange(
@@ -244,10 +301,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
 
         private static int GetDirection(float value)
         {
-            if (value > 0f)
+            return GetDirection(value, 0f);
+        }
+
+        private static int GetDirection(
+            float value,
+            float epsilon)
+        {
+            if (value > epsilon)
                 return 1;
 
-            if (value < 0f)
+            if (value < -epsilon)
                 return -1;
 
             return 0;

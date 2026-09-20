@@ -30,24 +30,18 @@ public sealed class PickupInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    public InteractionInfo GetInteractionInfo(
-        in InteractionContext context)
+    public InteractionInfo GetInteractionInfo(in InteractionContext context)
     {
-        bool isAvailable =
-            isActiveAndEnabled &&
-            !_isHeld &&
-            context.PickupReceiver != null &&
-            !context.PickupReceiver.IsOccupied;
+        IPickupReceiver pickupReceiver = context.Actor as IPickupReceiver;
 
-        return InteractionInfo.Press(
-            _prompt,
-            isAvailable);
+        bool isAvailable = isActiveAndEnabled && !_isHeld && pickupReceiver != null && !pickupReceiver.IsOccupied;
+
+        return InteractionInfo.Press(_prompt, isAvailable);
     }
 
     public bool Begin(in InteractionContext context)
     {
-        InteractionInfo interactionInfo =
-            GetInteractionInfo(context);
+        InteractionInfo interactionInfo = GetInteractionInfo(context);
 
         return interactionInfo.IsAvailable;
     }
@@ -57,10 +51,12 @@ public sealed class PickupInteractable : MonoBehaviour, IInteractable
         if (_isHeld)
             return;
 
-        if (context.PickupReceiver == null)
+        IPickupReceiver pickupReceiver = context.Actor as IPickupReceiver;
+
+        if (pickupReceiver == null)
             return;
 
-        if (!context.PickupReceiver.TryReceive(this))
+        if (!pickupReceiver.TryReceive(this))
             return;
 
         EnterHeldState();
@@ -134,9 +130,7 @@ public sealed class PickupInteractable : MonoBehaviour, IInteractable
     private void Reset()
     {
         _body = GetComponent<Rigidbody>();
-
-        _worldColliders =
-            GetComponentsInChildren<Collider>(true);
+        _worldColliders = GetComponentsInChildren<Collider>(true);
     }
 }
 }

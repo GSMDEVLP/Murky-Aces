@@ -9,7 +9,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure
     public sealed class TankInstaller : MonoInstaller
     {
         [SerializeField] private TankMovementConfig _movementConfig;
-        [SerializeField] private KinematicTankMotionBody _motionBody;
+        [SerializeField] private DynamicTankMotionBody _motionBody;
 
         public override void InstallBindings()
         {
@@ -19,7 +19,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure
 
             if (_motionBody == null)
                 throw new InvalidOperationException(
-                    $"{nameof(KinematicTankMotionBody)} is not assigned.");
+                    $"{nameof(DynamicTankMotionBody)} is not assigned.");
 
             Container.Bind<TankRoot>().FromComponentOnRoot().AsSingle();
 

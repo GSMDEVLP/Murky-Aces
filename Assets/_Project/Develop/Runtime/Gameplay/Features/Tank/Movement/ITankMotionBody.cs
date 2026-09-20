@@ -6,9 +6,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
     {
         Vector3 Position { get; }
         Quaternion Rotation { get; }
+        Vector3 LinearVelocity { get; }
+        Vector3 AngularVelocity { get; }
 
-        void ResolveAndApplyMotion(
-            Vector3 desiredDisplacement,
-            Quaternion desiredRotation);
+        void ApplyLinearAcceleration(Vector3 acceleration);
+        void ApplyAngularAcceleration(Vector3 acceleration);
     }
 }

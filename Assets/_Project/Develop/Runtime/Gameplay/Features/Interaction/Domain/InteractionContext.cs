@@ -1,16 +1,19 @@
+using System;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain
 {
     public readonly struct InteractionContext
     {
-        public ulong  InteractorId { get; }
-        public IPickupReceiver PickupReceiver { get; }
+        public IInteractionActor Actor { get; }
 
-        public InteractionContext(ulong  interactorId, IPickupReceiver pickupReceiver)
+        // Сохраняем для совместимости с существующими interactable.
+        public ulong InteractorId => Actor.Id;
+
+        public InteractionContext(IInteractionActor actor)
         {
-            InteractorId = interactorId;
-            PickupReceiver = pickupReceiver;
+            Actor = actor
+                ?? throw new ArgumentNullException(nameof(actor));
         }
     }
 }

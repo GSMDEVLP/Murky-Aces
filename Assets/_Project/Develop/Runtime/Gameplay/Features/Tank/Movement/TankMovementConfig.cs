@@ -14,7 +14,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
         [SerializeField, Min(0f)] private float _forwardAcceleration;
 
         [SerializeField, Min(0f)] private float _reverseAcceleration;
-
+        
+        [SerializeField, Min(0f)] private float _turnAcceleration;
         [SerializeField, Min(0f)] private float _deceleration;
 
         [SerializeField, Min(0f)] private float _brakeDeceleration;
@@ -25,30 +26,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
         [Header("Direction switching")]
         [SerializeField, Min(0f)] private float _directionSwitchDelay;
 
-        [Header("Ground")]
-        [SerializeField, Min(0f)] private float _groundProbeDistance;
-
-        [SerializeField, Min(0f)] private float _groundOffset;
-
-        [SerializeField, Min(0f)] private float _groundAlignmentSpeed;
-
-        [SerializeField, Range(0f, 90f)] private float _maximumSlopeAngle;
-
-        [Header("Collision")]
-        [SerializeField, Min(0f)] private float _collisionSkin;
-
         public float ForwardMaxSpeed => _forwardMaxSpeed;
         public float ReverseMaxSpeed => _reverseMaxSpeed;
         public float ForwardAcceleration => _forwardAcceleration;
         public float ReverseAcceleration => _reverseAcceleration;
+        public float TurnAcceleration => _turnAcceleration;
         public float Deceleration => _deceleration;
         public float BrakeDeceleration => _brakeDeceleration;
         public float TurnSpeed => _turnSpeed;
-        public float DirectionSwitchDelay => _directionSwitchDelay;
-        public float GroundProbeDistance => _groundProbeDistance;
-        public float GroundOffset => _groundOffset;
-        public float GroundAlignmentSpeed => _groundAlignmentSpeed;
-        public float MaximumSlopeAngle => _maximumSlopeAngle;
-        public float CollisionSkin => _collisionSkin;
+        public float DirectionSwitchDelay => _directionSwitchDelay;  
+
+
     }
 }

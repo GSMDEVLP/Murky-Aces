@@ -9,26 +9,32 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 {
-public sealed class InteractionInstaller : MonoInstaller
-{
-    [SerializeField] private InteractionHudView _hudView;
-    [SerializeField] private HeldItemSlot _heldItemSlot;
-    [SerializeField] private PhysicsInteractionTargetFinder _targetFinder;
-
-    public override void InstallBindings()
+    public sealed class InteractionInstaller : MonoInstaller
     {
-        Container.Bind<IInteractionTargetFinder>().FromInstance(_targetFinder);
-        Container.Bind<InteractionContext>().FromResolveGetter<PlayerFacade>(CreateInteractionContext).AsSingle();
-        Container.Bind<PlayerInteraction>().AsSingle();
-        Container.Bind<InteractionHudView>().FromInstance(_hudView);
-        Container.Bind<InteractionHudPresenter>().AsSingle();
-        Container.Bind<PresentationPhase>().AsSingle();
-    }
+        
+        [SerializeField] private PlayerFacade _playerFacade;
+        [SerializeField] private InteractionHudView _hudView;
+        [SerializeField] private HeldItemSlot _heldItemSlot;
+        [SerializeField] private PhysicsInteractionTargetFinder _targetFinder;
 
-    private InteractionContext CreateInteractionContext(PlayerFacade player)
-    {
-        ulong interactorId = EntityId.ToULong(player.GetEntityId());
-        return new InteractionContext(interactorId, _heldItemSlot);
+        public override void InstallBindings()
+        {
+            Container.Bind<IInteractionTargetFinder>().FromInstance(_targetFinder);
+            
+            ulong actorId = EntityId.ToULong(_playerFacade.GetEntityId());
+            Container.Bind<PlayerInteractionActor>().AsSingle().WithArguments(actorId,(IPickupReceiver)_heldItemSlot);
+
+            Container.Bind<IInteractionActor>().FromResolveGetter<PlayerInteractionActor>(actor => actor).AsSingle();
+            Container.Bind<InteractionContext>().FromResolveGetter<IInteractionActor>(CreateInteractionContext).AsSingle();
+            Container.Bind<PlayerInteraction>().AsSingle();
+            Container.Bind<InteractionHudView>().FromInstance(_hudView);
+            Container.Bind<InteractionHudPresenter>().AsSingle();
+            Container.Bind<PresentationPhase>().AsSingle();
+        }
+
+        private InteractionContext CreateInteractionContext(IInteractionActor actor)
+        {
+            return new InteractionContext(actor);
+        }
     }
-}
 }

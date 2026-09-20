@@ -16,6 +16,7 @@ MonoBehaviour:
   _reverseMaxSpeed: 3
   _forwardAcceleration: 3
   _reverseAcceleration: 2
+  _turnAcceleration: 180
   _deceleration: 4
   _brakeDeceleration: 8
   _turnSpeed: 60
