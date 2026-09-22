@@ -14,15 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Movement.TankMovementConfig
   _forwardMaxSpeed: 6
   _reverseMaxSpeed: 3
-  _forwardAcceleration: 3
-  _reverseAcceleration: 2
-  _turnAcceleration: 180
-  _deceleration: 4
-  _brakeDeceleration: 8
-  _turnSpeed: 60
+  _forwardAcceleration: 30
+  _reverseAcceleration: 20
+  _turnAcceleration: 1500
+  _deceleration: 15
+  _brakeDeceleration: 30
+  _turnSpeed: 45
   _directionSwitchDelay: 0.25
-  _groundProbeDistance: 0
-  _groundOffset: 0
-  _groundAlignmentSpeed: 0
-  _maximumSlopeAngle: 0
-  _collisionSkin: 0

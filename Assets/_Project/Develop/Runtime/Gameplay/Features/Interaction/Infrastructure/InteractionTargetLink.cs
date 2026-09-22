@@ -27,9 +27,7 @@ public sealed class InteractionTargetLink : MonoBehaviour
         if (_interactableBehaviour is IInteractable)
             return;
 
-        Debug.LogError(
-            $"{_interactableBehaviour.name} must implement {nameof(IInteractable)}.",
-            this);
+        Debug.LogError($"{_interactableBehaviour.name} must implement {nameof(IInteractable)}.", this);
 
         _interactableBehaviour = null;
     }

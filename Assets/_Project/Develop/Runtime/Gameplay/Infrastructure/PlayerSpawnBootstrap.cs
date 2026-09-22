@@ -1,22 +1,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using System;
+using _Project.Develop.Runtime.Gameplay.Presentation;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Infrastructure
 {
 public sealed class PlayerSpawnBootstrap : MonoBehaviour
 {
-    [Header("Camera")]
-    [SerializeField] private Camera _mainCamera;
     [SerializeField] private List<Transform> _playerSpawnPoints;
 
     private PlayerSpawner _playerSpawner;
+    private GameplayCameraRig _cameraRig;
 
     [Inject]
-    public void Construct(PlayerSpawner playerSpawner)
+    public void Construct(PlayerSpawner playerSpawner, GameplayCameraRig cameraRig)
     {
         _playerSpawner = playerSpawner;
+        _cameraRig = cameraRig;
     }
 
     private void Start()
@@ -24,9 +26,14 @@ public sealed class PlayerSpawnBootstrap : MonoBehaviour
         Transform point = _playerSpawnPoints[0];
         PlayerFacade player = _playerSpawner.Spawn(point.position, point.rotation);
 
-        _mainCamera.transform.SetParent(player.CameraPivot, false);
-        _mainCamera.transform.localPosition = Vector3.zero;
-        _mainCamera.transform.localRotation = Quaternion.identity;
+        if (!_cameraRig.TryBindWalkingAnchor(player.CameraPivot))
+        {
+            throw new InvalidOperationException(
+                "Gameplay Camera could not bind to Player.CameraPivot.");
+        }
+        
+        _cameraRig.transform.localPosition = Vector3.zero;
+        _cameraRig.transform.localRotation = Quaternion.identity;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

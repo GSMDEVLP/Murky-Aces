@@ -6,7 +6,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
     {
         bool IsInStation { get; }
 
-        bool TryEnterStation(Transform seatAnchor);
+        bool TryEnterStation(Transform seatAnchor, Transform cameraAnchor);
         bool TryExitStation(Transform exitAnchor);
     }
 }

@@ -157,27 +157,28 @@ Player не использует `CharacterController`. Все переходы 
 Использовать:
 
 ```text
-Kinematic Rigidbody
+Dynamic Rigidbody + Unity PhysX
 ```
 
 Обязательное состояние:
 
 ```csharp
-rigidbody.isKinematic = true;
+rigidbody.isKinematic = false;
+rigidbody.useGravity = true;
 ```
 
 Tank Core не использует:
 
-- `AddForce`;
-- `AddTorque`;
 - `WheelCollider`;
 - физическую симуляцию гусениц;
 - прямое чтение устройств ввода;
 - `transform.position` как основной collision-safe movement pipeline.
 
-`Rigidbody.MovePosition` и `Rigidbody.MoveRotation` применяют уже разрешённое
-движение. Проверка препятствий выполняется отдельным collision resolver внутри
-Unity motion adapter.
+`TankMovement` рассчитывает требуемые линейное и угловое ускорения, не обращаясь
+к Unity Physics напрямую. `DynamicTankMotionBody` применяет их через
+`Rigidbody.AddForce` и `Rigidbody.AddTorque` с `ForceMode.Acceleration`.
+Grounding и collision resolution выполняются Unity PhysX через динамический
+`Rigidbody` и коллайдеры Tank prefab.
 
 ## 3.2. Movement
 
@@ -364,13 +365,11 @@ TankDrivingInput                 immutable snapshot
         ↓
 TankMovement
         ↓
-ITankGroundProbe
-        ↓
 ITankMotionBody
         ↓
-KinematicTankMotionBody          Unity adapter
+DynamicTankMotionBody            Unity adapter
         ↓
-Rigidbody.MovePosition / MoveRotation
+Rigidbody.AddForce / AddTorque
 ```
 
 ## 5.3. Enter flow
@@ -507,9 +506,13 @@ FixedUpdate
 └── TankMovement
     ├── read latest TankDrivingInput
     ├── update TankMotionState
-    ├── query ground
-    ├── resolve collision
-    └── apply kinematic motion
+    ├── calculate linear/angular acceleration
+    └── apply acceleration through ITankMotionBody
+
+Unity PhysX
+├── integrate dynamic Rigidbody
+├── resolve ground contacts
+└── resolve collision contacts
 ```
 
 ---
@@ -528,10 +531,8 @@ Assets/Scripts/
 │   ├── Movement/
 │   │   ├── TankDrivingInput.cs
 │   │   ├── TankMotionState.cs
-│   │   ├── TankGroundInfo.cs
 │   │   ├── TankMovement.cs
 │   │   ├── ITankMotionBody.cs
-│   │   ├── ITankGroundProbe.cs
 │   │   └── TankMovementConfig.cs
 │   │
 │   ├── Stations/
@@ -542,8 +543,7 @@ Assets/Scripts/
 │   │   └── DriverStationView.cs
 │   │
 │   └── Infrastructure/
-│       ├── KinematicTankMotionBody.cs
-│       ├── TankGroundProbe.cs
+│       ├── DynamicTankMotionBody.cs
 │       └── TankInstaller.cs
 │
 ├── Player/
@@ -675,9 +675,9 @@ Plain C# gameplay-класс и fixed gameplay participant.
 - direction switch delay;
 - steering;
 - обновление `TankMotionState`;
-- вычисление desired displacement и rotation;
-- запрос ground data;
-- передачу движения в `ITankMotionBody`.
+- синхронизацию скорости из `ITankMotionBody`;
+- вычисление требуемого линейного и углового ускорения;
+- передачу ускорений в `ITankMotionBody`.
 
 Не отвечает за:
 
@@ -698,55 +698,31 @@ Plain C# gameplay-класс и fixed gameplay participant.
 ```text
 Position
 Rotation
-Resolve and apply requested motion
+LinearVelocity
+AngularVelocity
+ApplyLinearAcceleration
+ApplyAngularAcceleration
 ```
 
 Интерфейс не раскрывает gameplay-слою конкретный `Rigidbody` или `Collider`.
 
-## 8.7. KinematicTankMotionBody
+## 8.7. DynamicTankMotionBody
 
 Unity adapter, `MonoBehaviour`.
 
 Отвечает за:
 
-- kinematic Rigidbody;
-- основной Hull collider;
-- collision casts;
-- allowed displacement;
-- безопасное применение position и rotation;
+- dynamic Rigidbody;
+- применение линейного ускорения через `AddForce`;
+- применение углового ускорения через `AddTorque`;
+- чтение position, rotation и текущих velocities;
 - физические настройки Tank body.
 
 Не рассчитывает throttle, acceleration, brake или gear switching.
 
-Первая реализация может использовать `cast-and-stop`. Переход к
-`cast-and-slide` допускается после ручной проверки, не меняя `TankMovement`.
-
-## 8.8. ITankGroundProbe
-
-Возвращает `TankGroundInfo`:
-
-```text
-HasGround
-GroundPoint
-GroundNormal
-Distance
-```
-
-Gameplay не знает, использует реализация raycast, shape cast или несколько
-probe points.
-
-## 8.9. TankGroundProbe
-
-Unity implementation `ITankGroundProbe`.
-
-Отвечает за:
-
-- Physics queries к поверхности;
-- ground point;
-- ground normal;
-- ground distance.
-
-Не принимает решений о throttle, brake и switching direction.
+Collision и ground contacts разрешаются Unity PhysX. Отдельные
+`ITankGroundProbe`, `TankGroundProbe`, `cast-and-stop` и `cast-and-slide` в
+текущей реализации Stage 3 отсутствуют.
 
 ## 8.10. DriverStation
 
@@ -899,9 +875,9 @@ Per-player application adapter и конкретная реализация `IIn
 Рекомендуемая иерархия:
 
 ```text
-TankRoot                         Rigidbody (Kinematic)
+TankRoot                         Rigidbody (Dynamic)
 │                                TankRoot component
-│                                KinematicTankMotionBody
+│                                DynamicTankMotionBody
 │
 ├── Collision
 │   └── HullCollider
@@ -915,9 +891,6 @@ TankRoot                         Rigidbody (Kinematic)
 │       ├── DriverSeatAnchor
 │       ├── DriverCameraAnchor
 │       └── DriverExitAnchor
-│
-└── GroundProbes
-    └── Probe anchors required by chosen implementation
 ```
 
 `Rigidbody` находится на движущемся Tank root, чтобы Hull, Station anchors и
@@ -942,22 +915,19 @@ Hull Prefab содержит визуальную геометрию:
 ```text
 TankMovement
         ↓
-Desired displacement and rotation
+Requested linear/angular acceleration
         ↓
-KinematicTankMotionBody
+DynamicTankMotionBody
         ↓
-Collision query
+Rigidbody.AddForce / AddTorque
         ↓
-Allowed movement
-        ↓
-Rigidbody.MovePosition / MoveRotation
+Unity PhysX collision contacts
 ```
 
 Минимальные требования:
 
 - Tank не проходит через обычную стену;
 - Tank не проходит через крупный obstacle;
-- translation учитывает skin distance;
 - rotation рядом с геометрией не вызывает очевидного проникновения;
 - collision logic отсутствует в `TankMovement`;
 - игровые скорости ограничены значениями config.
@@ -965,23 +935,20 @@ Rigidbody.MovePosition / MoveRotation
 ## 10.2. Ground pipeline
 
 ```text
-TankGroundProbe
+Tank colliders + dynamic Rigidbody
         ↓
-TankGroundInfo
+Unity PhysX contacts and gravity
         ↓
-TankMovement
+DynamicTankMotionBody exposes resulting state
         ↓
-Target height and surface-aligned rotation
-        ↓
-ITankMotionBody
+TankMovement synchronizes TankMotionState
 ```
 
 Минимальные требования:
 
-- определяется наличие ground;
-- Tank удерживает настраиваемый ground offset;
+- Tank устойчиво контактирует с ground;
 - Tank следует умеренному изменению высоты;
-- Tank ориентируется по ground normal со сглаживанием;
+- Tank ориентируется по поверхности через физические контакты;
 - слишком крутой slope блокирует подъём;
 - корпус не уходит под поверхность.
 
@@ -1004,7 +971,7 @@ DriverStation
 DriverStationController
 TankMovementConfig
 ITankMotionBody       → KinematicTankMotionBody
-ITankGroundProbe      → TankGroundProbe
+ITankMotionBody       → DynamicTankMotionBody
 ```
 
 Static config передаётся через serialized reference installer-а или принятый в
@@ -1038,19 +1005,18 @@ Player-specific `DrivingIntentBuffer` остаётся в Player subcontainer. T
 - [x] Stage 3.5 — Collision-safe motion
 - [x] Stage 3.6 — Final Tank prefab composition
 - [x] Stage 3.7 — Interaction actor and Player station capability
-- [ ] Stage 3.8 — DriverStation state and Interaction — **Current**
-- [ ] Stage 3.9 — Camera anchor switching
-- [ ] Stage 3.10 — Driving input context
+- [x] Stage 3.8 — DriverStation state and Interaction
+- [x] Stage 3.9 — Camera anchor switching
+- [ ] Stage 3.10 — Driving input context — **Current**
 - [ ] Stage 3.11 — Validated exit flow
 - [ ] Stage 3.12 — Lifecycle and failure recovery
 - [ ] Stage 3.13 — Tests and acceptance scene
 
-Текущий этап: **Stage 3.8 — DriverStation state and Interaction**.
+Текущий этап: **Stage 3.10 — Driving input context**.
 
-Текущая задача: создать чистые `DriverStationState` и `DriverStation`, затем
-добавить `DriverStationView`, `DriverStationController` и
-`DriverStationInteractable` поверх существующих Interaction и
-`IStationOccupant` contracts.
+Текущая задача: добавить `Driving` action map в существующий InputActionAsset,
+расширить текущий input pipeline через `DrivingIntentBuffer` и передавать
+нормализованный `TankDrivingInput` только занятой DriverStation.
 
 ## Stage 3.0 — Foundation audit
 
@@ -1457,15 +1423,36 @@ Donor reference — **Adapt**:
 Статус:
 
 ```text
-In Progress
+Completed
 ```
 
-Текущая подзадача:
+Выполнено:
 
-- [ ] создать `DriverStationState`;
-- [ ] создать чистый runtime-state `DriverStation`;
-- [ ] проверить переходы `Free → Entering → Occupied → Exiting → Free`;
-- [ ] проверить rollback `Entering → Free` и `Exiting → Occupied`.
+- [x] создан `DriverStationState`;
+- [x] создан чистый runtime-state `DriverStation`;
+- [x] реализованы переходы `Free → Entering → Occupied → Exiting → Free`;
+- [x] реализованы rollback-переходы `Entering → Free` и
+      `Exiting → Occupied`;
+- [x] созданы `DriverStationView`, `DriverStationController` и
+      `DriverStationInteractable`;
+- [x] `Begin / Complete / Cancel` подключены к существующему `IInteractable`;
+- [x] `InteractionTargetLink` на `BodyCollider` ссылается на
+      `DriverStationInteractable`;
+- [x] Station bindings добавлены в `TankInstaller`;
+- [x] временный `PlayerStationDebugProbe` удалён.
+
+Ручная проверка:
+
+- prompt `Enter` отображается при наведении на Tank;
+- interaction переводит Station в occupied flow;
+- Player прикрепляется к `DriverSeatAnchor` реального Tank prefab;
+- walking locomotion и Player Look отключаются;
+- Player не может двигаться после посадки;
+- `TankRoot_Prototype.prefab` содержит Station components и сериализованные
+  ссылки на anchors.
+
+Полная автоматизированная проверка всех state-machine переходов и forced failed
+enter остаётся частью Stage 3.13.
 
 Сделать:
 
@@ -1502,7 +1489,27 @@ Donor reference — **Adapt**:
 
 ## Stage 3.9 — Camera anchor switching
 
-Добавить `PlayerCameraController` для существующей основной Camera.
+Статус:
+
+```text
+Completed — exit restoration verification deferred to Stage 3.11
+```
+
+Реализован scene-owned `GameplayCameraRig` для существующей основной Camera.
+Camera не хранится в `PlayerFacade`: rig принадлежит сцене, регистрируется в
+scene Zenject container и после spawn получает walking anchor конкретного
+Player.
+
+Реализовано:
+
+- `GameplayCameraRig` размещён на существующей Main Camera;
+- `PlayerSpawningInstaller` регистрирует rig как scene service;
+- `PlayerSpawnBootstrap` передаёт ему `Player.CameraPivot` после spawn;
+- `IStationOccupant` принимает `DriverCameraAnchor` при входе;
+- `PlayerStationController` переключает Camera на station anchor и
+  восстанавливает walking anchor при выходе или rollback;
+- `DriverStationView` предоставляет `DriverCameraAnchor`;
+- в сцене остаётся одна активная gameplay Camera.
 
 Поддержать:
 
@@ -1517,16 +1524,26 @@ Donor reference — **Adapt**:
 - не переносить создание дополнительной gameplay Camera, RenderTextures,
   radar, приборные экраны или управление камерой из Tank component;
 - donor camera pose должен быть представлен `DriverCameraAnchor`, а
-  переключение выполняет только `PlayerCameraController`;
+  переключение выполняет только `GameplayCameraRig`;
 - визуальные приборы считаются `Deferred` и не добавляются ради завершения
   Stage 3.9.
 
 Готово, если:
 
-- в сцене остаётся одна активная gameplay Camera;
-- при входе используется DriverCameraAnchor;
-- при выходе восстанавливается Player.CameraPivot;
-- повторные enter/exit не ломают parent или local pose.
+- [x] в сцене остаётся одна активная gameplay Camera;
+- [x] при входе используется `DriverCameraAnchor`;
+- [ ] при выходе восстанавливается `Player.CameraPivot` — реализация добавлена,
+      runtime-проверка выполняется вместе с Stage 3.11;
+- [ ] повторные enter/exit не ломают parent или local pose — проверяется после
+      реализации production exit flow в Stage 3.11.
+
+Ручная проверка:
+
+- до входа Main Camera следует за `Player.CameraPivot`;
+- при `Enter` та же Main Camera становится дочерней `DriverCameraAnchor`;
+- вторая gameplay Camera не создаётся;
+- Player Look в station mode остаётся отключённым, driver freelook не входит в
+  Stage 3.9.
 
 ---
 

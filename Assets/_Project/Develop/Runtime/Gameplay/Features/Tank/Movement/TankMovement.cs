@@ -105,9 +105,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
 
             if (_state.IsChangingDirection)
             {
-                UpdateDirectionChange(
-                    requestedDirection,
-                    fixedDeltaTime);
+                UpdateDirectionChange(requestedDirection, fixedDeltaTime);
 
                 return;
             }
@@ -174,8 +172,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             if (_state.RemainingDirectionSwitchDelay > 0f)
                 return;
 
-            int pendingDirection =
-                _state.PendingDirection;
+            int pendingDirection = _state.PendingDirection;
 
             CancelDirectionChange();
             ApplyThrottle(pendingDirection);
@@ -218,18 +215,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
                 requestedAcceleration);
         }
 
-        private void ApplyLongitudinalDeceleration(
-            float deceleration,
-            float fixedDeltaTime)
+        private void ApplyLongitudinalDeceleration(float deceleration, float fixedDeltaTime)
         {
             float currentSpeed =
                 _state.CurrentForwardSpeed;
 
-            if (Mathf.Abs(currentSpeed) <=
-                StopSpeedEpsilon)
-            {
+            if (Mathf.Abs(currentSpeed) <= StopSpeedEpsilon)
                 return;
-            }
 
             float requiredAcceleration =
                 Mathf.Min(
@@ -249,6 +241,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
             _motionBody.ApplyLinearAcceleration(
                 brakingAcceleration);
         }
+
 
         private void UpdateSteering(float fixedDeltaTime)
         {
@@ -273,9 +266,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement
                 return;
             }
 
-            Vector3 up =
-                _motionBody.Rotation *
-                Vector3.up;
+            Vector3 up = _motionBody.Rotation * Vector3.up;
 
             _motionBody.ApplyAngularAcceleration(
                 up *

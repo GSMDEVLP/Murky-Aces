@@ -12,35 +12,71 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {
-public class InputInstaller : MonoInstaller
-{
-    [SerializeField] private PlayerInputSystem _playerInputSystem;
-    [SerializeField] private PlayerMovement _playerMovement;
-    [SerializeField] private UnityPlayerStationBody _stationBody;
-    [SerializeField] private PlayerLook _playerLook;
-    private PlayerInput _playerInput;
-    public override void InstallBindings()
+    public class InputInstaller : MonoInstaller
     {
-        _playerInput = GetComponent<PlayerInput>();
-        
-        Container.Bind<PlayerFacade>().FromComponentOnRoot().AsSingle();
+        [SerializeField] private PlayerInputSystem _playerInputSystem;
+        [SerializeField] private PlayerMovement _playerMovement;
+        [SerializeField] private UnityPlayerStationBody _stationBody;
+        [SerializeField] private PlayerLook _playerLook;
 
-        Container.Bind<PlayerInput>().FromInstance(_playerInput);
-        Container.Bind<InputService>().AsSingle();
-        Container.Bind<PlayerIntentBuffer>().AsSingle();
+        private PlayerInput _playerInput;
 
-        Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
-        Container.Bind<PlayerMovement>().FromInstance(_playerMovement);
-        Container.Bind<PlayerLook>().FromInstance(_playerLook);
-        Container.Bind<IPlayerStationBody>().FromInstance(_stationBody).AsSingle();
-        Container.Bind<PlayerStationCapabilities>().AsSingle();
+        public override void InstallBindings()
+        {
+            CacheComponents();
+            BindPlayerFacade();
+            BindInput();
+            BindMovementAndLook();
+            BindStation();
+            BindPhases();
+        }
 
-        Container.Bind<PlayerStationController>().AsSingle();
-        Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
+        private void CacheComponents()
+        {
+            _playerInput = GetComponent<PlayerInput>();
+        }
 
-        Container.Bind<InputPhase>().AsSingle();
-        Container.Bind<GameplayPhase>().AsSingle();
+        private void BindPlayerFacade()
+        {
+            Container.Bind<PlayerFacade>().FromComponentOnRoot().AsSingle();
+        }
+
+        private void BindInput()
+        {
+            Container.Bind<PlayerInput>().FromInstance(_playerInput);
+
+            Container.Bind<InputService>().AsSingle();
+            Container.Bind<PlayerIntentBuffer>().AsSingle();
+            Container.Bind<DrivingIntentBuffer>().AsSingle();
+            Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
+            Container.Bind<PlayerDrivingInputMode>().AsSingle();
+
+            Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
+        }
+
+        private void BindMovementAndLook()
+        {
+            Container.Bind<PlayerMovement>().FromInstance(_playerMovement);
+
+            Container.Bind<PlayerLook>().FromInstance(_playerLook);
+        }
+
+        private void BindStation()
+        {
+            Container.Bind<IPlayerStationBody>().FromInstance(_stationBody).AsSingle();
+
+            Container.Bind<PlayerStationCapabilities>().AsSingle();
+
+            Container.Bind<PlayerStationController>().AsSingle();
+
+            Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
+        }
+
+        private void BindPhases()
+        {
+            Container.Bind<InputPhase>().AsSingle();
+            Container.Bind<GameplayPhase>().AsSingle();
+        }
     }
-}
 }
 

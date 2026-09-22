@@ -1099,6 +1099,182 @@ namespace _Project.Configs.Input
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Driving"",
+            ""id"": ""7c34ea26-00e7-4e22-8c67-26e0eac387d4"",
+            ""actions"": [
+                {
+                    ""name"": ""Throttle"",
+                    ""type"": ""Value"",
+                    ""id"": ""2b2d45ba-9a47-44b3-bb07-9924ef55a85f"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Steering"",
+                    ""type"": ""Value"",
+                    ""id"": ""53f4f69c-4fe8-40bc-aac9-8845518661ec"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Brake"",
+                    ""type"": ""Button"",
+                    ""id"": ""38c2bdbc-4b29-453e-b8d5-875a46e76325"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ExitStation"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd863681-9c0f-4cf6-975f-d435f79fe1e7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""bbdad2dd-49fa-420b-9457-8bde0c7a131a"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""d9e24492-16b3-40ff-9d34-6a3380ab2ee2"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""309043f4-076c-4e22-8998-3a0d9daea29c"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8789c51b-1803-4e92-819d-95263c0898ac"",
+                    ""path"": ""<Gamepad>/leftStick/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""e154f9c5-9e4e-4bb1-a59b-9877a3f8f030"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steering"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""6eff78d7-5537-4a86-9e76-933855610777"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Steering"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""ab2f3704-9b03-45e4-9cd6-a1833498ab88"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Steering"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""90d18674-4ce8-42f4-bc50-753a5a520671"",
+                    ""path"": ""<Gamepad>/leftStick/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Steering"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""553c52f5-9836-4d51-a73e-b2edba3cea98"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""601b2f32-0136-4ac2-90f0-5343c1ed18a8"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e4cddf51-6c7a-42ea-8b90-95959096e01b"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ExitStation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da205827-91f5-49ef-b586-009ab9e3c02e"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""ExitStation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1188,12 +1364,19 @@ namespace _Project.Configs.Input
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
             m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
             m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+            // Driving
+            m_Driving = asset.FindActionMap("Driving", throwIfNotFound: true);
+            m_Driving_Throttle = m_Driving.FindAction("Throttle", throwIfNotFound: true);
+            m_Driving_Steering = m_Driving.FindAction("Steering", throwIfNotFound: true);
+            m_Driving_Brake = m_Driving.FindAction("Brake", throwIfNotFound: true);
+            m_Driving_ExitStation = m_Driving.FindAction("ExitStation", throwIfNotFound: true);
         }
 
         ~@InputSystem_Actions()
         {
             UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Player.Disable() has not been called.");
             UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, InputSystem_Actions.UI.Disable() has not been called.");
+            UnityEngine.Debug.Assert(!m_Driving.enabled, "This will cause a leak and performance issues, InputSystem_Actions.Driving.Disable() has not been called.");
         }
 
         /// <summary>
@@ -1655,6 +1838,135 @@ namespace _Project.Configs.Input
         /// Provides a new <see cref="UIActions" /> instance referencing this action map.
         /// </summary>
         public UIActions @UI => new UIActions(this);
+
+        // Driving
+        private readonly InputActionMap m_Driving;
+        private List<IDrivingActions> m_DrivingActionsCallbackInterfaces = new List<IDrivingActions>();
+        private readonly InputAction m_Driving_Throttle;
+        private readonly InputAction m_Driving_Steering;
+        private readonly InputAction m_Driving_Brake;
+        private readonly InputAction m_Driving_ExitStation;
+        /// <summary>
+        /// Provides access to input actions defined in input action map "Driving".
+        /// </summary>
+        public struct DrivingActions
+        {
+            private @InputSystem_Actions m_Wrapper;
+
+            /// <summary>
+            /// Construct a new instance of the input action map wrapper class.
+            /// </summary>
+            public DrivingActions(@InputSystem_Actions wrapper) { m_Wrapper = wrapper; }
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/Throttle".
+            /// </summary>
+            public InputAction @Throttle => m_Wrapper.m_Driving_Throttle;
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/Steering".
+            /// </summary>
+            public InputAction @Steering => m_Wrapper.m_Driving_Steering;
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/Brake".
+            /// </summary>
+            public InputAction @Brake => m_Wrapper.m_Driving_Brake;
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/ExitStation".
+            /// </summary>
+            public InputAction @ExitStation => m_Wrapper.m_Driving_ExitStation;
+            /// <summary>
+            /// Provides access to the underlying input action map instance.
+            /// </summary>
+            public InputActionMap Get() { return m_Wrapper.m_Driving; }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+            public void Enable() { Get().Enable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+            public void Disable() { Get().Disable(); }
+            /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+            public bool enabled => Get().enabled;
+            /// <summary>
+            /// Implicitly converts an <see ref="DrivingActions" /> to an <see ref="InputActionMap" /> instance.
+            /// </summary>
+            public static implicit operator InputActionMap(DrivingActions set) { return set.Get(); }
+            /// <summary>
+            /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <param name="instance">Callback instance.</param>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+            /// </remarks>
+            /// <seealso cref="DrivingActions" />
+            public void AddCallbacks(IDrivingActions instance)
+            {
+                if (instance == null || m_Wrapper.m_DrivingActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_DrivingActionsCallbackInterfaces.Add(instance);
+                @Throttle.started += instance.OnThrottle;
+                @Throttle.performed += instance.OnThrottle;
+                @Throttle.canceled += instance.OnThrottle;
+                @Steering.started += instance.OnSteering;
+                @Steering.performed += instance.OnSteering;
+                @Steering.canceled += instance.OnSteering;
+                @Brake.started += instance.OnBrake;
+                @Brake.performed += instance.OnBrake;
+                @Brake.canceled += instance.OnBrake;
+                @ExitStation.started += instance.OnExitStation;
+                @ExitStation.performed += instance.OnExitStation;
+                @ExitStation.canceled += instance.OnExitStation;
+            }
+
+            /// <summary>
+            /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+            /// </summary>
+            /// <remarks>
+            /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+            /// </remarks>
+            /// <seealso cref="DrivingActions" />
+            private void UnregisterCallbacks(IDrivingActions instance)
+            {
+                @Throttle.started -= instance.OnThrottle;
+                @Throttle.performed -= instance.OnThrottle;
+                @Throttle.canceled -= instance.OnThrottle;
+                @Steering.started -= instance.OnSteering;
+                @Steering.performed -= instance.OnSteering;
+                @Steering.canceled -= instance.OnSteering;
+                @Brake.started -= instance.OnBrake;
+                @Brake.performed -= instance.OnBrake;
+                @Brake.canceled -= instance.OnBrake;
+                @ExitStation.started -= instance.OnExitStation;
+                @ExitStation.performed -= instance.OnExitStation;
+                @ExitStation.canceled -= instance.OnExitStation;
+            }
+
+            /// <summary>
+            /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="DrivingActions.UnregisterCallbacks(IDrivingActions)" />.
+            /// </summary>
+            /// <seealso cref="DrivingActions.UnregisterCallbacks(IDrivingActions)" />
+            public void RemoveCallbacks(IDrivingActions instance)
+            {
+                if (m_Wrapper.m_DrivingActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            /// <summary>
+            /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+            /// </summary>
+            /// <remarks>
+            /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+            /// </remarks>
+            /// <seealso cref="DrivingActions.AddCallbacks(IDrivingActions)" />
+            /// <seealso cref="DrivingActions.RemoveCallbacks(IDrivingActions)" />
+            /// <seealso cref="DrivingActions.UnregisterCallbacks(IDrivingActions)" />
+            public void SetCallbacks(IDrivingActions instance)
+            {
+                foreach (var item in m_Wrapper.m_DrivingActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_DrivingActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        /// <summary>
+        /// Provides a new <see cref="DrivingActions" /> instance referencing this action map.
+        /// </summary>
+        public DrivingActions @Driving => new DrivingActions(this);
         private int m_KeyboardMouseSchemeIndex = -1;
         /// <summary>
         /// Provides access to the input control scheme.
@@ -1875,6 +2187,42 @@ namespace _Project.Configs.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+        }
+        /// <summary>
+        /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Driving" which allows adding and removing callbacks.
+        /// </summary>
+        /// <seealso cref="DrivingActions.AddCallbacks(IDrivingActions)" />
+        /// <seealso cref="DrivingActions.RemoveCallbacks(IDrivingActions)" />
+        public interface IDrivingActions
+        {
+            /// <summary>
+            /// Method invoked when associated input action "Throttle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnThrottle(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Steering" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnSteering(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Brake" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnBrake(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "ExitStation" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnExitStation(InputAction.CallbackContext context);
         }
     }
 }
