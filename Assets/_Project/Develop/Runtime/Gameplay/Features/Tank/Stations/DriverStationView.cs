@@ -15,5 +15,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public Transform InteractionPoint => _interactionPoint;
 
         public bool CanEnter => _driverSeatAnchor != null && _driverCameraAnchor != null;
+        public bool CanExit => _driverExitAnchor != null;
     }
 }

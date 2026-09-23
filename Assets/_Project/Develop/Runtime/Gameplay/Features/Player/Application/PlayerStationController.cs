@@ -14,13 +14,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private readonly IPlayerStationCamera _camera;
         private readonly PlayerDrivingInputMode _drivingInputMode;
 
+
+        private Transform _seatAnchor;
+        private Transform _stationCameraAnchor;
         public bool IsInStation { get; private set; }
 
-        public PlayerStationController(
-            IPlayerStationBody body,
-            PlayerStationCapabilities capabilities,
-            IPlayerStationCamera camera,
-            PlayerDrivingInputMode drivingInputMode)
+        public PlayerStationController(IPlayerStationBody body, PlayerStationCapabilities capabilities, IPlayerStationCamera camera, PlayerDrivingInputMode drivingInputMode)
         {
             _body = body ??
                 throw new ArgumentNullException(
@@ -58,6 +57,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 return false;
             }
 
+            _seatAnchor = seatAnchor;
+            _stationCameraAnchor = cameraAnchor;
             IsInStation = true;
 
             return true;
@@ -66,29 +67,49 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         public bool TryExitStation(Transform exitAnchor)
         {
             if (IsInStation == false ||
-                exitAnchor == null)
+                exitAnchor == null ||
+                _seatAnchor == null ||
+                _stationCameraAnchor == null)
             {
                 return false;
             }
+
+            if (_body.CanDetach(exitAnchor) == false)
+                return false;
 
             if (_drivingInputMode.TryDeactivate() == false)
                 return false;
 
-            if (_body.TryDetach(exitAnchor) == false)
+            if (_camera.TryRestoreWalkingAnchor() == false)
             {
-                _drivingInputMode
-                    .TryRestoreAfterFailedExit();
+                _drivingInputMode.TryRestoreAfterFailedExit();
 
                 return false;
             }
 
-            if (_camera.TryRestoreWalkingAnchor() == false)
-                return false;
-
             if (_capabilities.TryRestore() == false)
+            {
+                _camera.TryUseStationAnchor(_stationCameraAnchor);
+
+                _drivingInputMode.TryRestoreAfterFailedExit();
+
                 return false;
+            }
+
+            if (_body.TryDetach(exitAnchor) == false)
+            {
+                _capabilities.TryDisableForStation();
+
+                _camera.TryUseStationAnchor(_stationCameraAnchor);
+
+                _drivingInputMode.TryRestoreAfterFailedExit();
+
+                return false;
+            }
 
             IsInStation = false;
+            _seatAnchor = null;
+            _stationCameraAnchor = null;
 
             return true;
         }

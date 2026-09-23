@@ -1007,16 +1007,16 @@ Player-specific `DrivingIntentBuffer` остаётся в Player subcontainer. T
 - [x] Stage 3.7 — Interaction actor and Player station capability
 - [x] Stage 3.8 — DriverStation state and Interaction
 - [x] Stage 3.9 — Camera anchor switching
-- [ ] Stage 3.10 — Driving input context — **Current**
-- [ ] Stage 3.11 — Validated exit flow
+- [x] Stage 3.10 — Driving input context
+- [ ] Stage 3.11 — Validated exit flow — **Current**
 - [ ] Stage 3.12 — Lifecycle and failure recovery
 - [ ] Stage 3.13 — Tests and acceptance scene
 
-Текущий этап: **Stage 3.10 — Driving input context**.
+Текущий этап: **Stage 3.11 — Validated exit flow**.
 
-Текущая задача: добавить `Driving` action map в существующий InputActionAsset,
-расширить текущий input pipeline через `DrivingIntentBuffer` и передавать
-нормализованный `TankDrivingInput` только занятой DriverStation.
+Текущая задача: реализовать проверку свободного места в `DriverExitAnchor` с
+учётом объёма `Player CapsuleCollider` и безопасно выполнять либо полностью
+откатывать выход из DriverStation.
 
 ## Stage 3.0 — Foundation audit
 
@@ -1549,6 +1549,12 @@ Donor reference — **Adapt**:
 
 ## Stage 3.10 — Driving input context
 
+Статус:
+
+```text
+Completed
+```
+
 Добавить `Driving` map в существующий InputActionAsset.
 
 Расширить существующий input pipeline:
@@ -1594,6 +1600,12 @@ Donor reference — **Reference**:
 ---
 
 ## Stage 3.11 — Validated exit flow
+
+Статус:
+
+```text
+Current
+```
 
 Реализовать проверку свободного места в `DriverExitAnchor`.
 

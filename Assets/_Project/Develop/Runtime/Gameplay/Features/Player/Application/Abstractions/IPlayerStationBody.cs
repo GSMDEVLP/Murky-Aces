@@ -7,6 +7,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstract
         bool IsAttached { get; }
 
         bool TryAttach(Transform seatAnchor);
+
+        bool CanDetach(Transform exitAnchor);
         bool TryDetach(Transform exitAnchor);
     }
 }

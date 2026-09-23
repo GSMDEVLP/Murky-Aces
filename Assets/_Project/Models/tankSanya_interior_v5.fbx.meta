@@ -1,0 +1,259 @@
+fileFormatVersion: 2
+guid: b080c0827d0d60c46a8b4d38b7ed82fe
+ModelImporter:
+  serializedVersion: 24501
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Ammo_Brass
+    second: {fileID: 2100000, guid: aa107f34b7d0b4a4db71b6fc6ba19816, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Controls
+    second: {fileID: 2100000, guid: 248aa810fa09295479526a5f27900c76, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Dark_Steel
+    second: {fileID: 2100000, guid: ef5fc06d628517149a2b6c19722a01b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Interior_Ivory
+    second: {fileID: 2100000, guid: 3e4ca6e076680fb4cb7c81c728c3ada3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Maintenance
+    second: {fileID: 2100000, guid: c32e7ca3e91732b448d4f21e44d90b96, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Mechanism_Red
+    second: {fileID: 2100000, guid: 6d8dda1b35a5abf47a09271e481e051f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V2_Rubber
+    second: {fileID: 2100000, guid: 23929c48a01f78945953b91078c06de4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Charcoal_Camo
+    second: {fileID: 2100000, guid: 2760cc9583d9c1647b0ac50ce63c8d82, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Oxide_Red
+    second: {fileID: 2100000, guid: 5d0d448b1826be943941f301b9e0a460, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Recess_Black
+    second: {fileID: 2100000, guid: 27a2898bc7880624589ea96688a97998, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Red_Optics
+    second: {fileID: 2100000, guid: 13b330d7fbcc6934daa0ec51fc691018, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Track_Rubber
+    second: {fileID: 2100000, guid: 242d450bf9a385f4aa281dce46652373, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V4_Worn_Steel
+    second: {fileID: 2100000, guid: 156035a06b67284479df031a7eed2362, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Amber
+    second: {fileID: 2100000, guid: b5c41a3a838a4c04fb3c211b58257530, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Cabin_Paint
+    second: {fileID: 2100000, guid: 16137daf2156465488be8a3aedd85c46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_Camera
+    second: {fileID: 2100000, guid: e04c9d116fbb64c4bb19dab54d1dc9dd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_Fuel
+    second: {fileID: 2100000, guid: 3380605ea038cbf48a0a8a7478f3cfa0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_GPS
+    second: {fileID: 2100000, guid: 1df6608c0165fd24aaf7b916789c5195, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_Radar
+    second: {fileID: 2100000, guid: 295ce67859c15944a9135581916c209b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_Radio
+    second: {fileID: 2100000, guid: af6d254723064f1448e27ff8da2ca6e1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Display_Sight
+    second: {fileID: 2100000, guid: 30eee3b1866501d4c8f4dc197ca195fe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Green_Lamp
+    second: {fileID: 2100000, guid: 46057535a3d764745aa680eaef931000, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Lettering
+    second: {fileID: 2100000, guid: 5104e18d33dcea64e9c7e6b290551c05, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Panel_Steel
+    second: {fileID: 2100000, guid: a64bf5729455d944596beec55930da04, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Red_Lamp
+    second: {fileID: 2100000, guid: 47f8dbe362b7dfb4e92670fb5cc14b9c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Red_Mechanism
+    second: {fileID: 2100000, guid: a64df5ce17c5cd84d95c5a858334ebd8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Rubber
+    second: {fileID: 2100000, guid: 3f11a9b1f23f63b4cb99dcd25cdafbfc, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Seat_Fabric
+    second: {fileID: 2100000, guid: fcf08b99538c939499b0769cb31e8f78, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: V5_Tread_Floor
+    second: {fileID: 2100000, guid: 7ec769b2b8319444babad99e55d69681, type: 2}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+    searchTexturesGlobally: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

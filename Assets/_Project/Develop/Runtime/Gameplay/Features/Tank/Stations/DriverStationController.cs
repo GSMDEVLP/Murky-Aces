@@ -7,8 +7,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
-    public sealed class DriverStationController :
-        IGameplayTickable
+    public sealed class DriverStationController : IGameplayTickable
     {
         private readonly DriverStation _station;
         private readonly DriverStationView _view;
@@ -16,10 +15,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         private IDrivingIntentSource _drivingIntentSource;
 
-        public DriverStationController(
-            DriverStation station,
-            DriverStationView view,
-            TankMovement tankMovement)
+        private ulong? _currentOccupantId;
+        private IStationOccupant _currentOccupant;
+
+        public DriverStationController(DriverStation station, DriverStationView view, TankMovement tankMovement)
         {
             _station = station ??
                 throw new ArgumentNullException(
@@ -43,19 +42,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 return false;
             }
 
-            IStationOccupant occupant =
-                actor as IStationOccupant;
+            IStationOccupant occupant = actor as IStationOccupant;
 
-            IDrivingIntentSource inputSource =
-                actor as IDrivingIntentSource;
+            IDrivingIntentSource inputSource = actor as IDrivingIntentSource;
 
             return occupant != null &&
                    inputSource != null &&
                    occupant.IsInStation == false;
         }
 
-        public bool CanContinueEnter(
-            IInteractionActor actor)
+        public bool CanContinueEnter(IInteractionActor actor)
         {
             if (actor == null ||
                 _view.CanEnter == false ||
@@ -66,19 +62,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 return false;
             }
 
-            IStationOccupant occupant =
-                actor as IStationOccupant;
+            IStationOccupant occupant = actor as IStationOccupant;
 
-            IDrivingIntentSource inputSource =
-                actor as IDrivingIntentSource;
+            IDrivingIntentSource inputSource = actor as IDrivingIntentSource;
 
             return occupant != null &&
                    inputSource != null &&
                    occupant.IsInStation == false;
         }
 
-        public bool TryBeginEnter(
-            IInteractionActor actor)
+        public bool TryBeginEnter(IInteractionActor actor)
         {
             if (CanBeginEnter(actor) == false)
                 return false;
@@ -86,17 +79,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             return _station.TryBeginEnter(actor.Id);
         }
 
-        public bool TryCompleteEnter(
-            IInteractionActor actor)
+        public bool TryCompleteEnter(IInteractionActor actor)
         {
             if (IsEnteringActor(actor) == false)
                 return false;
 
-            IStationOccupant occupant =
-                actor as IStationOccupant;
+            IStationOccupant occupant = actor as IStationOccupant;
 
-            IDrivingIntentSource inputSource =
-                actor as IDrivingIntentSource;
+            IDrivingIntentSource inputSource = actor as IDrivingIntentSource;
 
             if (occupant == null ||
                 inputSource == null ||
@@ -112,7 +102,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
             if (_station.TryCompleteEnter(actor.Id))
             {
+                _currentOccupantId = actor.Id;
+                _currentOccupant = occupant;
                 _drivingIntentSource = inputSource;
+
                 return true;
             }
 
@@ -123,14 +116,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             return false;
         }
 
-        public bool TryCancelEnter(
-            IInteractionActor actor)
+        public bool TryCancelEnter(IInteractionActor actor)
         {
             if (actor == null)
                 return false;
 
-            bool wasCancelled =
-                _station.TryCancelEnter(actor.Id);
+            bool wasCancelled = _station.TryCancelEnter(actor.Id);
 
             if (wasCancelled)
                 ClearInput();
@@ -140,10 +131,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         public void Tick(float deltaTime)
         {
-            if (_station.IsOccupied == false ||
-                _drivingIntentSource == null)
+            if (HasActiveOccupant() == false)
             {
                 ClearInput();
+                return;
+            }
+
+            if (_drivingIntentSource
+                .ConsumeExitRequest())
+            {
+                TryExitCurrentOccupant();
                 return;
             }
 
@@ -160,13 +157,76 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             _tankMovement.SetInput(input);
         }
 
+        private bool HasActiveOccupant()
+        {
+            return _currentOccupantId.HasValue &&
+                _currentOccupant != null &&
+                _drivingIntentSource != null &&
+                _station.IsOccupiedBy(
+                    _currentOccupantId.Value);
+        }
+
+        private bool TryExitCurrentOccupant()
+        {
+            if (HasActiveOccupant() == false ||
+                _view.CanExit == false)
+            {
+                return false;
+            }
+
+            ulong occupantId = _currentOccupantId.Value;
+
+            if (_station.TryBeginExit(occupantId) == false)
+            {
+                return false;
+            }
+
+            ClearInput();
+
+            if (_currentOccupant.TryExitStation(_view.DriverExitAnchor) == false)
+            {
+                if (_station.TryCancelExit(occupantId) == false)
+                {
+                    throw new InvalidOperationException(
+                        "DriverStation failed to rollback " +
+                        "a rejected exit.");
+                }
+
+                return false;
+            }
+
+            if (_station.TryCompleteExit(occupantId) == false)
+            {
+                bool playerRolledBack = _currentOccupant.TryEnterStation(_view.DriverSeatAnchor, _view.DriverCameraAnchor);
+
+                bool stationRolledBack = _station.TryCancelExit(occupantId);
+
+                if (playerRolledBack == false || stationRolledBack == false)
+                {
+                    throw new InvalidOperationException("DriverStation exit rollback failed.");
+                }
+                return false;
+            }
+
+            ClearOccupant();
+
+            return true;
+        }
+
+        private void ClearOccupant()
+        {
+            ClearInput();
+
+            _currentOccupantId = null;
+            _currentOccupant = null;
+            _drivingIntentSource = null;
+        }
         public void ClearInput()
         {
             _tankMovement.ClearInput();
         }
 
-        private bool IsEnteringActor(
-            IInteractionActor actor)
+        private bool IsEnteringActor(IInteractionActor actor)
         {
             return actor != null &&
                    _station.State ==
@@ -174,13 +234,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                    _station.OccupantId == actor.Id;
         }
 
-        private void RollbackPlayerEnter(
-            IStationOccupant occupant)
+        private void RollbackPlayerEnter(IStationOccupant occupant)
         {
             if (_view.DriverExitAnchor != null)
             {
-                occupant.TryExitStation(
-                    _view.DriverExitAnchor);
+                occupant.TryExitStation(_view.DriverExitAnchor);
             }
         }
     }

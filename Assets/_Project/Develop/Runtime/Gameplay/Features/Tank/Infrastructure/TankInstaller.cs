@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure.Debug;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure
