@@ -8,7 +8,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
     public sealed class CrewStationController : IGameplayTickable
     {
         private readonly CrewStationOccupancy _station;
-        private readonly DriverStationView  _view;
+        private readonly CrewStationView  _view;
         private readonly ICrewStationRoleAdapter _roleAdapter;
         private readonly StationDisplayFeed _displayFeed;
 
@@ -17,7 +17,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         public CrewStationController(
             CrewStationOccupancy station,
-            DriverStationView  view,
+            CrewStationView  view,
             ICrewStationRoleAdapter roleAdapter,
             StationDisplayFeed displayFeed)
         {
@@ -67,12 +67,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             if (CanContinueEnter(actor) == false)
                 return false;
 
-            IStationOccupant occupant =
-                (IStationOccupant)actor;
+            IStationOccupant occupant = (IStationOccupant)actor;
 
             if (occupant.TryEnterStation(
-                    _view.DriverSeatAnchor,
-                    _view.DriverCameraAnchor,
+                    _view.SeatAnchor,
+                    _view.CameraAnchor,
                     _view.PanelRoot) == false)
             {
                 return CancelFailedEnter(actor.Id);
@@ -155,7 +154,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             _roleAdapter.ClearOutput();
 
             if (_currentOccupant.TryExitStation(
-                    _view.DriverExitAnchor) == false)
+                    _view.ExitAnchor) == false)
             {
                 RestoreOccupiedState(occupantId);
                 return false;
@@ -220,7 +219,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
             bool occupantRolledBack =
                 occupant.TryExitStation(
-                    _view.DriverExitAnchor);
+                    _view.ExitAnchor);
 
             bool stationRolledBack =
                 _station.TryCancelEnter(
@@ -250,8 +249,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         {
             bool occupantRolledBack =
                 _currentOccupant.TryEnterStation(
-                    _view.DriverSeatAnchor,
-                    _view.DriverCameraAnchor,
+                    _view.SeatAnchor,
+                    _view.CameraAnchor,
                     _view.PanelRoot);
 
             bool stationRolledBack =

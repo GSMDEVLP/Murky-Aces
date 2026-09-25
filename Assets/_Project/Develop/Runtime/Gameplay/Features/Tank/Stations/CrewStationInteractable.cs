@@ -5,8 +5,9 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
-    public sealed class DriverStationInteractable : MonoBehaviour, IInteractable
+    public sealed class CrewStationInteractable : MonoBehaviour, IInteractable
     {
+        [SerializeField, Min(0.1f)] private float _holdDuration = 1f;
         [SerializeField] private InteractionPromts _prompt = InteractionPromts.Enter;
 
         private CrewStationController _controller;
@@ -19,15 +20,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         public InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
-            bool isAvailable =
-                isActiveAndEnabled &&
-                _controller != null &&
+            bool isAvailable = isActiveAndEnabled &&_controller != null &&
                 (
                     _controller.CanBeginEnter(context.Actor) ||
                     _controller.CanContinueEnter(context.Actor)
                 );
 
-            return InteractionInfo.Hold(_prompt, 1f, isAvailable);
+            return InteractionInfo.Hold(_prompt, _holdDuration, isAvailable);
         }
 
         public bool Begin(in InteractionContext context)
