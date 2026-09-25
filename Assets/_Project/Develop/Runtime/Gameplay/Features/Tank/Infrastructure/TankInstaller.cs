@@ -16,7 +16,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure
         public override void InstallBindings()
         {
             ValidateReferences();
-
+                        
             Container.Bind<TankRoot>().FromComponentOnRoot().AsSingle();
             Container.Bind<TankMovementConfig>().FromInstance(_movementConfig).AsSingle();
             Container.Bind<TankMotionState>().AsSingle();
@@ -29,8 +29,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure
             Container.Bind<DriverStationAdapter>().AsSingle();
             Container.Bind<ICrewStationRoleAdapter>().To<DriverStationAdapter>().FromResolve();
             Container.Bind<CrewStationController>().AsSingle();
-            
-            Container.Bind<CrewStationInteractable>().FromComponentInHierarchy().AsSingle().NonLazy();
+            Container.Bind<CrewStationRegistry>().AsSingle();
+
+            Container.Bind<CrewStationInteractable>().FromComponentsInHierarchy().AsCached().NonLazy();
             Container.Bind<StationDisplayFeed>().FromInstance(_driverDisplayFeed).AsSingle();
         }
 

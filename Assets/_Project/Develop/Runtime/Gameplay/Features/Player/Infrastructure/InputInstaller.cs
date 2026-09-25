@@ -49,7 +49,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<PlayerIntentBuffer>().AsSingle();
             Container.Bind<DrivingIntentBuffer>().AsSingle();
             Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
-            Container.Bind<PlayerDrivingInputMode>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerDrivingInputMode>().AsSingle();
 
             Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
         }

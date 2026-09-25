@@ -3,6 +3,7 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
@@ -40,31 +41,54 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                     nameof(interaction));
         }
 
-        public bool TryDisableForStation(IInteractionScope interactionScope)
+        public bool TryApplyForStation(StationCapabilityProfile profile, IInteractionScope interactionScope)
         {
-            if (AreDisabledForStation ||
-                interactionScope == null)
+            if (AreDisabledForStation || profile == null)
             {
                 return false;
             }
 
-            PlayerInteraction interaction =
-                _interaction.Value;
+            if (profile.UsesCockpitLook && profile.HasValidLookSettings == false)
+            {
+                return false;
+            }
+
+            if (profile.AllowsInteraction && interactionScope == null)
+            {
+                return false;
+            }
+
+            PlayerInteraction interaction = _interaction.Value;
 
             CacheState(interaction);
 
-            if (interaction.TryRestrictTargetScope(
-                    interactionScope) == false)
+            if (profile.AllowsInteraction)
             {
-                return false;
+                if (interaction.TryRestrictTargetScope(interactionScope) == false)
+                {
+                    return false;
+                }
+
+                interaction.SetGameplayEnabled(true);
+            }
+            else
+            {
+                interaction.ClearTargetScope();
+                interaction.SetGameplayEnabled(false);
             }
 
-            _movement.SetGameplayEnabled(false);
+            _movement.SetGameplayEnabled(
+                profile.BlocksLocomotion == false);
 
-            _look.EnterCockpitMode();
-            _look.SetGameplayEnabled(true);
-
-            interaction.SetGameplayEnabled(true);
+            if (profile.UsesCockpitLook)
+            {
+                _look.EnterCockpitMode(profile.YawLimits, profile.PitchLimits, profile.InitialLookAngles);
+                _look.SetGameplayEnabled(true);
+            }
+            else
+            {
+                _look.SetGameplayEnabled(false);
+            }
 
             AreDisabledForStation = true;
 

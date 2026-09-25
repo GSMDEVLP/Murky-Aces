@@ -15,6 +15,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         private IStationOccupant _currentOccupant;
         private IStationIntentSource _stationIntentSource;
 
+
+        public CrewRoleId RoleId => _view.RoleId;
+        public CrewStationState State => _station.State;
+        public bool IsOccupied => _station.IsOccupied;
+        
         public CrewStationController(
             CrewStationOccupancy station,
             CrewStationView  view,
@@ -72,7 +77,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             if (occupant.TryEnterStation(
                     _view.SeatAnchor,
                     _view.CameraAnchor,
-                    _view.PanelRoot) == false)
+                    _view.PanelRoot,
+                    _view.CapabilityProfile) == false)
             {
                 return CancelFailedEnter(actor.Id);
             }
@@ -251,20 +257,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 _currentOccupant.TryEnterStation(
                     _view.SeatAnchor,
                     _view.CameraAnchor,
-                    _view.PanelRoot);
+                    _view.PanelRoot,
+                    _view.CapabilityProfile);
 
-            bool stationRolledBack =
-                _station.TryCancelExit(
-                    occupantId);
+            bool stationRolledBack = _station.TryCancelExit(occupantId);
 
-            if (occupantRolledBack &&
-                stationRolledBack)
+            if (occupantRolledBack && stationRolledBack)
             {
                 return;
             }
 
-            throw new InvalidOperationException(
-                "Crew station exit rollback failed.");
+            throw new InvalidOperationException("Crew station exit rollback failed.");
         }
     }
 }

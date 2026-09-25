@@ -2,16 +2,17 @@ using System;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
-    public sealed class PlayerDrivingInputMode
+    public sealed class PlayerDrivingInputMode : IPlayerStationInputMode, IDrivingIntentSource
     {
         private readonly IPlayerInputContext _inputContext;
         private readonly DrivingIntentBuffer _intent;
 
-        public bool IsActive =>
-            _inputContext.IsUsingDrivingMap;
+        public StationControlContext Context => StationControlContext.Driving;
+        public bool IsActive => _inputContext.IsUsingDrivingMap;
 
         public PlayerDrivingInputMode(IPlayerInputContext inputContext, DrivingIntentBuffer intent)
         {

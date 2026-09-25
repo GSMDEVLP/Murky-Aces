@@ -1,4 +1,5 @@
 using UnityEngine;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
 {
@@ -6,7 +7,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
     {
         bool IsInStation { get; }
 
-        bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope);
+        bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope, StationCapabilityProfile capabilityProfile);
 
         bool TryExitStation(Transform exitAnchor);
     }

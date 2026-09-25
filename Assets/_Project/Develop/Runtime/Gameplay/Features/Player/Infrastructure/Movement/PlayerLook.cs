@@ -18,14 +18,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movem
         [Header("Walking Look")]
         [SerializeField] private float _maxWalkingPitch = 85f;
 
-        [Header("Cockpit Look")]
-        [SerializeField] private float _minCockpitYaw = -75f;
-        [SerializeField] private float _maxCockpitYaw = 75f;
-        [SerializeField] private float _minCockpitPitch = -35f;
-        [SerializeField] private float _maxCockpitPitch = 55f;
-
-        [SerializeField] private float _initialCockpitYaw;
-        [SerializeField] private float _initialCockpitPitch;
+        private float _minCockpitYaw;
+        private float _maxCockpitYaw;
+        private float _minCockpitPitch;
+        private float _maxCockpitPitch;
 
         private PlayerIntentBuffer _intent;
 
@@ -99,19 +95,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movem
             _body.MoveRotation(Heading);
         }
 
-        public void EnterCockpitMode()
+        public void EnterCockpitMode(Vector2 yawLimits, Vector2 pitchLimits, Vector2 initialLookAngles)
         {
+            _minCockpitYaw = yawLimits.x;
+            _maxCockpitYaw = yawLimits.y;
+
+            _minCockpitPitch = pitchLimits.x;
+            _maxCockpitPitch = pitchLimits.y;
+
             _mode = LookMode.Cockpit;
 
-            _cockpitYaw = Mathf.Clamp(
-                _initialCockpitYaw,
-                _minCockpitYaw,
-                _maxCockpitYaw);
-
-            _cockpitPitch = Mathf.Clamp(
-                _initialCockpitPitch,
-                _minCockpitPitch,
-                _maxCockpitPitch);
+            _cockpitYaw = Mathf.Clamp(initialLookAngles.x, _minCockpitYaw, _maxCockpitYaw);
+            _cockpitPitch = Mathf.Clamp(initialLookAngles.y, _minCockpitPitch, _maxCockpitPitch);
 
             ApplyCockpitRotation();
             _intent?.ClearLook();

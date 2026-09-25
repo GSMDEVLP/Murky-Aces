@@ -3,6 +3,7 @@ using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 {
@@ -19,7 +20,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         public bool IsInStation => _stationOccupant.IsInStation;
 
-        public PlayerInteractionActor(ulong id, IPickupReceiver pickupReceiver, IStationOccupant stationOccupant)
+        public PlayerInteractionActor(ulong id, IPickupReceiver pickupReceiver, IStationOccupant stationOccupant, IDrivingIntentSource drivingIntentSource)
         {
             Id = id;
 
@@ -31,11 +32,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                 ?? throw new ArgumentNullException(
                     nameof(stationOccupant));
 
-            _drivingIntentSource = stationOccupant as IDrivingIntentSource
-                ?? throw new ArgumentException(
-                    $"{nameof(stationOccupant)} must implement " +
-                    $"{nameof(IDrivingIntentSource)}.",
-                    nameof(stationOccupant));
+            _drivingIntentSource = drivingIntentSource
+                ?? throw new ArgumentNullException(
+                    nameof(drivingIntentSource));
 
             _stationIntentSource =
                 stationOccupant as IStationIntentSource
@@ -55,12 +54,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             return _pickupReceiver.TryDrop();
         }
 
-        public bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope)
+        public bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope, StationCapabilityProfile capabilityProfile)
         {
             return _stationOccupant.TryEnterStation(
                 seatAnchor,
                 cameraAnchor,
-                interactionScope);
+                interactionScope,
+                capabilityProfile);
         }
 
         public bool TryExitStation(Transform exitAnchor)

@@ -4,6 +4,7 @@ using Zenject;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using System.Collections.Generic;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank
 {
@@ -11,17 +12,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
     {
         private GameLoopRegistry _gameLoopRegistry;
         private TankMovement _tankMovement;
-        private CrewStationController  _driverStationController;
-
+        private CrewStationRegistry _stationRegistry;
+        private IReadOnlyList<CrewStationController> _stationControllers;
         private bool _isRegistered;
 
         public TankMovement Movement => _tankMovement;
 
         [Inject]
-        public void Construct(
-            GameLoopRegistry gameLoopRegistry,
-            TankMovement tankMovement,
-            CrewStationController  driverStationController)
+        public void Construct(GameLoopRegistry gameLoopRegistry, TankMovement tankMovement, CrewStationRegistry stationRegistry)
         {
             _gameLoopRegistry = gameLoopRegistry ??
                 throw new ArgumentNullException(
@@ -31,10 +29,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
                 throw new ArgumentNullException(
                     nameof(tankMovement));
 
-            _driverStationController =
-                driverStationController ??
+            _stationRegistry = stationRegistry ??
                 throw new ArgumentNullException(
-                    nameof(driverStationController));
+                    nameof(stationRegistry));
+
+            _stationControllers = _stationRegistry.Controllers;
+            if (_stationControllers.Count == 0)
+            {
+                throw new ArgumentException(
+                    "At least one crew station controller is required.",
+                    nameof(stationRegistry));
+            }
 
             TryRegister();
         }
@@ -59,22 +64,27 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             if (_isRegistered)
                 return;
 
-            if (isActiveAndEnabled == false)
-                return;
-
-            if (_gameLoopRegistry == null ||
-                _tankMovement == null ||
-                _driverStationController == null)
+            if (_gameLoopRegistry == null || _tankMovement == null || _stationRegistry  == null)
             {
                 return;
             }
 
-            _gameLoopRegistry.RegisterGameplay(
-                _driverStationController);
+            for (int i = 0; i < _stationControllers.Count; i++)
+            {
+                if (_stationControllers[i] == null)
+                {
+                    throw new InvalidOperationException(
+                        "Crew station controller cannot be null.");
+                }
+            }
 
-            _gameLoopRegistry.RegisterFixedGameplay(
-                _tankMovement);
+            for (int i = 0; i < _stationControllers.Count; i++)
+            {
+                _gameLoopRegistry.RegisterGameplay(
+                    _stationControllers[i]);
+            }
 
+            _gameLoopRegistry.RegisterFixedGameplay(_tankMovement);
             _isRegistered = true;
         }
 
@@ -83,14 +93,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             if (_isRegistered == false)
                 return;
 
-            _driverStationController.ClearOutput();
+            for (int i = 0; i < _stationControllers.Count; i++)
+            {
+                CrewStationController controller =
+                    _stationControllers[i];
 
-            _gameLoopRegistry.UnregisterGameplay(
-                _driverStationController);
+                if (controller == null)
+                    continue;
 
-            _gameLoopRegistry.UnregisterFixedGameplay(
-                _tankMovement);
+                controller.ClearOutput();
+                _gameLoopRegistry.UnregisterGameplay(controller);
+            }
 
+            _gameLoopRegistry.UnregisterFixedGameplay(_tankMovement);
             _isRegistered = false;
         }
     }
