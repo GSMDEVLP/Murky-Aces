@@ -7,19 +7,26 @@ using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
-    public sealed class PlayerStationController : IStationOccupant, IDrivingIntentSource
+    public sealed class PlayerStationController : IStationOccupant, IDrivingIntentSource, IStationIntentSource
     {
         private readonly IPlayerStationBody _body;
         private readonly PlayerStationCapabilities _capabilities;
-        private readonly IPlayerStationCamera _camera;
         private readonly PlayerDrivingInputMode _drivingInputMode;
-
+        private IInteractionScope _stationInteractionScope;
 
         private Transform _seatAnchor;
         private Transform _stationCameraAnchor;
-        public bool IsInStation { get; private set; }
 
-        public PlayerStationController(IPlayerStationBody body, PlayerStationCapabilities capabilities, IPlayerStationCamera camera, PlayerDrivingInputMode drivingInputMode)
+        public bool IsInStation
+        {
+            get;
+            private set;
+        }
+
+        public PlayerStationController(
+            IPlayerStationBody body,
+            PlayerStationCapabilities capabilities,
+            PlayerDrivingInputMode drivingInputMode)
         {
             _body = body ??
                 throw new ArgumentNullException(
@@ -29,24 +36,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 throw new ArgumentNullException(
                     nameof(capabilities));
 
-            _camera = camera ??
-                throw new ArgumentNullException(
-                    nameof(camera));
-
             _drivingInputMode = drivingInputMode ??
                 throw new ArgumentNullException(
                     nameof(drivingInputMode));
         }
 
-        public bool TryEnterStation(Transform seatAnchor, Transform cameraAnchor)
+        public bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope)
         {
-            if (CanEnter(seatAnchor, cameraAnchor) == false)
+            if (CanEnter(seatAnchor,cameraAnchor,interactionScope) == false)
             {
                 return false;
             }
 
-            if (TryPrepareStationMode(
-                    cameraAnchor) == false)
+            if (TryPrepareStationMode(interactionScope) == false)
             {
                 return false;
             }
@@ -59,6 +61,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
             _seatAnchor = seatAnchor;
             _stationCameraAnchor = cameraAnchor;
+            _stationInteractionScope = interactionScope;
             IsInStation = true;
 
             return true;
@@ -66,7 +69,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public bool TryExitStation(Transform exitAnchor)
         {
-            if (IsInStation == false ||
+            if (_stationInteractionScope == null || 
+                IsInStation == false ||
                 exitAnchor == null ||
                 _seatAnchor == null ||
                 _stationCameraAnchor == null)
@@ -80,27 +84,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             if (_drivingInputMode.TryDeactivate() == false)
                 return false;
 
-            if (_camera.TryRestoreWalkingAnchor() == false)
-            {
-                _drivingInputMode.TryRestoreAfterFailedExit();
-
-                return false;
-            }
-
             if (_capabilities.TryRestore() == false)
             {
-                _camera.TryUseStationAnchor(_stationCameraAnchor);
-
-                _drivingInputMode.TryRestoreAfterFailedExit();
+                _drivingInputMode
+                    .TryRestoreAfterFailedExit();
 
                 return false;
             }
 
             if (_body.TryDetach(exitAnchor) == false)
             {
-                _capabilities.TryDisableForStation();
-
-                _camera.TryUseStationAnchor(_stationCameraAnchor);
+                _capabilities.TryDisableForStation(_stationInteractionScope);
 
                 _drivingInputMode.TryRestoreAfterFailedExit();
 
@@ -110,46 +104,51 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             IsInStation = false;
             _seatAnchor = null;
             _stationCameraAnchor = null;
+            _stationInteractionScope = null;
 
             return true;
         }
+
         public DrivingIntentSnapshot ReadDrivingIntent()
         {
             if (IsInStation == false)
                 return DrivingIntentSnapshot.Neutral;
 
-            return _drivingInputMode.ReadDrivingIntent();
+            return _drivingInputMode
+                .ReadDrivingIntent();
         }
 
         public bool ConsumeExitRequest()
         {
             return IsInStation &&
-                _drivingInputMode.ConsumeExitRequest();
+                   _drivingInputMode
+                       .ConsumeExitRequest();
         }
 
-        private bool CanEnter(Transform seatAnchor, Transform cameraAnchor)
+        private bool CanEnter(
+            Transform seatAnchor,
+            Transform cameraAnchor,
+            IInteractionScope interactionScope)
         {
             return IsInStation == false &&
-                   seatAnchor != null &&
-                   _camera.CanUseAnchor(cameraAnchor);
+                _body.IsAttached == false &&
+                seatAnchor != null &&
+                cameraAnchor != null &&
+                interactionScope != null;
         }
 
-        private bool TryPrepareStationMode(Transform cameraAnchor)
+        private bool TryPrepareStationMode(
+            IInteractionScope interactionScope)
         {
-            if (_capabilities.TryDisableForStation() == false)
-                return false;
-
-            if (_camera.TryUseStationAnchor(
-                    cameraAnchor) == false)
+            if (_capabilities.TryDisableForStation(
+                    interactionScope) == false)
             {
-                _capabilities.TryRestore();
                 return false;
             }
 
             if (_drivingInputMode.TryActivate())
                 return true;
 
-            _camera.TryRestoreWalkingAnchor();
             _capabilities.TryRestore();
 
             return false;
@@ -158,7 +157,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private void RollbackStationMode()
         {
             _drivingInputMode.TryDeactivate();
-            _camera.TryRestoreWalkingAnchor();
             _capabilities.TryRestore();
         }
     }

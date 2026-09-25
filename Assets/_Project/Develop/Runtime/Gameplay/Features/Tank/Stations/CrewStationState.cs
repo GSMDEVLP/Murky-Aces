@@ -1,6 +1,6 @@
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
-    public enum DriverStationState
+    public enum CrewStationState
     {
         Free,
         Entering,

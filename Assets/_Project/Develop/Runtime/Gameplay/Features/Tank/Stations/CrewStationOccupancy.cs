@@ -1,46 +1,48 @@
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
-    public sealed class DriverStation
+    public sealed class CrewStationOccupancy
     {
-        public DriverStationState State { get; private set; } = DriverStationState.Free;
+        public CrewStationState State { get; private set; } = CrewStationState.Free;
 
         public ulong? OccupantId { get; private set; }
 
-        public bool IsFree => State == DriverStationState.Free;
+        public bool IsFree => State == CrewStationState.Free;
 
-        public bool IsOccupied => State == DriverStationState.Occupied;
+        public bool IsOccupied => State == CrewStationState.Occupied;
 
         public bool IsOccupiedBy(ulong occupantId)
         {
-            return State == DriverStationState.Occupied &&
+            return State == CrewStationState.Occupied &&
                    OccupantId == occupantId;
         }
 
         public bool TryBeginEnter(ulong occupantId)
         {
-            if (State != DriverStationState.Free || OccupantId.HasValue)
+            if (State != CrewStationState.Free ||
+                OccupantId.HasValue)
             {
                 return false;
             }
 
-            State = DriverStationState.Entering;
+            State = CrewStationState.Entering;
             OccupantId = occupantId;
+
             return true;
         }
 
         public bool TryCompleteEnter(ulong occupantId)
         {
             return TryTransition(
-                DriverStationState.Entering,
-                DriverStationState.Occupied,
+                CrewStationState.Entering,
+                CrewStationState.Occupied,
                 occupantId);
         }
 
         public bool TryCancelEnter(ulong occupantId)
         {
             return TryTransition(
-                DriverStationState.Entering,
-                DriverStationState.Free,
+                CrewStationState.Entering,
+                CrewStationState.Free,
                 occupantId,
                 releaseOccupant: true);
         }
@@ -48,16 +50,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public bool TryBeginExit(ulong occupantId)
         {
             return TryTransition(
-                DriverStationState.Occupied,
-                DriverStationState.Exiting,
+                CrewStationState.Occupied,
+                CrewStationState.Exiting,
                 occupantId);
         }
 
         public bool TryCompleteExit(ulong occupantId)
         {
             return TryTransition(
-                DriverStationState.Exiting,
-                DriverStationState.Free,
+                CrewStationState.Exiting,
+                CrewStationState.Free,
                 occupantId,
                 releaseOccupant: true);
         }
@@ -65,19 +67,23 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public bool TryCancelExit(ulong occupantId)
         {
             return TryTransition(
-                DriverStationState.Exiting,
-                DriverStationState.Occupied,
+                CrewStationState.Exiting,
+                CrewStationState.Occupied,
                 occupantId);
         }
 
-        private bool TryTransition(DriverStationState expected, DriverStationState next, ulong occupantId, bool releaseOccupant = false)
+        private bool TryTransition(
+            CrewStationState expectedState,
+            CrewStationState nextState,
+            ulong occupantId,
+            bool releaseOccupant = false)
         {
-            if (State != expected ||OccupantId != occupantId)
+            if (State != expectedState || OccupantId != occupantId)
             {
                 return false;
             }
 
-            State = next;
+            State = nextState;
 
             if (releaseOccupant)
                 OccupantId = null;

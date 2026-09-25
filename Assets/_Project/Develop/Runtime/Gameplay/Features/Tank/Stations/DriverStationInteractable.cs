@@ -9,10 +9,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
     {
         [SerializeField] private InteractionPromts _prompt = InteractionPromts.Enter;
 
-        private DriverStationController _controller;
+        private CrewStationController _controller;
 
         [Inject]
-        public void Construct(DriverStationController controller)
+        public void Construct(CrewStationController  controller)
         {
             _controller = controller;
         }

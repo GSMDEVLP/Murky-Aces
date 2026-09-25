@@ -5,7 +5,6 @@ using _Project.Develop.Runtime.Gameplay.Presentation;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Infrastructure
 {
@@ -24,7 +23,7 @@ namespace _Project.Develop.Runtime.Gameplay.Infrastructure
                 .FromSubContainerResolve()
                 .ByNewContextPrefab(_playerPrefab);
             Container.Bind<GameplayCameraRig>().FromInstance(_gameplayCameraRig).AsSingle();
-            Container.Bind<IPlayerStationCamera>().FromInstance(_gameplayCameraRig).AsSingle();
+            
         }
 
         private void ValidateReferences()

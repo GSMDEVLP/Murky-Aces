@@ -26,15 +26,11 @@ public sealed class PlayerSpawnBootstrap : MonoBehaviour
         Transform point = _playerSpawnPoints[0];
         PlayerFacade player = _playerSpawner.Spawn(point.position, point.rotation);
 
-        if (!_cameraRig.TryBindWalkingAnchor(player.CameraPivot))
+        if (!_cameraRig.TryBindPlayerCameraPivot(player.CameraPivot))
         {
-            throw new InvalidOperationException(
-                "Gameplay Camera could not bind to Player.CameraPivot.");
+            throw new InvalidOperationException("Gameplay Camera could not bind " + "to Player.CameraPivot.");
         }
         
-        _cameraRig.transform.localPosition = Vector3.zero;
-        _cameraRig.transform.localRotation = Quaternion.identity;
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         // foreach(Transform spawnPoint in _playerSpawnPoints)

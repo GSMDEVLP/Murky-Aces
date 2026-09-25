@@ -1,55 +1,30 @@
 using UnityEngine;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Presentation
 {
-    public sealed class GameplayCameraRig : MonoBehaviour, IPlayerStationCamera
+    public sealed class GameplayCameraRig : MonoBehaviour
     {
-        private Transform _walkingAnchor;
-
-        public Transform CurrentAnchor { get; private set; }
-
-        public bool TryBindWalkingAnchor(Transform anchor)
+        public Transform PlayerCameraPivot
         {
-            if (anchor == null)
-                return false;
-
-            _walkingAnchor = anchor;
-
-            return TryMoveTo(anchor);
+            get;
+            private set;
         }
 
-        public bool TryUseStationAnchor(Transform anchor)
+        public bool TryBindPlayerCameraPivot(
+            Transform cameraPivot)
         {
-            if (!CanUseAnchor(anchor))
+            if (cameraPivot == null)
                 return false;
 
-            return TryMoveTo(anchor);
-        }
+            transform.SetParent(cameraPivot, false);
 
-        public bool TryRestoreWalkingAnchor()
-        {
-            return TryMoveTo(_walkingAnchor);
-        }
-
-        private bool TryMoveTo(Transform anchor)
-        {
-            if (anchor == null)
-                return false;
-
-            transform.SetParent(anchor, false);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
             transform.localScale = Vector3.one;
 
-            CurrentAnchor = anchor;
+            PlayerCameraPivot = cameraPivot;
 
             return true;
-        }
-        public bool CanUseAnchor(Transform anchor)
-        {
-            return _walkingAnchor != null &&
-                anchor != null;
         }
     }
 }

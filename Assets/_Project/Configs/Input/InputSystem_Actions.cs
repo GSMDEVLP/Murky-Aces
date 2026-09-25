@@ -1139,6 +1139,24 @@ namespace _Project.Configs.Input
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Look"",
+                    ""type"": ""Value"",
+                    ""id"": ""83c4246b-1b8a-4649-ac06-e03b060a8d4c"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""96fb66d6-dbae-449a-8a3f-82aebcbd7af4"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -1255,7 +1273,7 @@ namespace _Project.Configs.Input
                 {
                     ""name"": """",
                     ""id"": ""e4cddf51-6c7a-42ea-8b90-95959096e01b"",
-                    ""path"": ""<Keyboard>/e"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
@@ -1271,6 +1289,39 @@ namespace _Project.Configs.Input
                     ""processors"": """",
                     ""groups"": "";Gamepad"",
                     ""action"": ""ExitStation"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e6cf8b5-006f-4509-ae88-d1682fb8a645"",
+                    ""path"": ""<Pointer>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61856eb8-07d2-4168-8b41-de6972ac2973"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7326a14-648c-424d-8b29-b6a6fc17d390"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1370,6 +1421,8 @@ namespace _Project.Configs.Input
             m_Driving_Steering = m_Driving.FindAction("Steering", throwIfNotFound: true);
             m_Driving_Brake = m_Driving.FindAction("Brake", throwIfNotFound: true);
             m_Driving_ExitStation = m_Driving.FindAction("ExitStation", throwIfNotFound: true);
+            m_Driving_Look = m_Driving.FindAction("Look", throwIfNotFound: true);
+            m_Driving_Interact = m_Driving.FindAction("Interact", throwIfNotFound: true);
         }
 
         ~@InputSystem_Actions()
@@ -1846,6 +1899,8 @@ namespace _Project.Configs.Input
         private readonly InputAction m_Driving_Steering;
         private readonly InputAction m_Driving_Brake;
         private readonly InputAction m_Driving_ExitStation;
+        private readonly InputAction m_Driving_Look;
+        private readonly InputAction m_Driving_Interact;
         /// <summary>
         /// Provides access to input actions defined in input action map "Driving".
         /// </summary>
@@ -1873,6 +1928,14 @@ namespace _Project.Configs.Input
             /// Provides access to the underlying input action "Driving/ExitStation".
             /// </summary>
             public InputAction @ExitStation => m_Wrapper.m_Driving_ExitStation;
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/Look".
+            /// </summary>
+            public InputAction @Look => m_Wrapper.m_Driving_Look;
+            /// <summary>
+            /// Provides access to the underlying input action "Driving/Interact".
+            /// </summary>
+            public InputAction @Interact => m_Wrapper.m_Driving_Interact;
             /// <summary>
             /// Provides access to the underlying input action map instance.
             /// </summary>
@@ -1911,6 +1974,12 @@ namespace _Project.Configs.Input
                 @ExitStation.started += instance.OnExitStation;
                 @ExitStation.performed += instance.OnExitStation;
                 @ExitStation.canceled += instance.OnExitStation;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
 
             /// <summary>
@@ -1934,6 +2003,12 @@ namespace _Project.Configs.Input
                 @ExitStation.started -= instance.OnExitStation;
                 @ExitStation.performed -= instance.OnExitStation;
                 @ExitStation.canceled -= instance.OnExitStation;
+                @Look.started -= instance.OnLook;
+                @Look.performed -= instance.OnLook;
+                @Look.canceled -= instance.OnLook;
+                @Interact.started -= instance.OnInteract;
+                @Interact.performed -= instance.OnInteract;
+                @Interact.canceled -= instance.OnInteract;
             }
 
             /// <summary>
@@ -2223,6 +2298,20 @@ namespace _Project.Configs.Input
             /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
             /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
             void OnExitStation(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Look" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnLook(InputAction.CallbackContext context);
+            /// <summary>
+            /// Method invoked when associated input action "Interact" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+            /// </summary>
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+            /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+            void OnInteract(InputAction.CallbackContext context);
         }
     }
 }

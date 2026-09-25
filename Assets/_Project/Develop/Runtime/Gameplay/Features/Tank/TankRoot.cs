@@ -11,7 +11,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
     {
         private GameLoopRegistry _gameLoopRegistry;
         private TankMovement _tankMovement;
-        private DriverStationController _driverStationController;
+        private CrewStationController  _driverStationController;
 
         private bool _isRegistered;
 
@@ -21,7 +21,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
         public void Construct(
             GameLoopRegistry gameLoopRegistry,
             TankMovement tankMovement,
-            DriverStationController driverStationController)
+            CrewStationController  driverStationController)
         {
             _gameLoopRegistry = gameLoopRegistry ??
                 throw new ArgumentNullException(
@@ -83,7 +83,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             if (_isRegistered == false)
                 return;
 
-            _driverStationController.ClearInput();
+            _driverStationController.ClearOutput();
 
             _gameLoopRegistry.UnregisterGameplay(
                 _driverStationController);

@@ -10,6 +10,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         private readonly PlayerIntentBuffer _intent;
         private readonly IInteractionTargetFinder _targetFinder;
         private readonly InteractionContext _context;
+        private IInteractionScope _targetScope;
 
         private HoldInteractionSession _activeHold;
 
@@ -58,6 +59,38 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                 UpdateActiveHold(deltaTime);
         }
 
+        public bool TryRestrictTargetScope(IInteractionScope scope)
+        {
+            if (scope == null)
+                return false;
+
+            if (ReferenceEquals(
+                    _targetScope,
+                    scope))
+            {
+                return true;
+            }
+
+            CancelActiveInteraction(
+                InteractionCancelReason.ContextChanged);
+
+            ClearFocus();
+            _targetScope = scope;
+
+            return true;
+        }
+
+        public void ClearTargetScope()
+        {
+            if (_targetScope == null)
+                return;
+
+            CancelActiveInteraction(
+                InteractionCancelReason.ContextChanged);
+
+            ClearFocus();
+            _targetScope = null;
+        }
         public void CancelActiveInteraction(InteractionCancelReason reason)
         {
             if (!IsHolding)
@@ -170,7 +203,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                 return;
             }
 
-            if (!_targetFinder.TryFindTarget(out IInteractable target))
+            if (!_targetFinder.TryFindTarget(_targetScope, out IInteractable target))
             {
                 ClearFocus();
                 return;

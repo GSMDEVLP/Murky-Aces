@@ -6,80 +6,209 @@ using GameLoopTickable = _Project.Develop.Runtime.Core.GameLoop.Abstractions.ITi
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement
 {
-    public sealed class PlayerLook : MonoBehaviour, GameLoopTickable, GameLoopFixedTickable
+    public sealed class PlayerLook :
+        MonoBehaviour,
+        GameLoopTickable,
+        GameLoopFixedTickable
     {
+        [Header("References")]
         [SerializeField] private Rigidbody _body;
         [SerializeField] private Transform _cameraPivot;
-        [SerializeField] private float _maxPitch = 85f;
+
+        [Header("Walking Look")]
+        [SerializeField] private float _maxWalkingPitch = 85f;
+
+        [Header("Cockpit Look")]
+        [SerializeField] private float _minCockpitYaw = -75f;
+        [SerializeField] private float _maxCockpitYaw = 75f;
+        [SerializeField] private float _minCockpitPitch = -35f;
+        [SerializeField] private float _maxCockpitPitch = 55f;
+
+        [SerializeField] private float _initialCockpitYaw;
+        [SerializeField] private float _initialCockpitPitch;
 
         private PlayerIntentBuffer _intent;
-        private float _yaw;
-        private float _pitch;
-        private bool _initialized;
+
+        private LookMode _mode = LookMode.Walking;
+
+        private float _walkingYaw;
+        private float _walkingPitch;
+
+        private float _cockpitYaw;
+        private float _cockpitPitch;
+
+        private bool _walkingInitialized;
         private bool _gameplayEnabled = true;
-        public bool IsGameplayEnabled => _gameplayEnabled;
+
+        public bool IsGameplayEnabled =>
+            _gameplayEnabled;
+
+        public bool IsCockpitMode =>
+            _mode == LookMode.Cockpit;
 
         public Quaternion Heading
         {
             get
             {
-                EnsureInitialized();
-                return Quaternion.Euler(0f, _yaw, 0f);
+                if (IsCockpitMode)
+                    return _body.rotation;
+
+                EnsureWalkingInitialized();
+
+                return Quaternion.Euler(
+                    0f,
+                    _walkingYaw,
+                    0f);
             }
         }
 
         [Inject]
-        public void Construct(PlayerIntentBuffer intent)
+        public void Construct(
+            PlayerIntentBuffer intent)
         {
             _intent = intent;
         }
 
         public void Tick(float deltaTime)
         {
-            if (!_gameplayEnabled)
+            if (_gameplayEnabled == false ||
+                _intent == null)
+            {
                 return;
-
-            EnsureInitialized();
+            }
 
             Vector2 look = _intent.LookDelta;
 
-            _yaw += look.x;
-            _pitch = Mathf.Clamp(
-                _pitch - look.y,
-                -_maxPitch,
-                _maxPitch);
+            if (IsCockpitMode)
+            {
+                TickCockpitLook(look);
+                return;
+            }
 
-            _cameraPivot.localRotation =
-                Quaternion.Euler(_pitch, 0f, 0f);
+            TickWalkingLook(look);
         }
 
         public void FixedTick(float fixedDeltaTime)
         {
-            if (!_gameplayEnabled)
+            if (_gameplayEnabled == false ||
+                IsCockpitMode)
+            {
                 return;
+            }
 
             _body.MoveRotation(Heading);
         }
 
-        public void SetGameplayEnabled(bool isEnabled)
+        public void EnterCockpitMode()
+        {
+            _mode = LookMode.Cockpit;
+
+            _cockpitYaw = Mathf.Clamp(
+                _initialCockpitYaw,
+                _minCockpitYaw,
+                _maxCockpitYaw);
+
+            _cockpitPitch = Mathf.Clamp(
+                _initialCockpitPitch,
+                _minCockpitPitch,
+                _maxCockpitPitch);
+
+            ApplyCockpitRotation();
+            _intent?.ClearLook();
+        }
+
+        public void EnterWalkingMode()
+        {
+            _mode = LookMode.Walking;
+
+            _cameraPivot.localRotation =
+                Quaternion.identity;
+
+            _walkingInitialized = false;
+            _intent?.ClearLook();
+        }
+
+        public void SetGameplayEnabled(
+            bool isEnabled)
         {
             if (_gameplayEnabled == isEnabled)
                 return;
 
             _gameplayEnabled = isEnabled;
+            _intent?.ClearLook();
 
-            if (isEnabled)
-                _initialized = false;
+            if (isEnabled &&
+                IsCockpitMode == false)
+            {
+                _walkingInitialized = false;
+            }
         }
 
-        private void EnsureInitialized()
+        private void TickWalkingLook(
+            Vector2 look)
         {
-            if (_initialized)
+            EnsureWalkingInitialized();
+
+            _walkingYaw += look.x;
+
+            _walkingPitch = Mathf.Clamp(
+                _walkingPitch - look.y,
+                -_maxWalkingPitch,
+                _maxWalkingPitch);
+
+            _cameraPivot.localRotation =
+                Quaternion.Euler(
+                    _walkingPitch,
+                    0f,
+                    0f);
+        }
+
+        private void TickCockpitLook(
+            Vector2 look)
+        {
+            _cockpitYaw = Mathf.Clamp(
+                _cockpitYaw + look.x,
+                _minCockpitYaw,
+                _maxCockpitYaw);
+
+            _cockpitPitch = Mathf.Clamp(
+                _cockpitPitch - look.y,
+                _minCockpitPitch,
+                _maxCockpitPitch);
+
+            ApplyCockpitRotation();
+        }
+
+        private void ApplyCockpitRotation()
+        {
+            _cameraPivot.localRotation =
+                Quaternion.Euler(
+                    _cockpitPitch,
+                    _cockpitYaw,
+                    0f);
+        }
+
+        private void EnsureWalkingInitialized()
+        {
+            if (_walkingInitialized)
                 return;
 
-            _yaw = _body.rotation.eulerAngles.y;
-            _pitch = Mathf.DeltaAngle(0f, _cameraPivot.localEulerAngles.x);
-            _initialized = true;
+            _walkingYaw =
+                _body.rotation.eulerAngles.y;
+
+            _walkingPitch =
+                Mathf.DeltaAngle(
+                    0f,
+                    _cameraPivot
+                        .localEulerAngles.x);
+
+            _walkingInitialized = true;
+        }
+
+        private enum LookMode
+        {
+            Walking,
+            Cockpit
         }
     }
 }

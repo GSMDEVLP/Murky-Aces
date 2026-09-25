@@ -6,11 +6,12 @@ using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 {
-    public sealed class PlayerInteractionActor :IInteractionActor, IPickupReceiver, IStationOccupant, IDrivingIntentSource
+    public sealed class PlayerInteractionActor :IInteractionActor, IPickupReceiver, IStationOccupant, IDrivingIntentSource, IStationIntentSource
     {
         private readonly IPickupReceiver _pickupReceiver;
         private readonly IStationOccupant _stationOccupant;
         private readonly IDrivingIntentSource _drivingIntentSource;
+        private readonly IStationIntentSource _stationIntentSource;
 
         public ulong Id { get; }
 
@@ -35,6 +36,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                     $"{nameof(stationOccupant)} must implement " +
                     $"{nameof(IDrivingIntentSource)}.",
                     nameof(stationOccupant));
+
+            _stationIntentSource =
+                stationOccupant as IStationIntentSource
+                ?? throw new ArgumentException(
+                    $"{nameof(stationOccupant)} must implement " +
+                    $"{nameof(IStationIntentSource)}.",
+                    nameof(stationOccupant));
         }
 
         public bool TryReceive(IInteractable item)
@@ -47,9 +55,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             return _pickupReceiver.TryDrop();
         }
 
-        public bool TryEnterStation(Transform seatAnchor, Transform cameraAnchor)
+        public bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope)
         {
-            return _stationOccupant.TryEnterStation(seatAnchor, cameraAnchor);
+            return _stationOccupant.TryEnterStation(
+                seatAnchor,
+                cameraAnchor,
+                interactionScope);
         }
 
         public bool TryExitStation(Transform exitAnchor)
@@ -63,7 +74,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         public bool ConsumeExitRequest()
         {
-            return _drivingIntentSource.ConsumeExitRequest();
+            return _stationIntentSource.ConsumeExitRequest();
         }
     }
 }

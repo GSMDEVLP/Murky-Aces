@@ -1,6 +1,7 @@
 using System;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
@@ -15,33 +16,55 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private bool _cachedLookEnabled;
         private bool _cachedInteractionEnabled;
 
-        public bool AreDisabledForStation { get; private set; }
-
-        public PlayerStationCapabilities(PlayerMovement movement, PlayerLook look, LazyInject<PlayerInteraction> interaction)
+        public bool AreDisabledForStation
         {
-            _movement = movement
-                ?? throw new ArgumentNullException(nameof(movement));
-
-            _look = look
-                ?? throw new ArgumentNullException(nameof(look));
-
-            _interaction = interaction
-                ?? throw new ArgumentNullException(nameof(interaction));
+            get;
+            private set;
         }
 
-        public bool TryDisableForStation()
+        public PlayerStationCapabilities(
+            PlayerMovement movement,
+            PlayerLook look,
+            LazyInject<PlayerInteraction> interaction)
         {
-            if (AreDisabledForStation)
+            _movement = movement ??
+                throw new ArgumentNullException(
+                    nameof(movement));
+
+            _look = look ??
+                throw new ArgumentNullException(
+                    nameof(look));
+
+            _interaction = interaction ??
+                throw new ArgumentNullException(
+                    nameof(interaction));
+        }
+
+        public bool TryDisableForStation(IInteractionScope interactionScope)
+        {
+            if (AreDisabledForStation ||
+                interactionScope == null)
+            {
                 return false;
+            }
 
             PlayerInteraction interaction =
                 _interaction.Value;
 
             CacheState(interaction);
 
-            interaction.SetGameplayEnabled(false);
+            if (interaction.TryRestrictTargetScope(
+                    interactionScope) == false)
+            {
+                return false;
+            }
+
             _movement.SetGameplayEnabled(false);
-            _look.SetGameplayEnabled(false);
+
+            _look.EnterCockpitMode();
+            _look.SetGameplayEnabled(true);
+
+            interaction.SetGameplayEnabled(true);
 
             AreDisabledForStation = true;
 
@@ -50,16 +73,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public bool TryRestore()
         {
-            if (!AreDisabledForStation)
+            if (AreDisabledForStation == false)
                 return false;
 
             _movement.SetGameplayEnabled(
                 _cachedMovementEnabled);
 
+            _look.EnterWalkingMode();
             _look.SetGameplayEnabled(
                 _cachedLookEnabled);
 
-            _interaction.Value.SetGameplayEnabled(
+            PlayerInteraction interaction =
+                _interaction.Value;
+
+            interaction.ClearTargetScope();
+
+            interaction.SetGameplayEnabled(
                 _cachedInteractionEnabled);
 
             AreDisabledForStation = false;

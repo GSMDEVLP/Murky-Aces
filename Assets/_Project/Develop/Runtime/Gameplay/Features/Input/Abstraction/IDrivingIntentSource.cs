@@ -5,7 +5,5 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions
     public interface IDrivingIntentSource
     {
         DrivingIntentSnapshot ReadDrivingIntent();
-
-        bool ConsumeExitRequest();
     }
 }
