@@ -1,6 +1,7 @@
 using System;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using UnityEngine.InputSystem;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {
@@ -8,13 +9,41 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
     {
         private const string PlayerMapName = "Player";
         private const string DrivingMapName = "Driving";
+        private const string GunnerMapName = "Gunner";
 
         private readonly PlayerInput _playerInput;
 
-        public bool IsUsingPlayerMap => IsCurrentMap(PlayerMapName);
+        public bool IsUsingPlayerMap => CurrentMap == InputMapId.Player;
 
-        public bool IsUsingDrivingMap => IsCurrentMap(DrivingMapName);
+        public bool IsUsingDrivingMap => CurrentMap == InputMapId.Driving;
 
+        public bool IsUsingGunnerMap => CurrentMap == InputMapId.Gunner;
+
+        public InputMapId CurrentMap
+        {
+            get
+            {
+                InputActionMap currentMap = _playerInput.currentActionMap;
+
+                if (currentMap == null)
+                    return InputMapId.None;
+
+                switch (currentMap.name)
+                {
+                    case PlayerMapName:
+                        return InputMapId.Player;
+
+                    case DrivingMapName:
+                        return InputMapId.Driving;
+
+                    case GunnerMapName:
+                        return InputMapId.Gunner;
+
+                    default:
+                        return InputMapId.None;
+                }
+            }
+        }
         public PlayerInputContext(PlayerInput playerInput)
         {
             _playerInput = playerInput ??
@@ -22,14 +51,37 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
                     nameof(playerInput));
         }
 
+        public bool TryUseMap(InputMapId map)
+        {
+            switch (map)
+            {
+                case InputMapId.Player:
+                    return TrySwitchMap(PlayerMapName);
+
+                case InputMapId.Driving:
+                    return TrySwitchMap(DrivingMapName);
+
+                case InputMapId.Gunner:
+                    return TrySwitchMap(GunnerMapName);
+
+                default:
+                    return false;
+            }
+        }
+
         public bool TryUsePlayerMap()
         {
-            return TrySwitchMap(PlayerMapName);
+            return TryUseMap(InputMapId.Player);
         }
 
         public bool TryUseDrivingMap()
         {
-            return TrySwitchMap(DrivingMapName);
+            return TryUseMap(InputMapId.Driving);
+        }
+
+        public bool TryUseGunnerMap()
+        {
+            return TryUseMap(InputMapId.Gunner);
         }
 
         private bool TrySwitchMap(string mapName)
@@ -52,12 +104,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             _playerInput.SwitchCurrentActionMap(mapName);
 
             return _playerInput.currentActionMap == targetMap;
-        }
-
-        private bool IsCurrentMap(string mapName)
-        {
-            InputActionMap currentMap = _playerInput.currentActionMap;
-            return currentMap != null && currentMap.name == mapName;
         }
     }
 }

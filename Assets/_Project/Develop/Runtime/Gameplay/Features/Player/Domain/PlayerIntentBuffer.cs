@@ -13,6 +13,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Domain
         public bool DropPressedThisFrame { get; private set; }
 
         private bool _jumpPending;
+        private bool _interactionSuppressed;
 
         public void SetMovement(Vector2 move, bool sprintHeld)
         {
@@ -31,9 +32,29 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Domain
 
         public void SetInteraction(bool pressedThisFrame, bool held, bool releasedThisFrame)
         {
+            if (_interactionSuppressed)
+            {
+                InteractPressedThisFrame = false;
+                InteractHeld = false;
+                InteractReleasedThisFrame = false;
+
+                if (!held)
+                    _interactionSuppressed = false;
+
+                return;
+            }
+
             InteractPressedThisFrame = pressedThisFrame;
             InteractHeld = held;
             InteractReleasedThisFrame = releasedThisFrame;
+        }
+
+        public void SuppressInteractionUntilReleased()
+        {
+            _interactionSuppressed = true;
+            InteractPressedThisFrame = false;
+            InteractHeld = false;
+            InteractReleasedThisFrame = false;
         }
 
         public void SetDrop(bool pressedThisFrame)

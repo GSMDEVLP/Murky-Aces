@@ -7,12 +7,13 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 {
-    public sealed class PlayerInteractionActor :IInteractionActor, IPickupReceiver, IStationOccupant, IDrivingIntentSource, IStationIntentSource
+    public sealed class PlayerInteractionActor :IInteractionActor, IPickupReceiver, IStationOccupant, IDrivingIntentSource, IStationIntentSource, IGunnerIntentSource
     {
         private readonly IPickupReceiver _pickupReceiver;
         private readonly IStationOccupant _stationOccupant;
         private readonly IDrivingIntentSource _drivingIntentSource;
         private readonly IStationIntentSource _stationIntentSource;
+        private readonly IGunnerIntentSource _gunnerIntentSource;
 
         public ulong Id { get; }
 
@@ -20,7 +21,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         public bool IsInStation => _stationOccupant.IsInStation;
 
-        public PlayerInteractionActor(ulong id, IPickupReceiver pickupReceiver, IStationOccupant stationOccupant, IDrivingIntentSource drivingIntentSource)
+        public PlayerInteractionActor(ulong id, IPickupReceiver pickupReceiver, IStationOccupant stationOccupant, IDrivingIntentSource drivingIntentSource, IGunnerIntentSource gunnerIntentSource)
         {
             Id = id;
 
@@ -42,6 +43,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                     $"{nameof(stationOccupant)} must implement " +
                     $"{nameof(IStationIntentSource)}.",
                     nameof(stationOccupant));
+
+            _gunnerIntentSource = gunnerIntentSource
+                ?? throw new ArgumentNullException(
+                    nameof(gunnerIntentSource));
         }
 
         public bool TryReceive(IInteractable item)
@@ -75,6 +80,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         public bool ConsumeExitRequest()
         {
             return _stationIntentSource.ConsumeExitRequest();
+        }
+
+        public GunnerIntentSnapshot ConsumeGunnerIntent()
+        {
+            return _gunnerIntentSource.ConsumeGunnerIntent();
         }
     }
 }

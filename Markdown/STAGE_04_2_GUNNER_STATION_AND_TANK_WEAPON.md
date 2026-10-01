@@ -15,24 +15,45 @@
 # 1. Статус
 
 ```text
-Proposed
+In Progress
 
-Blocked by:
-Stage 04.1 — Driver Cockpit acceptance
+Current checkpoint:
+Stage E — GunnerCamera follows the turret; station display and GunnerStation
+runtime are not connected yet
+
+Checkpoint date:
+2026-10-01
+
+Next session:
+1. Give each StationDisplayFeed its own runtime RenderTexture and bind it
+   to the station screen; check Driver regression
+2. Complete GunnerStation prefab references and register its controller
+3. Check Gunner enter → aim → display → exit in Play Mode
 ```
 
-До начала реализации GunnerStation необходимо завершить водительский cockpit:
+Manual acceptance Stage 04.1 завершён. Автоматические EditMode/PlayMode tests
+для этого acceptance flow в документе пока не зафиксированы.
+Пользователь ранее подтвердил прохождение тестов управления; после последних
+изменений GunnerCamera отдельная Play Mode проверка здесь не зафиксирована.
 
-- безопасный переход между Input Action Maps;
-- Driving Look и Interact;
-- Press/Hold-взаимодействия с панелью;
-- instance-safe RenderTexture и `StationDisplayFeed`;
-- корректное восстановление Player при disable/destroy Tank;
-- автоматические проверки и полный manual acceptance flow.
+Текущий прогресс Stage 04.2:
 
-Причина блокировки не функциональная, а архитектурная: GunnerStation должна
-стать вторым экземпляром общей Station-системы, а не копией незавершённого
-DriverStation.
+- Завершено в коде: `Gunner` Action Map, typed readers и snapshots,
+  `GunnerIntentBuffer`, `PlayerGunnerInputMode`, переключение input context;
+- завершено в коде: `TurretAimState`, `TurretMechanism`, reference modes,
+  `TurretAimConfig`, `UnityTurretRig` и регистрация gameplay/presentation
+  поворота башни в `TankRoot`;
+- завершено в коде и prefab: отдельная `GunnerCamera` под `Sensors`, её
+  позиция берётся из `Crew_Gunner_Eye`, направление — из `MuzzlePose`;
+- подготовлено в prefab: `GunnerStation`, seat/exit/interaction anchors и
+  `GunnerPanelRoot`; `GunnerStationAdapter` существует, но не подключён;
+- текущая точка остановки: `StationDisplayFeed` ещё требует назначенный
+  asset `RenderTexture` и не создаёт отдельную runtime texture; у
+  `GunnerStation` не назначен `CameraAnchor`, а `TankInstaller` создаёт
+  только Driver controller. Поэтому занять GunnerStation и увидеть её
+  камеру на `Display_Gunner` пока нельзя;
+- `FireRequested` и `ZoomHeld` доходят до Gunner intent, но выстрел, зарядка
+  и двукратный zoom ещё не подключены.
 
 ---
 
@@ -40,6 +61,9 @@ DriverStation.
 
 Создать рабочее место стрелка-наводчика, в котором Player:
 
+- входит внутрь башни через верхний люк;
+- свободно перемещается внутри башни и взаимодействует с её предметами;
+- может выбрать одно из доступных мест экипажа — Gunner или CommanderLoader;
 - занимает GunnerStation через существующую Interaction feature;
 - остаётся физически закреплённым в кресле;
 - управляет горизонтальным поворотом башни;
@@ -52,12 +76,19 @@ DriverStation.
   орудие, не покидая своего места;
 - взаимодействует с пультом, казёнником и дополнительными модулями через
   общую Interaction feature;
-- корректно покидает GunnerStation и возвращается в walking mode.
+- корректно покидает GunnerStation, оставаясь внутри башни;
+- выходит из Tank наружу только через отдельное взаимодействие с верхним люком.
 
 Целевой полный поток:
 
 ```text
-Player подходит к GunnerStation
+Player снаружи подходит к верхнему люку Tank
+        ↓
+удерживает Interact и входит внутрь башни
+        ↓
+Player переходит в свободный walking mode внутри Tank
+        ↓
+взаимодействует с GunnerStation или CommanderLoaderStation
         ↓
 удерживает Interact и занимает место
         ↓
@@ -81,7 +112,11 @@ Player нажимает Fire
         ↓
 Player выходит из станции
         ↓
-восстанавливаются walking input, look, locomotion и world interaction
+восстанавливаются walking input, look, locomotion и interaction внутри башни
+        ↓
+Player взаимодействует с верхним люком изнутри
+        ↓
+Player выходит из Tank наружу
 ```
 
 ---
@@ -99,8 +134,8 @@ Player выходит из станции
 | `Space` | Переключить режим отсчёта направления башни |
 | `ЛКМ` | Запросить выстрел |
 | `ПКМ` | Включить двукратное увеличение камеры прицела |
-| `E` | Press/Hold-взаимодействие с объектом под прицелом |
-| `F` | Покинуть GunnerStation |
+| `E` | Press/Hold-взаимодействие с объектом под прицелом, включая верхний люк |
+| `F` | Встать с GunnerStation и остаться внутри башни |
 | `TBD` | Выбросить предмет из рук в Gunner context |
 
 Mouse Look продолжает отвечать за осмотр интерьера Player, а не за движение
@@ -161,22 +196,16 @@ Turret_Yaw
 
 ## 4.3. Архитектурные ограничения текущего состояния
 
-Перед добавлением GunnerStation требуется устранить следующие зависимости:
+Общий `CrewStationView`, выбор input mode и Gunner input pipeline уже
+реализованы. Открытые зависимости перед включением GunnerStation:
 
-- `CrewStationController` всё ещё принимает `DriverStationView`;
-- `DriverStationView` содержит driver-specific имена anchors;
-- `PlayerStationController` всегда включает `PlayerDrivingInputMode`;
-- `IPlayerInputContext` знает только Player и Driving maps;
-- `PlayerInteraction` прекращает поиск цели, если руки заняты;
-- `HeldItemSlot` зависит от sandbox-класса `PickupInteractable`;
-- `TankInstaller` создаёт только одну station occupancy и один station
-  controller;
-- `TankRoot` регистрирует только DriverStation controller;
-- `StationDisplayFeed` пока не гарантирует отдельный runtime RenderTexture на
-  экземпляр Tank.
-
-Добавление GunnerStation поверх этих ограничений создаст копирование lifecycle
-и неоднозначные Zenject bindings. Поэтому сначала выполняется этап обобщения.
+- `TankInstaller` создаёт только Driver controller и occupancy;
+- `GunnerStation` ещё не имеет `CameraAnchor` и собственного
+  `StationDisplayFeed`;
+- `StationDisplayFeed` не создаёт отдельный runtime RenderTexture на
+  экземпляр станции и Tank;
+- работа с предметами в руках и переход через верхний люк относятся к
+  следующим срезам и ещё не закрыты.
 
 ---
 
@@ -367,14 +396,63 @@ CommanderLoader — одна совмещённая роль и одна Station
 Код должен получать эти значения из ScriptableObject-конфигов, а не содержать
 magic numbers.
 
+## 6.6. Вход в Tank и выход со Station
+
+Решение подтверждено:
+
+```text
+OutsideTank
+    → Interact с верхним люком
+    → InsideTank, свободное перемещение внутри башни
+    → Interact с GunnerStation или CommanderLoaderStation
+    → OccupiedStation
+    → ExitStation
+    → InsideTank
+    → Interact с верхним люком
+    → OutsideTank
+```
+
+`ExitStation` отвечает только за освобождение занятого места. Он не выводит
+Player наружу и не использует внешний hatch anchor.
+
+Вход и выход из Tank через верхний люк являются отдельной interaction-механикой
+и не входят в ответственность `CrewStationController`. Для них используются
+отдельные validated anchors внутри и снаружи Tank.
+
+Состояние «Player находится внутри Tank» независимо от station occupancy.
+Player внутри башни может не занимать ни одного места и продолжать
+взаимодействовать с сидениями, снарядами, казёнником и другими предметами.
+
+Свободно перемещающийся внутри Player должен оставаться в системе координат
+движущегося Tank. Конкретная реализация moving-frame поведения выбирается при
+реализации Tank interior и не должна смешиваться с seat attach/detach.
+
 ---
 
 # 7. Целевая схема систем
 
+Вход, свободное перемещение внутри Tank и занятие места разделены:
+
+```text
+UpperHatch interaction
+        ↓
+Tank interior enter/exit lifecycle
+        ↓
+InsideTank walking + world interaction
+        ↓
+CrewStationInteractable
+        ↓
+CrewStationController
+```
+
+`CrewStationController` не управляет люком и не определяет, находится ли
+Player внутри Tank. Верхний люк не освобождает занятую Station неявно: сначала
+Player должен встать с места.
+
 ```text
 InputSystem_Actions / Gunner map
                 ↓
-InputService
+GunnerActionsReader
                 ↓
 PlayerInputSystem
                 ↓
@@ -413,6 +491,10 @@ GunChamber.Load(shell)
 
 # 8. Этап A — завершение Stage 04.1
 
+**Статус: manual acceptance завершён.** Проверены три последовательных цикла,
+управление, cockpit look, экран, выход/восстановление и чистая Console.
+Автоматические EditMode/PlayMode tests в рамках этой проверки не зафиксированы.
+
 ## 8.1. Задачи
 
 - завершить `Interact` в Driving Action Map;
@@ -441,7 +523,14 @@ Enter → Drive → Interact → Exit
 
 # 9. Этап B — обобщение Station foundation
 
+**Статус: выполняется.** Общий lifecycle и registry уже внедрены для Driver,
+но второй независимо созданный station runtime ещё не добавлен.
+
 ## 9.1. CrewStationView
+
+**Статус: частично выполнено.** Driver-specific тип и имена устранены,
+добавлены `RoleId` и `CapabilityProfile`. Массив `DisplayFeeds[]` пока не
+реализован: текущий controller использует один `StationDisplayFeed`.
 
 `DriverStationView` преобразовать в общий `CrewStationView`.
 
@@ -462,6 +551,10 @@ RoleId
 
 ## 9.2. CrewStationInteractable
 
+**Статус: выполнено.** Общий interactable находит соответствующий controller
+через `CrewStationRegistry` и `CrewRoleId`; binding поддерживает несколько
+компонентов в иерархии Tank.
+
 `DriverStationInteractable` заменить общим компонентом:
 
 ```text
@@ -476,6 +569,10 @@ CrewStationInteractable
 
 ## 9.3. Station capability profile
 
+**Статус: выполнено для текущего Driver flow.** `PlayerStationController`
+выбирает input mode по `StationControlContext`, а параметры look, locomotion и
+interaction получает из `StationCapabilityProfile`.
+
 Профиль станции задаёт:
 
 - Player control context;
@@ -489,6 +586,11 @@ CrewStationInteractable
 активирует `PlayerDrivingInputMode`.
 
 ## 9.4. Несколько станций одного Tank
+
+**Статус: частично выполнено.** Глобальные singleton bindings station view,
+occupancy, adapter, controller и display feed удалены. `TankInstaller` создаёт
+station runtime явно через общий `CreateStation`, однако в registry пока
+передаётся только Driver controller.
 
 Текущие singleton bindings одного `CrewStationController` и одной occupancy
 должны быть заменены station-scoped созданием.
@@ -505,6 +607,10 @@ GameObjectContext. Runtime gameplay не должен использовать
 
 ## 9.5. CrewStationRegistry
 
+**Статус: выполнено.** Registry проверяет пустой список, `null` и повторяющиеся
+роли, предоставляет lookup по `CrewRoleId`, состояние occupancy и список
+controller'ов для lifecycle `TankRoot`.
+
 Добавить registry конкретного Tank:
 
 ```text
@@ -520,6 +626,9 @@ Registry нужен для:
 
 ## 9.6. Критерий завершения
 
+**Статус: не завершено.** Driver regression пройден, но критерий двух
+независимых station runtime будет закрыт после добавления GunnerStation.
+
 - DriverStation работает на новом общем foundation;
 - Tank содержит минимум два независимо создаваемых station runtime;
 - GunnerStation может быть добавлена без копирования enter/exit;
@@ -531,6 +640,14 @@ Registry нужен для:
 # 10. Этап C — Gunner input pipeline
 
 ## 10.1. Новый Action Map
+
+**Статус: выполнено на уровне input asset.** Action Map `Gunner` и
+перечисленные actions добавлены в `.inputactions`. `Aim` оформлен как один
+`2D Vector Composite` с частями W / S / A / D.
+
+Generated wrapper `InputSystem_Actions.cs` runtime-кодом не используется.
+`Generate C# Class` остаётся выключенным: readers получают action asset через
+`PlayerInput.actions` и явно кешируют только actions своей карты.
 
 Добавить Action Map `Gunner`:
 
@@ -563,7 +680,40 @@ Look                 Pointer Delta
 
 ## 10.2. Intent data
 
-Добавить:
+**Статус: реализовано в коде; сквозная проверка после подключения
+GunnerStation ещё не выполнена.**
+
+Завершено:
+
+- `InputMapId` с Player / Driving / Gunner;
+- `CommonInputSnapshot`;
+- `PlayerActionsSnapshot` и `DrivingActionsSnapshot`;
+- `PlayerActionsReader` и `DrivingActionsReader`;
+- `ICommonActionsReader`;
+- `ActiveCommonActionsReader` с проверкой пустого списка, `null` и
+  повторяющихся map id;
+- перевод `PlayerInputSystem` и `InputInstaller` на readers;
+- удаление больше не используемого `InputService`.
+
+Реализованная цепочка:
+
+```text
+GunnerActionsSnapshot
+        ↓
+GunnerActionsReader : ICommonActionsReader
+        ↓
+регистрация reader в InputInstaller
+        ↓
+GunnerIntentSnapshot / GunnerIntentBuffer
+        ↓
+IGunnerIntentSource / PlayerGunnerInputMode
+```
+
+После подключения GunnerStation проверить в Play Mode отсутствие regression:
+walking, Player Look, Interact, Drop, вход в DriverStation, Driving Look,
+Throttle / Steering / Brake, выход по F и восстановление Player map.
+
+Поля реализованного `GunnerIntentSnapshot`:
 
 ```text
 GunnerIntentSnapshot
@@ -574,7 +724,7 @@ GunnerIntentSnapshot
 └── ToggleReferenceModeRequested
 ```
 
-И:
+Связанные реализованные типы:
 
 ```text
 GunnerIntentBuffer
@@ -605,6 +755,8 @@ PlayerGunnerInputMode
 
 ## 10.4. Критерий завершения
 
+**Статус: ожидает Play Mode проверку после подключения GunnerStation.**
+
 - WASD в Gunner context не двигает Player и Tank;
 - Mouse Look осматривает интерьер;
 - gunner intents доходят до role adapter;
@@ -614,6 +766,10 @@ PlayerGunnerInputMode
 ---
 
 # 11. Этап D — Turret и Gun Elevation
+
+**Статус: основные domain и Unity-компоненты собраны и зарегистрированы.**
+Наведение через занятую GunnerStation и критерии раздела 11.6 ещё не
+проверены, поскольку её controller пока не создан в `TankInstaller`.
 
 ## 11.1. Domain state
 
@@ -710,6 +866,11 @@ Adapter:
 
 # 12. Этап E — GunnerStation и камера прицела
 
+**Статус: камера следует за направлением орудия; станция и вывод на экран
+не завершены.** `GunnerCameraPresenter` зарегистрирован после применения
+углов башни. Остались runtime RenderTexture, feed на `Display_Gunner`,
+`CameraAnchor`, регистрация Gunner controller и проверка enter/exit.
+
 ## 12.1. Anchors
 
 Создать wrapper-объекты или назначить ссылки:
@@ -718,7 +879,7 @@ Adapter:
 GunnerStation
 ├── InteractionPoint
 ├── GunnerSeatAnchor
-├── GunnerExitAnchor
+├── GunnerExitAnchor (внутри башни, рядом с сидением)
 ├── GunnerViewAnchor
 ├── GunnerPanelRoot
 └── GunnerDisplayFeed
@@ -729,13 +890,21 @@ Donor references:
 ```text
 GunnerSeatAnchor ← Crew_Gunner_Seat
 GunnerViewAnchor ← Crew_Gunner_Eye
-GunnerExitAnchor ← Hatch_Exit_Gunner или отдельный validated anchor
+GunnerExitAnchor ← отдельный validated anchor внутри башни
 GunnerPanelRoot  ← wrapper над Console_Gunner / Display_Gunner
 ```
 
-`Hatch_Exit_Gunner` нельзя автоматически считать безопасной точкой выхода.
-Нужно проверить положение capsule Player и при необходимости создать отдельный
-anchor в wrapper-prefab.
+`GunnerExitAnchor` используется только для вставания с места и никогда не
+выводит Player наружу. `Hatch_Exit_Gunner` относится к отдельному lifecycle
+верхнего люка. Для входа и выхода из Tank нужны отдельные безопасные точки:
+
+```text
+TankInteriorEntryAnchor
+TankExteriorExitAnchor
+```
+
+Обе точки проверяются с учётом capsule Player. Внешний anchor не передаётся в
+`CrewStationController`.
 
 ## 12.2. Main Camera
 
@@ -780,6 +949,8 @@ zoomFactor = 2
 ## 12.5. Критерий завершения
 
 - Player занимает и покидает GunnerStation;
+- после выхода со Station Player находится внутри башни рядом с сидением;
+- выйти наружу можно только через взаимодействие с верхним люком;
 - экран показывает направление прицела;
 - изображение не содержит recursive feedback;
 - ПКМ включает ровно 2x zoom;
@@ -1187,6 +1358,13 @@ TankRoot_Prototype
 │       ├── GunnerPanelRoot
 │       └── interaction proxy colliders
 │
+├── TankInterior
+│   ├── UpperHatchInteractable
+│   ├── TankInteriorEntryAnchor
+│   ├── TankExteriorExitAnchor
+│   ├── CommanderLoaderStation
+│   └── interior interaction objects
+│
 ├── TurretRuntime
 │   ├── UnityTurretRig
 │   ├── GunnerCamera
@@ -1289,14 +1467,27 @@ sessions очищаются.
 - blocked exit оставляет Player в станции;
 - blocked exit сохраняет Gunner context;
 - успешный exit очищает gunner intents;
+- успешный exit перемещает Player к внутреннему anchor рядом с сидением;
+- station exit не переносит Player наружу;
 - активный loading Hold отменяется;
 - held shell остаётся у Player либо обрабатывается отдельным подтверждённым
   правилом;
 - camera feed отключается после завершения exit.
 
-## 20.3. Disable/destroy Tank
+## 20.3. Tank interior enter/exit
 
-- Player принудительно получает безопасное восстановление;
+- вход через верхний люк переводит Player к безопасному внутреннему anchor;
+- выход через люк доступен только Player, который находится внутри Tank и не
+  занимает Station;
+- заблокированный внешний anchor отменяет выход и оставляет Player внутри;
+- station exit и hatch exit не используют один и тот же anchor;
+- повторное взаимодействие с люком не создаёт двойной переход;
+- Player внутри корректно следует за системой координат движущегося Tank.
+
+## 20.4. Disable/destroy Tank
+
+- Player, находящийся в Station или свободно внутри Tank, принудительно
+  перемещается в безопасную внешнюю точку и получает восстановление;
 - active hold отменяется;
 - breech и shell reservations снимаются;
 - turret input очищается;
@@ -1306,7 +1497,7 @@ sessions очищаются.
 - GameLoop registrations удаляются;
 - не остаётся второго AudioListener или потерянной Main Camera.
 
-## 20.4. Disable/destroy items
+## 20.5. Disable/destroy items
 
 - уничтоженный held item освобождает HeldItemSlot;
 - уничтоженный shell во время loading отменяет session;
@@ -1373,7 +1564,11 @@ sessions очищаются.
 
 - все обязательные serialized references назначены;
 - `Turret_Yaw`, `Gun_Pitch`, `Muzzle`, `Breech_Load_Point` доступны adapter;
+- верхний люк переводит Player между внешней и внутренней точками;
+- Player может свободно находиться внутри башни, не занимая Station;
 - GunnerStation входит и выходит;
+- выход с GunnerStation оставляет Player внутри Tank;
+- внешний выход возможен только через люк;
 - display feed включается по occupancy;
 - RenderTexture не разделяется двумя Tank instances;
 - Main Camera не переподключается;
@@ -1386,11 +1581,19 @@ sessions очищаются.
 
 ## 22.1. Enter / Exit
 
-- [ ] Player входит в GunnerStation через Hold interaction.
+- [ ] Player входит внутрь Tank через Hold interaction с верхним люком.
+- [ ] После входа Player свободно перемещается внутри башни.
+- [ ] Внутри доступны как минимум GunnerStation и CommanderLoaderStation.
+- [ ] Player входит в GunnerStation через отдельный Hold interaction.
 - [ ] Player закрепляется в GunnerSeatAnchor.
 - [ ] Tank не получает случайный Fire от кнопки входа.
 - [ ] Main Camera остаётся на Player.CameraPivot.
-- [ ] ExitStation возвращает walking input и interaction.
+- [ ] ExitStation возвращает walking input и interaction внутри Tank.
+- [ ] ExitStation перемещает Player к GunnerExitAnchor рядом с сидением.
+- [ ] ExitStation не перемещает Player наружу.
+- [ ] После вставания Player может взаимодействовать со вторым сидением и
+      предметами внутри башни.
+- [ ] Выйти наружу можно только через взаимодействие с верхним люком.
 - [ ] Цикл Enter → Exit работает минимум три раза.
 
 ## 22.2. Look и экран
@@ -1465,9 +1668,17 @@ sessions очищаются.
 ```text
 Input/
 ├── InputSystem_Actions.inputactions
-├── InputSystem_Actions.cs (generated)
-├── InputService
 ├── PlayerInputSystem
+├── InputMapId
+├── CommonInputSnapshot
+├── PlayerActionsSnapshot
+├── DrivingActionsSnapshot
+├── ICommonActionsReader
+├── ActiveCommonActionsReader
+├── PlayerActionsReader
+├── DrivingActionsReader
+├── GunnerActionsSnapshot
+├── GunnerActionsReader
 ├── IGunnerIntentSource
 └── GunnerIntentSnapshot
 
@@ -1495,6 +1706,12 @@ Tank/Stations/
 ├── StationDisplayFeed
 ├── GunnerStationAdapter
 └── GunnerInteractionScope
+
+Tank/Interior/
+├── upper hatch interactable
+├── interior enter/exit lifecycle
+├── interior/exterior anchors
+└── moving-frame support for a walking Player
 
 Tank/Turret/
 ├── TurretAimConfig
@@ -1560,7 +1777,10 @@ CrewStationView
 ## Slice 3 — Empty GunnerStation
 
 ```text
-Enter / cockpit look / display / exit
+upper hatch enter
++ free movement inside Tank
++ GunnerStation enter / cockpit look / display / seat exit
++ upper hatch exit
 без turret и gun gameplay
 ```
 
@@ -1652,6 +1872,10 @@ searchlights
 Stage 04.2 считается завершённым, когда стабильно работает:
 
 ```text
+Player входит в Tank через верхний люк
+        ↓
+свободно перемещается внутри башни
+        ↓
 Player занимает GunnerStation
         ↓
 Main Camera остаётся на Player
@@ -1674,12 +1898,19 @@ GunChamber становится Empty
         ↓
 Player выходит
         ↓
-walking input, look, interaction и camera полностью восстановлены
+Player остаётся внутри башни с восстановленными walking input, look,
+interaction и camera
+        ↓
+Player взаимодействует с верхним люком и выходит наружу
 ```
 
 Дополнительные обязательные архитектурные критерии:
 
 - DriverStation и GunnerStation используют один station lifecycle;
+- station exit и Tank exit являются разными lifecycle;
+- освобождение Station всегда оставляет Player внутри Tank;
+- внешний вход и выход выполняются только через верхний люк;
+- Player может свободно находиться внутри Tank без занятой Station;
 - role-specific код ограничен adapters и конкретными gameplay features;
 - Gunner input проходит через Action Map и intent buffer;
 - Turret/Gun domain не зависит от Unity API;
@@ -1714,4 +1945,3 @@ walking input, look, interaction и camera полностью восстанов
 Как вручную проверить полный flow
 Какие TBD остались
 ```
-

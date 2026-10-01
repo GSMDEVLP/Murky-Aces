@@ -4,6 +4,7 @@ using Zenject;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
 using System.Collections.Generic;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank
@@ -15,11 +16,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
         private CrewStationRegistry _stationRegistry;
         private IReadOnlyList<CrewStationController> _stationControllers;
         private bool _isRegistered;
-
+        private TurretAimRuntime _turretRuntime;
+        private GunnerCameraPresenter _gunnerCameraPresenter;
         public TankMovement Movement => _tankMovement;
 
         [Inject]
-        public void Construct(GameLoopRegistry gameLoopRegistry, TankMovement tankMovement, CrewStationRegistry stationRegistry)
+        public void Construct(GameLoopRegistry gameLoopRegistry, 
+            TankMovement tankMovement, 
+            CrewStationRegistry stationRegistry, 
+            TurretAimRuntime turretRuntime,
+            GunnerCameraPresenter gunnerCameraPresenter)
         {
             _gameLoopRegistry = gameLoopRegistry ??
                 throw new ArgumentNullException(
@@ -33,6 +39,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
                 throw new ArgumentNullException(
                     nameof(stationRegistry));
 
+            _turretRuntime = turretRuntime ?? throw new ArgumentNullException(nameof(turretRuntime));
+            _gunnerCameraPresenter = gunnerCameraPresenter ?? throw new ArgumentNullException(nameof(gunnerCameraPresenter));
+            
             _stationControllers = _stationRegistry.Controllers;
             if (_stationControllers.Count == 0)
             {
@@ -85,6 +94,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             }
 
             _gameLoopRegistry.RegisterFixedGameplay(_tankMovement);
+            _gameLoopRegistry.RegisterGameplay(_turretRuntime);
+            _gameLoopRegistry.RegisterPresentation(_turretRuntime.Presentation);
+
+            _gameLoopRegistry.RegisterPresentation(_gunnerCameraPresenter);
             _isRegistered = true;
         }
 
@@ -106,6 +119,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             }
 
             _gameLoopRegistry.UnregisterFixedGameplay(_tankMovement);
+            _turretRuntime.ClearInput();
+            _gameLoopRegistry.UnregisterGameplay(_turretRuntime);
+            _gameLoopRegistry.UnregisterPresentation(_turretRuntime.Presentation);
+            _gameLoopRegistry.UnregisterPresentation(_gunnerCameraPresenter);
+
             _isRegistered = false;
         }
     }

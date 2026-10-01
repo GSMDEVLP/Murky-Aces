@@ -9,6 +9,8 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Readers;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {
@@ -45,12 +47,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         {
             Container.Bind<PlayerInput>().FromInstance(_playerInput);
 
-            Container.Bind<InputService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerActionsReader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<DrivingActionsReader>().AsSingle();
+            Container.Bind<ActiveCommonActionsReader>().AsSingle();
+            
             Container.Bind<PlayerIntentBuffer>().AsSingle();
             Container.Bind<DrivingIntentBuffer>().AsSingle();
             Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerDrivingInputMode>().AsSingle();
 
+            Container.BindInterfacesAndSelfTo<GunnerActionsReader>().AsSingle();
+            Container.Bind<GunnerIntentBuffer>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerGunnerInputMode>().AsSingle();
+            
             Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
         }
 
