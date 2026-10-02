@@ -72,6 +72,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         {
             return _stationOccupant.TryExitStation(exitAnchor);
         }
+
+        public bool TryForceExitStation(Transform exitAnchor)
+        {
+            return _stationOccupant.TryForceExitStation(exitAnchor);
+        }
+
+        public bool TrySetReleaseHandler(Func<bool> releaseHandler)
+        {
+            return _stationOccupant.TrySetReleaseHandler(releaseHandler);
+        }
+
+        public void ClearReleaseHandler(Func<bool> releaseHandler)
+        {
+            _stationOccupant.ClearReleaseHandler(releaseHandler);
+        }
+        
         public DrivingIntentSnapshot ReadDrivingIntent()
         {
             return _drivingIntentSource.ReadDrivingIntent();

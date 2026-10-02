@@ -15,7 +15,16 @@ namespace _Project.Develop.Runtime.Core.GameLoop.Application
         public IReadOnlyList<IGameplayTickable> GameplayRegistry => _gameplayRegistry;
         public IReadOnlyList<IFixedGameplayTickable> FixedGameplayRegistry => _fixedGameplayRegistry;
         public IReadOnlyList<IPresentationTickable> PresentationRegistry => _presentationRegistry;
-    
+
+
+        public bool IsInputRegistered(IInputTickable item) => _inputRegistry.Contains(item);
+
+        public bool IsGameplayRegistered(IGameplayTickable item) => _gameplayRegistry.Contains(item);
+
+        public bool IsFixedGameplayRegistered(IFixedGameplayTickable item) => _fixedGameplayRegistry.Contains(item); 
+
+        public bool IsPresentationRegistered(IPresentationTickable item) => _presentationRegistry.Contains(item); 
+        
         public void RegisterInput(IInputTickable inputTickable)
         {
             if (inputTickable == null)

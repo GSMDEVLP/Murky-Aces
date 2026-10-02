@@ -91,8 +91,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     deactivateRole: false);
             }
 
+            if (occupant.TrySetReleaseHandler(TryForceReleaseCurrentOccupant) == false)
+            {
+                return RollbackEnter(
+                    actor.Id,
+                    occupant,
+                    deactivateRole: true);
+            }
+
             if (_station.TryCompleteEnter(actor.Id) == false)
             {
+                occupant.ClearReleaseHandler(TryForceReleaseCurrentOccupant);
                 return RollbackEnter(
                     actor.Id,
                     occupant,
@@ -143,7 +152,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             _roleAdapter.ClearOutput();
         }
 
-        private bool TryExitCurrentOccupant()
+        private bool TryExitCurrentOccupant(bool force = false)
         {
             if (HasActiveOccupant() == false ||
                 _view.CanExit == false)
@@ -151,16 +160,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 return false;
             }
 
-            ulong occupantId =
-                _station.OccupantId.Value;
+            ulong occupantId = _station.OccupantId.Value;
 
             if (_station.TryBeginExit(occupantId) == false)
                 return false;
 
             _roleAdapter.ClearOutput();
 
-            if (_currentOccupant.TryExitStation(
-                    _view.ExitAnchor) == false)
+            bool exited = force
+                ? _currentOccupant.TryForceExitStation(_view.ExitAnchor)
+                : _currentOccupant.TryExitStation(_view.ExitAnchor);
+
+            if (exited == false)
             {
                 RestoreOccupiedState(occupantId);
                 return false;
@@ -171,6 +182,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 RollbackExit(occupantId);
                 return false;
             }
+
+            _currentOccupant.ClearReleaseHandler(TryForceReleaseCurrentOccupant);
             _displayFeed.Deactivate();
             _roleAdapter.Deactivate();
 
@@ -180,11 +193,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             return true;
         }
 
-        private bool CanActorUseStation(
-            IInteractionActor actor)
+        private bool TryForceReleaseCurrentOccupant()
         {
-            IStationOccupant occupant =
-                actor as IStationOccupant;
+            return TryExitCurrentOccupant(force: true);
+        }
+
+        private bool CanActorUseStation(IInteractionActor actor)
+        {
+            IStationOccupant occupant = actor as IStationOccupant;
 
             return occupant != null &&
                    occupant.IsInStation == false &&
@@ -201,8 +217,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                        _station.OccupantId.Value);
         }
 
-        private bool CancelFailedEnter(
-            ulong occupantId)
+        private bool CancelFailedEnter(ulong occupantId)
         {
             _roleAdapter.ClearOutput();
 
@@ -213,26 +228,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 "Crew station failed to cancel enter.");
         }
 
-        private bool RollbackEnter(
-            ulong occupantId,
-            IStationOccupant occupant,
-            bool deactivateRole)
+        private bool RollbackEnter(ulong occupantId, IStationOccupant occupant, bool deactivateRole)
         {
             if (deactivateRole)
                 _roleAdapter.Deactivate();
             else
                 _roleAdapter.ClearOutput();
 
-            bool occupantRolledBack =
-                occupant.TryExitStation(
-                    _view.ExitAnchor);
+            bool occupantRolledBack = occupant.TryForceExitStation(_view.ExitAnchor);
 
-            bool stationRolledBack =
-                _station.TryCancelEnter(
-                    occupantId);
+            bool stationRolledBack = _station.TryCancelEnter(occupantId);
 
-            if (occupantRolledBack &&
-                stationRolledBack)
+            if (occupantRolledBack && stationRolledBack)
             {
                 return false;
             }

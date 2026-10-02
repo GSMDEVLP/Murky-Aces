@@ -106,6 +106,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8937597168217571540}
   - component: {fileID: 8695180976629660236}
+  - component: {fileID: 6225176178814401225}
   m_Layer: 0
   m_Name: GunnerPanelRoot
   m_TagString: Untagged
@@ -122,7 +123,7 @@ Transform:
   m_GameObject: {fileID: 1243427070469790738}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.816, y: 1.245, z: -0.616}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -142,6 +143,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.StationPanelRoot
   _primaryScreenRenderer: {fileID: 2932530372155805181}
   _primaryScreenMaterialIndex: 0
+--- !u!114 &6225176178814401225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1243427070469790738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d6f8c716407fd4b9681b0b4190a2e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.StationDisplayFeed
+  _camera: {fileID: 8688147544159586839}
+  _panelRoot: {fileID: 8695180976629660236}
+  _width: 1024
+  _height: 512
 --- !u!1 &1264079004347748376
 GameObject:
   m_ObjectHideFlags: 0
@@ -228,58 +245,6 @@ CapsuleCollider:
   m_Height: 11.103042
   m_Direction: 1
   m_Center: {x: 0, y: 0.19891672, z: 0.025842234}
---- !u!1 &2434406098425164549
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4954747726728231726}
-  - component: {fileID: 4582531480194602487}
-  m_Layer: 0
-  m_Name: TankInstaller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4954747726728231726
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2434406098425164549}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 31915234037634501}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4582531480194602487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2434406098425164549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fda082c8d35630438cabfae1b729b43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Infrastructure.TankInstaller
-  _movementConfig: {fileID: 11400000, guid: 4098cb58fd586ea4bbf8302095433a5b, type: 2}
-  _turretAimConfig: {fileID: 11400000, guid: da3118e5e0df42c419dc68fbf939c615, type: 2}
-  _motionBody: {fileID: 7805367557768940300}
-  _driverStationView: {fileID: 7360064975102790226}
-  _driverDisplayFeed: {fileID: 1926421498696024605}
-  _turretRig: {fileID: 272370686522524971}
-  _gunnerCameraMount: {fileID: 7802497104735417764}
-  _gunnerEye: {fileID: 4608826946000577844}
 --- !u!1 &2594651460462906139
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,7 +517,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 4582531480194602487}
+  - {fileID: 2929709104358809222}
+  - {fileID: 2667084062409198222}
+  - {fileID: 5927647033258562642}
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
@@ -890,7 +857,7 @@ GameObject:
   - component: {fileID: 3704586840720511187}
   - component: {fileID: 8462070969039635763}
   m_Layer: 0
-  m_Name: InteractionPoint
+  m_Name: DriverInteractionPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1091,7 +1058,7 @@ Transform:
   m_GameObject: {fileID: 5006830740768033555}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.005, y: 3.168, z: 0.221}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1121,8 +1088,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5272132546027216442}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.12, y: 0.792, z: -0.87}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.1200006, y: 0.7919997, z: -0.8700003}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1137,6 +1104,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8814739088732471874}
+  - component: {fileID: 3894297480595445877}
+  - component: {fileID: 2280724420099374412}
   m_Layer: 0
   m_Name: GunnerInteractionPoint
   m_TagString: Untagged
@@ -1153,12 +1122,46 @@ Transform:
   m_GameObject: {fileID: 5340733022708598696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.12, y: 0.764, z: -0.906}
+  m_LocalPosition: {x: -1.03, y: 3.44, z: -2.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2679515355184916705}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &3894297480595445877
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5340733022708598696}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.15515874, z: 1}
+  m_Center: {x: 0, y: 0.0036730194, z: 0}
+--- !u!114 &2280724420099374412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5340733022708598696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _interactableBehaviour: {fileID: 1904784831339631429}
 --- !u!1 &5347565764133818866
 GameObject:
   m_ObjectHideFlags: 0
@@ -1168,6 +1171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2679515355184916705}
+  - component: {fileID: 1904784831339631429}
   - component: {fileID: 3187210795879794721}
   m_Layer: 0
   m_Name: GunnerStation
@@ -1189,13 +1193,28 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7750144306849997823}
+  - {fileID: 8814739088732471874}
   - {fileID: 1346768087701321538}
   - {fileID: 5984575697994278951}
-  - {fileID: 8814739088732471874}
   - {fileID: 8937597168217571540}
+  - {fileID: 7750144306849997823}
   m_Father: {fileID: 6495116284277946633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1904784831339631429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5347565764133818866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743a41ef6b2bcfb43ab7234a759c7bb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.CrewStationInteractable
+  _stationView: {fileID: 3187210795879794721}
+  _holdDuration: 1
+  _prompt: 0
 --- !u!114 &3187210795879794721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1210,7 +1229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.CrewStationView
   _seatAnchor: {fileID: 7750144306849997823}
   _exitAnchor: {fileID: 5984575697994278951}
-  _cameraAnchor: {fileID: 0}
+  _cameraAnchor: {fileID: 1346768087701321538}
   _interactionPoint: {fileID: 8814739088732471874}
   _panelRoot: {fileID: 8695180976629660236}
   _roleId: 1
@@ -1352,6 +1371,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.StationDisplayFeed
   _camera: {fileID: 3253706929761468515}
+  _panelRoot: {fileID: 2403075095894574877}
+  _width: 1024
+  _height: 512
 --- !u!1 &5744028030623648351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,6 +1502,54 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &5854986943399015870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3285051797471518356}
+  - component: {fileID: 2929709104358809222}
+  m_Layer: 0
+  m_Name: TankStationsInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3285051797471518356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854986943399015870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 31915234037634501}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2929709104358809222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5854986943399015870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bcea234a180634aa6328b4c7c1e0d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.TankStationsInstaller
+  _driverStationView: {fileID: 7360064975102790226}
+  _driverDisplayFeed: {fileID: 1926421498696024605}
+  _gunnerStationView: {fileID: 3187210795879794721}
+  _gunnerDisplayFeed: {fileID: 6225176178814401225}
 --- !u!1 &6007383649189255653
 GameObject:
   m_ObjectHideFlags: 0
@@ -1654,7 +1724,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure.UnityTurretRig
   _config: {fileID: 11400000, guid: da3118e5e0df42c419dc68fbf939c615, type: 2}
   _hull: {fileID: 1543847929294810092}
-  _turretYaw: {fileID: 5123445885514621434}
+  _turretYaw: {fileID: 1431785640196410734}
   _gunPitch: {fileID: 181854368711967445}
   _muzzle: {fileID: 8308942989723049515}
   _breechLoadPoint: {fileID: 5898445371204773452}
@@ -1777,7 +1847,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 796a3218194385446b9ee6bcec227f3b, type: 2}
+  m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1831,6 +1901,100 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &7443596254160350681
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2248183037386139393}
+  - component: {fileID: 2667084062409198222}
+  m_Layer: 0
+  m_Name: TankMovementInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2248183037386139393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443596254160350681}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 31915234037634501}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2667084062409198222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7443596254160350681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24f3906abcc04894d83f655dc94c48e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Movement.TankMovementInstaller
+  _config: {fileID: 11400000, guid: 4098cb58fd586ea4bbf8302095433a5b, type: 2}
+  _body: {fileID: 7805367557768940300}
+--- !u!1 &7494216966002258225
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6804598296747277984}
+  - component: {fileID: 5927647033258562642}
+  m_Layer: 0
+  m_Name: TankTurretInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6804598296747277984
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7494216966002258225}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 31915234037634501}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5927647033258562642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7494216966002258225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08d3f4c368c7cf1429cdfdca44c5b622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure.TankTurretInstaller
+  _aimConfig: {fileID: 11400000, guid: da3118e5e0df42c419dc68fbf939c615, type: 2}
+  _rig: {fileID: 272370686522524971}
+  _gunnerCameraMount: {fileID: 7802497104735417764}
+  _gunnerEye: {fileID: 4608826946000577844}
 --- !u!1 &8467247361920896121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1913,7 +2077,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 4954747726728231726}
+  - {fileID: 3285051797471518356}
+  - {fileID: 2248183037386139393}
+  - {fileID: 6804598296747277984}
   m_Father: {fileID: 1498560307844761635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &9050215289302758364
@@ -1977,6 +2143,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1543847929294810092}
     m_Modifications:
+    - target: {fileID: 417934039345156554, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 863413406023538245, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
       propertyPath: m_Name
       value: TankHull
@@ -1993,10 +2163,54 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 1.722
       objectReference: {fileID: 0}
+    - target: {fileID: 1719465713041203035, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1719465713041203035, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.913
+      objectReference: {fileID: 0}
+    - target: {fileID: 1719465713041203035, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.65
+      objectReference: {fileID: 0}
+    - target: {fileID: 2646645612383552430, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.6619997
+      objectReference: {fileID: 0}
+    - target: {fileID: 3443561292419302621, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4329566617914595854, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: c76ee6a580e74fa448287d6f29d4a695, type: 2}
+    - target: {fileID: 4596502172414790849, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.6619997
+      objectReference: {fileID: 0}
+    - target: {fileID: 5073807902599055812, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.6619997
+      objectReference: {fileID: 0}
+    - target: {fileID: 5530673996944732790, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967827508836007859, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 3.662
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967827508836007859, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.88
+      objectReference: {fileID: 0}
+    - target: {fileID: 5967827508836007859, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.95
+      objectReference: {fileID: 0}
     - target: {fileID: 6258930609550434479, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2037,6 +2251,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7276714631187635157, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7991181995110639926, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.298
@@ -2057,6 +2275,10 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9043346871020224084, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -2071,6 +2293,11 @@ PrefabInstance:
 --- !u!4 &181854368711967445 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 583307646560223454, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+  m_PrefabInstance: {fileID: 765120057605079563}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1431785640196410734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1819728952654712677, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
   m_PrefabInstance: {fileID: 765120057605079563}
   m_PrefabAsset: {fileID: 0}
 --- !u!23 &2932530372155805181 stripped

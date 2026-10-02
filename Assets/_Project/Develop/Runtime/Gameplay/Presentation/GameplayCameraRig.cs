@@ -26,5 +26,18 @@ namespace _Project.Develop.Runtime.Gameplay.Presentation
 
             return true;
         }
+
+        public bool TryUnbindPlayerCameraPivot(Transform cameraPivot)
+        {
+            if (PlayerCameraPivot == null ||
+                PlayerCameraPivot != cameraPivot)
+            {
+                return false;
+            }
+
+            transform.SetParent(null, true);
+            PlayerCameraPivot = null;
+            return true;
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstract
 
         bool CanDetach(Transform exitAnchor);
         bool TryDetach(Transform exitAnchor);
+        bool TryForceDetach(Transform exitAnchor);
     }
 }

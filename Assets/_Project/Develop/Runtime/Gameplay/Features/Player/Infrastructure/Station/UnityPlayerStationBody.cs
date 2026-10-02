@@ -3,9 +3,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station
 {
-    public sealed class UnityPlayerStationBody :
-        MonoBehaviour,
-        IPlayerStationBody
+    public sealed class UnityPlayerStationBody : MonoBehaviour, IPlayerStationBody
     {
         [SerializeField] private Rigidbody _body;
         [SerializeField] private CapsuleCollider _collider;
@@ -278,7 +276,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
                     _body.isKinematic,
                     _body.useGravity,
                     _body.detectCollisions,
-                    _collider.enabled);
+                    _collider.enabled,
+                    _body.interpolation);
         }
 
         private void DisableWorldBody()
@@ -294,6 +293,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             _body.detectCollisions = false;
             _body.useGravity = false;
             _body.isKinematic = true;
+            _body.interpolation = RigidbodyInterpolation.None;
         }
 
         private void AttachTo(Transform seatAnchor)
@@ -327,12 +327,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
         private void RestoreState()
         {
             _body.useGravity = _snapshot.UseGravity;
-
             _body.detectCollisions = _snapshot.DetectCollisions;
-
             _collider.enabled = _snapshot.ColliderEnabled;
-
-            _body.isKinematic = _snapshot.IsKinematic;
+            _body.interpolation = _snapshot.Interpolation;            _body.isKinematic = _snapshot.IsKinematic;
 
             if (_body.isKinematic == false)
             {
@@ -352,6 +349,29 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             {
                 _collider = _body.GetComponentInChildren<CapsuleCollider>(true);
             }
+        }
+
+        public bool TryForceDetach(Transform exitAnchor)
+        {
+            if (IsAttached == false || HasRequiredReferences() == false)
+                return false;
+
+            Transform playerTransform = _body.transform;
+            playerTransform.SetParent(_snapshot.Parent, true);
+            playerTransform.localScale = _snapshot.LocalScale;
+
+            if (exitAnchor != null)
+            {
+                playerTransform.SetPositionAndRotation(
+                    exitAnchor.position,
+                    exitAnchor.rotation);
+            }
+
+            RestoreState();
+            IsAttached = false;
+            Physics.SyncTransforms();
+
+            return true;
         }
     }
 }

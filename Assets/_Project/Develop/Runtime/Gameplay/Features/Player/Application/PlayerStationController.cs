@@ -14,6 +14,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private readonly IReadOnlyList<IPlayerStationInputMode> _inputModes;
 
         private IPlayerStationInputMode _activeInputMode;
+        private Func<bool> _releaseStation;
         private IInteractionScope _stationInteractionScope;
         private StationCapabilityProfile _stationCapabilityProfile;
         private Transform _seatAnchor;
@@ -73,6 +74,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public bool TryExitStation(Transform exitAnchor)
         {
+            return TryExitStationInternal(exitAnchor, force: false);
+        }
+
+        public bool TryForceExitStation(Transform exitAnchor)
+        {
+            return TryExitStationInternal(exitAnchor, force: true);
+        }
+
+        private bool TryExitStationInternal(Transform exitAnchor, bool force)
+        {
             if (_activeInputMode == null ||
                 _stationCapabilityProfile == null ||
                 _stationInteractionScope == null ||
@@ -84,7 +95,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 return false;
             }
 
-            if (_body.CanDetach(exitAnchor) == false)
+            if (force == false && _body.CanDetach(exitAnchor) == false)
                 return false;
 
             if (_activeInputMode.TryDeactivate() == false)
@@ -96,14 +107,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 return false;
             }
 
-            if (_body.TryDetach(exitAnchor) == false)
+            bool detached = force
+                ? _body.TryForceDetach(exitAnchor)
+                : _body.TryDetach(exitAnchor);
+
+            if (detached == false)
             {
                 _capabilities.TryApplyForStation(
                     _stationCapabilityProfile,
                     _stationInteractionScope);
 
                 _activeInputMode.TryRestoreAfterFailedExit();
-
                 return false;
             }
 
@@ -201,6 +215,27 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             }
 
             return result;
+        }
+        public bool TrySetReleaseHandler(Func<bool> releaseHandler)
+        {
+            if (releaseHandler == null || _releaseStation != null)
+                return false;
+
+            _releaseStation = releaseHandler;
+            return true;
+        }
+
+        public void ClearReleaseHandler(Func<bool> releaseHandler)
+        {
+            if (_releaseStation == releaseHandler)
+                _releaseStation = null;
+        }
+
+        public bool TryReleaseStation()
+        {
+            return _releaseStation != null
+                ? _releaseStation()
+                : IsInStation == false;
         }
     }
 }

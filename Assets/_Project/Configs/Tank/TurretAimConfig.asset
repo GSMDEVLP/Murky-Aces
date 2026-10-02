@@ -16,8 +16,8 @@ MonoBehaviour:
   _elevationDegreesPerSecond: 15
   _minPitch: -10
   _maxPitch: 20
-  _yawAxis: {x: 0, y: 1, z: 0}
-  _pitchAxis: {x: 0, y: 0, z: 1}
+  _yawAxis: {x: 0, y: 0, z: 1}
+  _pitchAxis: {x: 0, y: -1, z: 0}
   _muzzleForwardAxis: {x: 1, y: 0, z: 0}
   _hullForwardAxis: {x: 0, y: 0, z: 1}
   _defaultReferenceMode: 0

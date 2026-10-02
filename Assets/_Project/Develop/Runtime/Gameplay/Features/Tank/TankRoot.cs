@@ -1,55 +1,39 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
-using System.Collections.Generic;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank
 {
     public sealed class TankRoot : MonoBehaviour
     {
         private GameLoopRegistry _gameLoopRegistry;
-        private TankMovement _tankMovement;
-        private CrewStationRegistry _stationRegistry;
-        private IReadOnlyList<CrewStationController> _stationControllers;
+        private IReadOnlyList<ITankRuntimeModule> _modules;
         private bool _isRegistered;
-        private TurretAimRuntime _turretRuntime;
-        private GunnerCameraPresenter _gunnerCameraPresenter;
-        public TankMovement Movement => _tankMovement;
 
         [Inject]
-        public void Construct(GameLoopRegistry gameLoopRegistry, 
-            TankMovement tankMovement, 
-            CrewStationRegistry stationRegistry, 
-            TurretAimRuntime turretRuntime,
-            GunnerCameraPresenter gunnerCameraPresenter)
+        public void Construct(
+            GameLoopRegistry gameLoopRegistry,
+            List<ITankRuntimeModule> modules)
         {
             _gameLoopRegistry = gameLoopRegistry ??
-                throw new ArgumentNullException(
-                    nameof(gameLoopRegistry));
+                throw new ArgumentNullException(nameof(gameLoopRegistry));
 
-            _tankMovement = tankMovement ??
-                throw new ArgumentNullException(
-                    nameof(tankMovement));
-
-            _stationRegistry = stationRegistry ??
-                throw new ArgumentNullException(
-                    nameof(stationRegistry));
-
-            _turretRuntime = turretRuntime ?? throw new ArgumentNullException(nameof(turretRuntime));
-            _gunnerCameraPresenter = gunnerCameraPresenter ?? throw new ArgumentNullException(nameof(gunnerCameraPresenter));
-            
-            _stationControllers = _stationRegistry.Controllers;
-            if (_stationControllers.Count == 0)
-            {
+            if (modules == null || modules.Count == 0)
                 throw new ArgumentException(
-                    "At least one crew station controller is required.",
-                    nameof(stationRegistry));
+                    "At least one tank runtime module is required.",
+                    nameof(modules));
+
+            for (int i = 0; i < modules.Count; i++)
+            {
+                if (modules[i] == null)
+                    throw new ArgumentException(
+                        "Tank runtime module cannot be null.",
+                        nameof(modules));
             }
 
+            _modules = modules.AsReadOnly();
             TryRegister();
         }
 
@@ -70,34 +54,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
 
         private void TryRegister()
         {
-            if (_isRegistered)
-                return;
-
-            if (_gameLoopRegistry == null || _tankMovement == null || _stationRegistry  == null)
+            if (_isRegistered ||
+                _gameLoopRegistry == null ||
+                _modules == null)
             {
                 return;
             }
 
-            for (int i = 0; i < _stationControllers.Count; i++)
-            {
-                if (_stationControllers[i] == null)
-                {
-                    throw new InvalidOperationException(
-                        "Crew station controller cannot be null.");
-                }
-            }
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].Register(_gameLoopRegistry);
 
-            for (int i = 0; i < _stationControllers.Count; i++)
-            {
-                _gameLoopRegistry.RegisterGameplay(
-                    _stationControllers[i]);
-            }
-
-            _gameLoopRegistry.RegisterFixedGameplay(_tankMovement);
-            _gameLoopRegistry.RegisterGameplay(_turretRuntime);
-            _gameLoopRegistry.RegisterPresentation(_turretRuntime.Presentation);
-
-            _gameLoopRegistry.RegisterPresentation(_gunnerCameraPresenter);
             _isRegistered = true;
         }
 
@@ -106,23 +72,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank
             if (_isRegistered == false)
                 return;
 
-            for (int i = 0; i < _stationControllers.Count; i++)
-            {
-                CrewStationController controller =
-                    _stationControllers[i];
-
-                if (controller == null)
-                    continue;
-
-                controller.ClearOutput();
-                _gameLoopRegistry.UnregisterGameplay(controller);
-            }
-
-            _gameLoopRegistry.UnregisterFixedGameplay(_tankMovement);
-            _turretRuntime.ClearInput();
-            _gameLoopRegistry.UnregisterGameplay(_turretRuntime);
-            _gameLoopRegistry.UnregisterPresentation(_turretRuntime.Presentation);
-            _gameLoopRegistry.UnregisterPresentation(_gunnerCameraPresenter);
+            for (int i = 0; i < _modules.Count; i++)
+                _modules[i].Unregister(_gameLoopRegistry);
 
             _isRegistered = false;
         }

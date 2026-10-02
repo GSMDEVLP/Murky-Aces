@@ -52,7 +52,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
                     _muzzle.position,
                     Quaternion.LookRotation(
                         direction,
-                        _muzzle.up));
+                        Vector3.up));
             }
         }
 

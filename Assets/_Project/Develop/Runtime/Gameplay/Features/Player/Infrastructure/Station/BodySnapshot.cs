@@ -11,6 +11,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
         public bool UseGravity { get; }
         public bool DetectCollisions { get; }
         public bool ColliderEnabled { get; }
+        public RigidbodyInterpolation Interpolation { get; }
 
         public PlayerStationBodySnapshot(
             Transform parent,
@@ -18,7 +19,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             bool isKinematic,
             bool useGravity,
             bool detectCollisions,
-            bool colliderEnabled)
+            bool colliderEnabled,
+            RigidbodyInterpolation interpolation)
         {
             Parent = parent;
             LocalScale = localScale;
@@ -27,6 +29,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             UseGravity = useGravity;
             DetectCollisions = detectCollisions;
             ColliderEnabled = colliderEnabled;
+            Interpolation = interpolation;
         }
     }
 
