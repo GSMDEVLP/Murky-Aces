@@ -18,23 +18,26 @@
 In Progress
 
 Current checkpoint:
-Stage E — GunnerCamera follows the turret; station display and GunnerStation
-runtime are not connected yet
+Stage E — hatch interactions and tank entry/exit flow. GunnerStation,
+turret aiming, camera display and zoom work according to the user;
+the hatch interaction model and detailed Stage E acceptance remain open
 
 Checkpoint date:
-2026-10-01
+2026-10-05
 
 Next session:
-1. Give each StationDisplayFeed its own runtime RenderTexture and bind it
-   to the station screen; check Driver regression
-2. Complete GunnerStation prefab references and register its controller
-3. Check Gunner enter → aim → display → exit in Play Mode
+1. Finish one clear interaction flow for both hatches and crew seats
+2. Check driver hatch → DriverStation and turret hatch → free interior →
+   GunnerStation; verify that the prefab has no duplicate entry paths
+3. Verify exit and re-entry in Play Mode, then finish Stage E acceptance
+4. Only after Stage E: Stage F preloaded shot from Muzzle
 ```
 
 Manual acceptance Stage 04.1 завершён. Автоматические EditMode/PlayMode tests
 для этого acceptance flow в документе пока не зафиксированы.
-Пользователь ранее подтвердил прохождение тестов управления; после последних
-изменений GunnerCamera отдельная Play Mode проверка здесь не зафиксирована.
+Пользователь сообщил о входе через люк, нахождении внутри башни,
+посадке на место стрелка, изображении внешнего мира на экране и управлении
+башней. Детальные проверки критериев разделов 11.6 и 12.5 не зафиксированы.
 
 Текущий прогресс Stage 04.2:
 
@@ -45,15 +48,44 @@ Manual acceptance Stage 04.1 завершён. Автоматические Edit
   поворота башни в `TankRoot`;
 - завершено в коде и prefab: отдельная `GunnerCamera` под `Sensors`, её
   позиция берётся из `Crew_Gunner_Eye`, направление — из `MuzzlePose`;
-- подготовлено в prefab: `GunnerStation`, seat/exit/interaction anchors и
-  `GunnerPanelRoot`; `GunnerStationAdapter` существует, но не подключён;
-- текущая точка остановки: `StationDisplayFeed` ещё требует назначенный
-  asset `RenderTexture` и не создаёт отдельную runtime texture; у
-  `GunnerStation` не назначен `CameraAnchor`, а `TankInstaller` создаёт
-  только Driver controller. Поэтому занять GunnerStation и увидеть её
-  камеру на `Display_Gunner` пока нельзя;
-- `FireRequested` и `ZoomHeld` доходят до Gunner intent, но выстрел, зарядка
-  и двукратный zoom ещё не подключены.
+- подключено в prefab и коде: `GunnerStation`, её anchors, `GunnerPanelRoot`,
+  `GunnerStationAdapter`, отдельный controller в `TankStationsInstaller` и
+  `StationDisplayFeed` с собственной runtime `RenderTexture`;
+- подтверждено пользователем: Player входит через люк, находится внутри
+  башни, садится на место стрелка, видит внешний мир на `Display_Gunner`
+  и управляет башней; позднее пользователь подтвердил работу zoom по ПКМ;
+- `ZoomHeld` подключён к FOV `GunnerCamera`; `FireRequested` доходит до Gunner
+  intent, но выстрел и зарядка ещё не подключены.
+
+Отметка текущего среза (по сообщению пользователя и проверке кода/prefab):
+
+- [x] Вход в башню через верхний люк.
+- [x] Player находится внутри башни и может занять GunnerStation.
+- [x] Изображение внешнего мира выводится на экран стрелка.
+- [x] Стрелок управляет башней с занятого места.
+- [ ] Проверены выход со станции внутрь башни и выход наружу через люк.
+- [ ] Проверены pitch, limits и оба режима отсчёта направления башни.
+- [x] Zoom по ПКМ работает по сообщению пользователя; точность 2x и сброс
+      при выходе требуют отдельной проверки.
+- [ ] Приведены к единой схеме оба люка и входы на места экипажа.
+- [ ] Реализован первый выстрел из предварительно заряженного орудия.
+
+Текущая задача этапа E — привести входы к понятной схеме:
+
+```text
+E на любом люке → Hold → переход к назначенной цели
+  люк водителя → сразу DriverStation
+  верхний люк → свободное перемещение внутри башни
+
+E на кресле внутри башни → Press → занять Station
+E на прочем доступном объекте → Press → выполнить его действие
+```
+
+Общая Interaction feature уже отвечает за поиск цели, нажатие/удержание,
+progress и отмену. Люк задаёт цель перехода; Station отвечает за занятие места.
+Это целевая схема, а не отметка о завершённой реализации. Перед приёмкой
+нужно проверить привязки interaction targets и убедиться, что у каждого
+люка остался один действующий путь входа.
 
 ---
 
@@ -90,7 +122,7 @@ Player переходит в свободный walking mode внутри Tank
         ↓
 взаимодействует с GunnerStation или CommanderLoaderStation
         ↓
-удерживает Interact и занимает место
+нажимает Interact и занимает место
         ↓
 Player прикрепляется к GunnerSeatAnchor
         ↓
@@ -134,7 +166,7 @@ Player выходит из Tank наружу
 | `Space` | Переключить режим отсчёта направления башни |
 | `ЛКМ` | Запросить выстрел |
 | `ПКМ` | Включить двукратное увеличение камеры прицела |
-| `E` | Press/Hold-взаимодействие с объектом под прицелом, включая верхний люк |
+| `E` | `Hold` для люков, `Press` для остальных объектов под прицелом |
 | `F` | Встать с GunnerStation и остаться внутри башни |
 | `TBD` | Выбросить предмет из рук в Gunner context |
 
@@ -197,15 +229,12 @@ Turret_Yaw
 ## 4.3. Архитектурные ограничения текущего состояния
 
 Общий `CrewStationView`, выбор input mode и Gunner input pipeline уже
-реализованы. Открытые зависимости перед включением GunnerStation:
+реализованы. После подключения GunnerStation остаются открытыми:
 
-- `TankInstaller` создаёт только Driver controller и occupancy;
-- `GunnerStation` ещё не имеет `CameraAnchor` и собственного
-  `StationDisplayFeed`;
-- `StationDisplayFeed` не создаёт отдельный runtime RenderTexture на
-  экземпляр станции и Tank;
-- работа с предметами в руках и переход через верхний люк относятся к
-  следующим срезам и ещё не закрыты.
+- проверка точности 2x zoom и сброса FOV при выходе;
+- детальная Play Mode проверка выхода со станции, выхода через люк,
+  reference modes и освобождения ресурсов display;
+- работа с предметами в руках, ручная зарядка и выстрел.
 
 ---
 
@@ -587,13 +616,13 @@ interaction получает из `StationCapabilityProfile`.
 
 ## 9.4. Несколько станций одного Tank
 
-**Статус: частично выполнено.** Глобальные singleton bindings station view,
-occupancy, adapter, controller и display feed удалены. `TankInstaller` создаёт
-station runtime явно через общий `CreateStation`, однако в registry пока
-передаётся только Driver controller.
+**Статус: реализовано для Driver и Gunner.** `TankStationsInstaller` создаёт
+отдельные controller и occupancy для обеих станций и передаёт их в
+`CrewStationRegistry`. Driver regression после подключения Gunner требует
+отдельной проверки.
 
-Текущие singleton bindings одного `CrewStationController` и одной occupancy
-должны быть заменены station-scoped созданием.
+Ниже сохранены архитектурные варианты для дальнейшего расширения списка
+станций.
 
 Допустимые варианты:
 
@@ -768,8 +797,8 @@ PlayerGunnerInputMode
 # 11. Этап D — Turret и Gun Elevation
 
 **Статус: основные domain и Unity-компоненты собраны и зарегистрированы.**
-Наведение через занятую GunnerStation и критерии раздела 11.6 ещё не
-проверены, поскольку её controller пока не создан в `TankInstaller`.
+Пользователь подтвердил управление башней с места стрелка. Точные проверки
+pitch, limits и двух reference modes из раздела 11.6 ещё не зафиксированы.
 
 ## 11.1. Domain state
 
@@ -866,10 +895,20 @@ Adapter:
 
 # 12. Этап E — GunnerStation и камера прицела
 
-**Статус: камера следует за направлением орудия; станция и вывод на экран
-не завершены.** `GunnerCameraPresenter` зарегистрирован после применения
-углов башни. Остались runtime RenderTexture, feed на `Display_Gunner`,
-`CameraAnchor`, регистрация Gunner controller и проверка enter/exit.
+**Статус: сейчас работа над люками и переходами; этап E ещё открыт.**
+Основной поток станции и экрана работает по сообщению пользователя.
+`GunnerCameraPresenter` зарегистрирован после применения
+углов башни. `GunnerStation` имеет `CameraAnchor`, собственный display feed
+и controller; `StationDisplayFeed` создаёт runtime `RenderTexture`.
+Пользователь подтвердил посадку, изображение внешнего мира, управление
+башней и работу zoom. Остались проверка точности 2x zoom и детальная
+проверка exit, hatch и lifecycle feed.
+
+Для завершения работы с люками нужно сохранить два разных маршрута после
+одинакового Hold-взаимодействия: люк водителя ведёт прямо в DriverStation,
+верхний люк ведёт в свободное состояние внутри башни. Посадка на место
+стрелка изнутри выполняется через Press. Текущие компоненты и ссылки prefab
+ещё требуют согласования с этой схемой и проверки в Play Mode.
 
 ## 12.1. Anchors
 
@@ -1584,7 +1623,7 @@ sessions очищаются.
 - [ ] Player входит внутрь Tank через Hold interaction с верхним люком.
 - [ ] После входа Player свободно перемещается внутри башни.
 - [ ] Внутри доступны как минимум GunnerStation и CommanderLoaderStation.
-- [ ] Player входит в GunnerStation через отдельный Hold interaction.
+- [ ] Player входит в GunnerStation через отдельный Press interaction.
 - [ ] Player закрепляется в GunnerSeatAnchor.
 - [ ] Tank не получает случайный Fire от кнопки входа.
 - [ ] Main Camera остаётся на Player.CameraPivot.

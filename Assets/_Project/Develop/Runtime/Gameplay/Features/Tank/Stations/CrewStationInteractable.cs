@@ -10,7 +10,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
     {
         [SerializeField] private CrewStationView _stationView;
         [SerializeField] private InteractionPromts _prompt = InteractionPromts.Enter;
-
+        [SerializeField, Min(0.1f)] private float _holdDuration = 1f;
         private CrewStationController _controller;
 
         [Inject]
@@ -37,7 +37,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     _controller.CanBeginEnter(context.Actor) ||
                     _controller.CanContinueEnter(context.Actor)
                 );
-
             return InteractionInfo.Press(_prompt, isAvailable);
         }
 

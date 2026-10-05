@@ -2,6 +2,7 @@ using System;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
@@ -9,16 +10,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
     public sealed class GunnerStationAdapter : ICrewStationRoleAdapter
     {
         private readonly TurretAimRuntime _turret;
+        private readonly GunnerZoomState _zoom;
         private IGunnerIntentSource _intentSource;
 
         public bool IsActive => _intentSource != null;
 
-        public GunnerStationAdapter(TurretAimRuntime turret)
+        public GunnerStationAdapter(
+            TurretAimRuntime turret,
+            GunnerZoomState zoom)
         {
-            _turret = turret ??
-                throw new ArgumentNullException(nameof(turret));
+            _turret = turret ?? throw new ArgumentNullException(nameof(turret));
+            _zoom = zoom ?? throw new ArgumentNullException(nameof(zoom));
         }
-
         public bool CanUse(IInteractionActor actor)
         {
             return actor is IGunnerIntentSource;
@@ -48,6 +51,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             GunnerIntentSnapshot intent =
                 _intentSource.ConsumeGunnerIntent();
 
+            _zoom.SetHeld(intent.ZoomHeld);
+
             _turret.SetInput(
                 intent.Traverse,
                 intent.Elevation);
@@ -55,13 +60,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             if (intent.ToggleReferenceModeRequested)
                 _turret.ToggleReferenceMode();
 
-            // FireRequested и ZoomHeld подключим вместе
-            // с орудием и GunnerCamera.
         }
 
         public void ClearOutput()
         {
             _turret.ClearInput();
+            _zoom.Clear();
         }
 
         public void Deactivate()

@@ -165,37 +165,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawningInstaller
   _playerPrefab: {fileID: 4685068223650277509, guid: b5e2c554421a21a469df9eab66fb3027, type: 3}
   _gameplayCameraRig: {fileID: 330585548}
---- !u!1 &106859366
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 106859367}
-  m_Layer: 0
-  m_Name: GunnerStandAnchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &106859367
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 106859366}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.36, y: 1.205, z: -1.838}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 347684332}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &301282935
 GameObject:
   m_ObjectHideFlags: 0
@@ -411,22 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0511354e2a8484c990d904fc22f855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Presentation.GameplayCameraRig
---- !u!4 &347684332 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2679515355184916705, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &347684333 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1904784831339631429, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743a41ef6b2bcfb43ab7234a759c7bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.CrewStationInteractable
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -1276,11 +1229,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce28bbbdd8bb184bb4fea74f1ba2727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameLoop
---- !u!4 &1523464063 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7750144306849997823, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1608219296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1419,39 +1367,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1904784831339631429, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: _holdDuration
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3187210795879794721, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: _exitAnchor
-      value: 
-      objectReference: {fileID: 106859367}
     - target: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_Name
       value: TankRoot_Prototype
       objectReference: {fileID: 0}
-    - target: {fileID: 4698403206751552457, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: m_Size.z
-      value: 2.954195
-      objectReference: {fileID: 0}
-    - target: {fileID: 4698403206751552457, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: m_Center.x
-      value: -0.059568714
-      objectReference: {fileID: 0}
-    - target: {fileID: 4698403206751552457, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: m_Center.z
-      value: -5.913556
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2679515355184916705, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 106859367}
-    - targetCorrespondingSourceObject: {fileID: 7750144306849997823, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2029649533}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
 --- !u!1 &1803477704
@@ -1629,73 +1551,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 630284584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2029649532
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2029649533}
-  - component: {fileID: 2029649534}
-  - component: {fileID: 2029649535}
-  m_Layer: 0
-  m_Name: GunnerSeatInteractionPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2029649533
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029649532}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1523464063}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2029649534
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029649532}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.6829126, y: 0.37337133, z: 0.6376125}
-  m_Center: {x: -0.060397558, y: 0.01509956, z: -0.041523248}
---- !u!114 &2029649535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2029649532}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
-  _interactableBehaviour: {fileID: 347684333}
 --- !u!1 &2072673967
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 {
     public sealed class TankTurretInstaller : MonoInstaller
     {
+        [SerializeField] private Camera _gunnerCamera;
         [SerializeField] private TurretAimConfig _aimConfig;
         [SerializeField] private UnityTurretRig _rig;
         [SerializeField] private Transform _gunnerCameraMount;
@@ -38,13 +39,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 
             TurretAimRuntime runtime =
                 new TurretAimRuntime(mechanism, _rig);
-
+            
+            var zoomState = new GunnerZoomState();
             GunnerCameraPresenter camera =
                 new GunnerCameraPresenter(
                     _gunnerCameraMount,
                     _gunnerEye,
-                    _rig);
+                    _rig,
+                    _gunnerCamera,
+                    zoomState);
 
+            Container.Bind<GunnerZoomState>()
+                .FromInstance(zoomState).AsSingle();
             Container.Bind<TurretAimRuntime>()
                 .FromInstance(runtime).AsSingle();
 

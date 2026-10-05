@@ -29,6 +29,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
         public void Unregister(GameLoopRegistry registry)
         {
             _runtime.ClearInput();
+            _cameraPresenter.ResetZoom();
             registry.UnregisterGameplay(_runtime);
             registry.UnregisterPresentation(_runtime.Presentation);
             registry.UnregisterPresentation(_cameraPresenter);
