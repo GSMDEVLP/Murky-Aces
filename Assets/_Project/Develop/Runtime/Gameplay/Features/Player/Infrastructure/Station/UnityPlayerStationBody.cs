@@ -33,6 +33,36 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
 
             return true;
         }
+        public bool TryRestoreBeforeAttach()
+        {
+            if (!IsAttached || !HasRequiredReferences())
+                return false;
+
+            Transform playerTransform = _body.transform;
+
+            playerTransform.SetParent(_snapshot.Parent, true);
+            playerTransform.localScale = _snapshot.LocalScale;
+
+            playerTransform.SetPositionAndRotation(
+                _snapshot.Position,
+                _snapshot.Rotation);
+
+            _body.position = _snapshot.Position;
+            _body.rotation = _snapshot.Rotation;
+
+            RestoreState();
+
+            if (!_body.isKinematic)
+            {
+                _body.linearVelocity = _snapshot.LinearVelocity;
+                _body.angularVelocity = _snapshot.AngularVelocity;
+            }
+
+            Physics.SyncTransforms();
+
+            IsAttached = false;
+            return true;
+        }
 
         public bool CanDetach(Transform exitAnchor)
         {
@@ -269,15 +299,26 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
         {
             Transform playerTransform = _body.transform;
 
-            _snapshot =
-                new PlayerStationBodySnapshot(
-                    playerTransform.parent,
-                    playerTransform.localScale,
-                    _body.isKinematic,
-                    _body.useGravity,
-                    _body.detectCollisions,
-                    _collider.enabled,
-                    _body.interpolation);
+            Vector3 linearVelocity = _body.isKinematic
+                ? Vector3.zero
+                : _body.linearVelocity;
+
+            Vector3 angularVelocity = _body.isKinematic
+                ? Vector3.zero
+                : _body.angularVelocity;
+
+            _snapshot = new PlayerStationBodySnapshot(
+                playerTransform.parent,
+                playerTransform.localScale,
+                _body.position,
+                _body.rotation,
+                linearVelocity,
+                angularVelocity,
+                _body.isKinematic,
+                _body.useGravity,
+                _body.detectCollisions,
+                _collider.enabled,
+                _body.interpolation);
         }
 
         private void DisableWorldBody()
@@ -329,7 +370,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             _body.useGravity = _snapshot.UseGravity;
             _body.detectCollisions = _snapshot.DetectCollisions;
             _collider.enabled = _snapshot.ColliderEnabled;
-            _body.interpolation = _snapshot.Interpolation;            _body.isKinematic = _snapshot.IsKinematic;
+            _body.interpolation = _snapshot.Interpolation;            
+            _body.isKinematic = _snapshot.IsKinematic;
 
             if (_body.isKinematic == false)
             {

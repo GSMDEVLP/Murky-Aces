@@ -5,6 +5,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain
         Enter,
         PickUp,
         Hold,
-        Toggle
+        Toggle,
+        Exit
     }
 }

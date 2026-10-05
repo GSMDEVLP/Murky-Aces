@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 {
@@ -13,47 +15,57 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
         [SerializeField]
         private LayerMask _collisionMask = ~0;
 
-        [SerializeField]
-        private QueryTriggerInteraction _triggerInteraction = QueryTriggerInteraction.Ignore;
-
-        public bool TryFindTarget(IInteractionScope scope, out IInteractable target)
+        public bool TryFindTarget(
+            IInteractionScope scope,
+            in InteractionContext context,
+            out IInteractable target)
         {
             target = null;
 
-            if (_origin == null)
+            if (_origin == null || context.Actor == null)
                 return false;
 
-            bool hasHit = Physics.Raycast(
+            RaycastHit[] hits = Physics.RaycastAll(
                 _origin.position,
                 _origin.forward,
-                out RaycastHit hit,
                 _maxDistance,
                 _collisionMask,
-                _triggerInteraction);
+                QueryTriggerInteraction.Collide);
 
-            if (hasHit == false)
-                return false;
+            Array.Sort(
+                hits,
+                (left, right) =>
+                    left.distance.CompareTo(right.distance));
 
-            if (hit.collider.TryGetComponent(
-                    out InteractionTargetLink targetLink) == false)
+            foreach (RaycastHit hit in hits)
             {
-                return false;
+                Collider collider = hit.collider;
+
+                if (collider == null)
+                    continue;
+
+                if (collider.TryGetComponent(
+                        out InteractionTargetLink link) &&
+                    link.TryGetInteractable(
+                        out IInteractable candidate))
+                {
+                    bool allowedByScope =
+                        scope == null || scope.Allows(candidate);
+
+                    if (allowedByScope &&
+                        candidate.GetInteractionInfo(context).IsAvailable)
+                    {
+                        target = candidate;
+                        return true;
+                    }
+                }
+
+                if (!collider.isTrigger)
+                    return false;
+
             }
 
-            if (targetLink.TryGetInteractable(
-                    out target) == false)
-            {
-                return false;
-            }
-
-            if (scope != null &&
-                scope.Allows(target) == false)
-            {
-                target = null;
-                return false;
-            }
-
-            return true;
+            return false;
         }
     }
 }

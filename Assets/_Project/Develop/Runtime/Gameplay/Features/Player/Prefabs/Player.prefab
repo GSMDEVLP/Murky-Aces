@@ -32,6 +32,52 @@ Transform:
   - {fileID: 4545291085218955164}
   m_Father: {fileID: 7067042086959848057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &171798799401659199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6215095027578793920}
+  - component: {fileID: 2143266497835361806}
+  m_Layer: 0
+  m_Name: PlayerTankInteriorService
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6215095027578793920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171798799401659199}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2303102009184477153}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2143266497835361806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171798799401659199}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d47f828dcdfa6d4c9956461a8467120, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Interior.PlayerTankInteriorBody
+  _body: {fileID: 8099265463362173601}
+  _look: {fileID: 2415880753312151595}
 --- !u!1 &307358756801704836
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,6 +124,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station.UnityPlayerStationBody
   _body: {fileID: 8099265463362173601}
   _collider: {fileID: 5993489912872838117}
+  _exitBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _exitSkin: 0.02
 --- !u!1 &536099687693044793
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,6 +452,7 @@ Transform:
   - {fileID: 6983009452534361695}
   - {fileID: 7098525697013920398}
   - {fileID: 6983267779664061787}
+  - {fileID: 6215095027578793920}
   m_Father: {fileID: 7067042086959848057}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3752895758163105874
@@ -587,8 +638,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2211602548852536293}
   - {fileID: 6201950846334203582}
@@ -786,7 +837,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerLook
   _body: {fileID: 8099265463362173601}
   _cameraPivot: {fileID: 2211602548852536293}
-  _maxPitch: 85
+  _maxWalkingPitch: 85
 --- !u!1 &5748611269358653203
 GameObject:
   m_ObjectHideFlags: 0
@@ -1075,6 +1126,7 @@ MonoBehaviour:
   _playerMovement: {fileID: 4347475834648742723}
   _stationBody: {fileID: 3442489514879851672}
   _playerLook: {fileID: 2415880753312151595}
+  _interiorBody: {fileID: 2143266497835361806}
 --- !u!114 &8298391348411335077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1154,7 +1206,6 @@ MonoBehaviour:
   _collisionMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  _triggerInteraction: 1
 --- !u!1 &6829617144393843022
 GameObject:
   m_ObjectHideFlags: 0

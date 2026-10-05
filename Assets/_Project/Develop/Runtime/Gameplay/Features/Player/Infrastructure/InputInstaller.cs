@@ -9,8 +9,10 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Interior;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Readers;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {
@@ -20,12 +22,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         [SerializeField] private PlayerMovement _playerMovement;
         [SerializeField] private UnityPlayerStationBody _stationBody;
         [SerializeField] private PlayerLook _playerLook;
+        [SerializeField] private PlayerTankInteriorBody _interiorBody;
+
 
         private PlayerInput _playerInput;
 
         public override void InstallBindings()
         {
             CacheComponents();
+            BindCrewTransitions();
             BindPlayerFacade();
             BindInput();
             BindMovementAndLook();
@@ -43,6 +48,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<PlayerFacade>().FromComponentOnRoot().AsSingle();
         }
 
+
+        private void BindCrewTransitions()
+        {
+            Container.Bind<CrewTransitionCoordinator>()
+                .AsSingle();
+
+            Container.Bind<ICrewLocationReader>()
+                .FromResolveGetter<CrewTransitionCoordinator>(
+                    coordinator => coordinator)
+                .AsSingle();
+        }
         private void BindInput()
         {
             Container.Bind<PlayerInput>().FromInstance(_playerInput);
@@ -73,12 +89,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         private void BindStation()
         {
             Container.Bind<IPlayerStationBody>().FromInstance(_stationBody).AsSingle();
-
             Container.Bind<PlayerStationCapabilities>().AsSingle();
-
             Container.Bind<PlayerStationController>().AsSingle();
-
             Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
+            Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
+            Container.Bind<ITankInteriorOccupant>().To<PlayerTankInteriorController>().AsSingle();
         }
 
         private void BindPhases()

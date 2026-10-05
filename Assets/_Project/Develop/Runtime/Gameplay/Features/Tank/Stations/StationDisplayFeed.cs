@@ -14,9 +14,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         private RenderTexture _ownedTexture;
 
         public bool IsActive =>
+            isActiveAndEnabled &&
             _camera != null &&
-            _camera.enabled &&
-            _ownedTexture != null;
+            _camera.isActiveAndEnabled &&
+            _ownedTexture != null &&
+            _ownedTexture.IsCreated() &&
+            _camera.targetTexture == _ownedTexture;
+
 
         private void Awake()
         {
@@ -29,14 +33,34 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             SetScreenTexture(Texture2D.blackTexture);
         }
 
-        public void Activate()
+        public bool TryActivate()
         {
+            // Отключённый компонент может означать отказ модуля.
+            if (!isActiveAndEnabled)
+                return false;
+
             if (_camera == null ||
                 _panelRoot == null ||
-                _panelRoot.HasValidPrimaryScreen == false)
+                !_panelRoot.TryGetPrimaryScreen(
+                    out Renderer renderer,
+                    out int materialIndex))
             {
-                Debug.LogError("StationDisplayFeed references are not assigned.", this);
-                return;
+                Debug.LogError(
+                    "StationDisplayFeed references are not assigned.",
+                    this);
+                return false;
+            }
+
+            Material screenMaterial =
+                renderer.sharedMaterials[materialIndex];
+
+            if (screenMaterial == null ||
+                !screenMaterial.HasProperty(BaseMap))
+            {
+                Debug.LogError(
+                    "Station screen material has no _BaseMap property.",
+                    this);
+                return false;
             }
 
             if (_ownedTexture == null)
@@ -48,18 +72,23 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     hideFlags = HideFlags.DontSave
                 };
 
-                if (_ownedTexture.Create() == false)
+                if (!_ownedTexture.Create())
                 {
                     Destroy(_ownedTexture);
                     _ownedTexture = null;
-                    Debug.LogError("Could not create station RenderTexture.", this);
-                    return;
+
+                    Debug.LogError(
+                        "Could not create station RenderTexture.",
+                        this);
+                    return false;
                 }
             }
 
             _camera.targetTexture = _ownedTexture;
             SetScreenTexture(_ownedTexture);
             _camera.enabled = true;
+
+            return IsActive;
         }
 
         public void Deactivate()

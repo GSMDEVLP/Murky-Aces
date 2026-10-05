@@ -1,32 +1,42 @@
 using System;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
-    public sealed class PlayerStationController : IStationOccupant, IStationIntentSource
+    public sealed class PlayerStationController :
+        IStationOccupant,
+        IStationIntentSource
     {
         private readonly IPlayerStationBody _body;
         private readonly PlayerStationCapabilities _capabilities;
         private readonly IReadOnlyList<IPlayerStationInputMode> _inputModes;
+        private readonly CrewTransitionCoordinator _transitions;
 
         private IPlayerStationInputMode _activeInputMode;
         private Func<bool> _releaseStation;
+
         private IInteractionScope _stationInteractionScope;
         private StationCapabilityProfile _stationCapabilityProfile;
         private Transform _seatAnchor;
-        private Transform _stationCameraAnchor;
 
-        public bool IsInStation
-        {
-            get;
-            private set;
-        }
+        private CrewLocation _returnLocation;
+        private CrewRoleId _stationRole;
 
-        public PlayerStationController(IPlayerStationBody body, PlayerStationCapabilities capabilities, List<IPlayerStationInputMode> inputModes)
+        public bool IsInStation =>
+            _transitions.Current.Kind == CrewLocationKind.Station;
+
+        public PlayerStationController(
+            IPlayerStationBody body,
+            PlayerStationCapabilities capabilities,
+            List<IPlayerStationInputMode> inputModes,
+            CrewTransitionCoordinator transitions)
         {
             _body = body ??
                 throw new ArgumentNullException(nameof(body));
@@ -37,6 +47,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             _inputModes = inputModes ??
                 throw new ArgumentNullException(nameof(inputModes));
 
+            _transitions = transitions ??
+                throw new ArgumentNullException(nameof(transitions));
+
             if (_inputModes.Count == 0)
             {
                 throw new ArgumentException(
@@ -45,165 +58,208 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             }
         }
 
-        public bool TryEnterStation(Transform seatAnchor,Transform cameraAnchor,IInteractionScope interactionScope, StationCapabilityProfile capabilityProfile)
-        {
-            if (CanEnter(seatAnchor,cameraAnchor,interactionScope,capabilityProfile) == false)
-            {
-                return false;
-            }
-
-            if (TryPrepareStationMode(interactionScope, capabilityProfile) == false)
-            {
-                return false;
-            }
-
-            if (_body.TryAttach(seatAnchor) == false)
-            {
-                RollbackStationMode();
-                return false;
-            }
-
-            _seatAnchor = seatAnchor;
-            _stationCameraAnchor = cameraAnchor;
-            _stationInteractionScope = interactionScope;
-            _stationCapabilityProfile = capabilityProfile;
-            IsInStation = true;
-
-            return true;
-        }
-
-        public bool TryExitStation(Transform exitAnchor)
-        {
-            return TryExitStationInternal(exitAnchor, force: false);
-        }
-
-        public bool TryForceExitStation(Transform exitAnchor)
-        {
-            return TryExitStationInternal(exitAnchor, force: true);
-        }
-
-        private bool TryExitStationInternal(Transform exitAnchor, bool force)
-        {
-            if (_activeInputMode == null ||
-                _stationCapabilityProfile == null ||
-                _stationInteractionScope == null ||
-                IsInStation == false ||
-                exitAnchor == null ||
-                _seatAnchor == null ||
-                _stationCameraAnchor == null)
-            {
-                return false;
-            }
-
-            if (force == false && _body.CanDetach(exitAnchor) == false)
-                return false;
-
-            if (_activeInputMode.TryDeactivate() == false)
-                return false;
-
-            if (_capabilities.TryRestore() == false)
-            {
-                _activeInputMode.TryRestoreAfterFailedExit();
-                return false;
-            }
-
-            bool detached = force
-                ? _body.TryForceDetach(exitAnchor)
-                : _body.TryDetach(exitAnchor);
-
-            if (detached == false)
-            {
-                _capabilities.TryApplyForStation(
-                    _stationCapabilityProfile,
-                    _stationInteractionScope);
-
-                _activeInputMode.TryRestoreAfterFailedExit();
-                return false;
-            }
-
-            IsInStation = false;
-            _seatAnchor = null;
-            _stationCameraAnchor = null;
-            _stationInteractionScope = null;
-            _stationCapabilityProfile = null;
-            _activeInputMode = null;
-
-            return true;
-        }
-        public bool ConsumeExitRequest()
-        {
-            return IsInStation &&
-                _activeInputMode != null &&
-                _activeInputMode.ConsumeExitRequest();
-        }
-
-        private bool CanEnter(
+        public bool TryEnterStation(
+            long expectedRevision,
+            CrewRoleId roleId,
             Transform seatAnchor,
             Transform cameraAnchor,
             IInteractionScope interactionScope,
             StationCapabilityProfile capabilityProfile)
         {
-            return IsInStation == false &&
-                _body.IsAttached == false &&
-                seatAnchor != null &&
-                cameraAnchor != null &&
-                interactionScope != null &&
-                capabilityProfile != null;
+            CrewLocation source = _transitions.Current;
+
+            if (expectedRevision != _transitions.Revision ||
+                (source.Kind != CrewLocationKind.Outside &&
+                 source.Kind != CrewLocationKind.Interior) ||
+                _body.IsAttached ||
+                _activeInputMode != null ||
+                _capabilities.AreDisabledForStation ||
+                seatAnchor == null ||
+                cameraAnchor == null ||
+                interactionScope == null ||
+                capabilityProfile == null ||
+                !Enum.IsDefined(typeof(CrewRoleId), roleId))
+            {
+                return false;
+            }
+
+            IPlayerStationInputMode mode =
+                FindInputMode(capabilityProfile.ControlContext);
+
+            if (mode == null)
+                return false;
+
+            return _transitions.TryTransition(
+                expectedRevision,
+                CrewLocation.AtStation(roleId),
+                () =>
+                {
+                    _seatAnchor = seatAnchor;
+                    _stationInteractionScope = interactionScope;
+                    _stationCapabilityProfile = capabilityProfile;
+                    _activeInputMode = mode;
+                    _returnLocation = source;
+                    _stationRole = roleId;
+
+                    if (!_capabilities.TryApplyForStation(
+                            capabilityProfile,
+                            interactionScope))
+                    {
+                        return false;
+                    }
+
+                    if (!mode.TryActivate())
+                        return false;
+
+                    return _body.TryAttach(seatAnchor);
+                },
+                () =>
+                {
+                    bool restored = true;
+
+                    if (_body.IsAttached)
+                    {
+                        restored =
+                            _body.TryRestoreBeforeAttach() && restored;
+                    }
+
+                    restored = mode.TryDeactivate() && restored;
+
+                    if (_capabilities.AreDisabledForStation)
+                    {
+                        restored =
+                            _capabilities.TryRestoreBeforeStation() &&
+                            restored;
+                    }
+
+                    if (restored)
+                        ClearStationCache();
+
+                    return restored;
+                });
         }
 
-        private bool TryPrepareStationMode(IInteractionScope interactionScope, StationCapabilityProfile capabilityProfile)
+        public bool TryExitStation(Transform exitAnchor)
         {
-            if (capabilityProfile == null)
-                return false;
-
-            IPlayerStationInputMode inputMode = FindInputMode(capabilityProfile.ControlContext);
-
-            if (inputMode == null)
-                return false;
-
-            if (_capabilities.TryApplyForStation(
-                    capabilityProfile,
-                    interactionScope) == false)
-            {
-                return false;
-            }
-
-            if (inputMode.TryActivate() == false)
-            {
-                _capabilities.TryRestore();
-                return false;
-            }
-
-            _activeInputMode = inputMode;
-
-            return true;
+            return TryLeaveStation(exitAnchor, false, false);
         }
 
-        private void RollbackStationMode()
+        public bool TryForceExitStation(Transform exitAnchor)
         {
-            if (_activeInputMode != null)
-            {
-                _activeInputMode.TryDeactivate();
-                _activeInputMode = null;
-            }
-
-            _capabilities.TryRestore();
+            return TryLeaveStation(exitAnchor, true, false);
         }
 
-        private IPlayerStationInputMode FindInputMode(StationControlContext context)
+        public bool TryRollbackStationEntry()
+        {
+            return TryLeaveStation(null, true, true);
+        }
+
+        private bool TryLeaveStation(
+            Transform exitAnchor,
+            bool force,
+            bool restoreBeforeAttach)
+        {
+            if (!IsInStation ||
+                _transitions.Current.StationRole != _stationRole ||
+                !_body.IsAttached ||
+                _activeInputMode == null ||
+                _stationCapabilityProfile == null ||
+                _stationInteractionScope == null ||
+                _seatAnchor == null ||
+                _returnLocation == null)
+            {
+                return false;
+            }
+
+            if (!restoreBeforeAttach &&
+                (exitAnchor == null ||
+                 (!force && !_body.CanDetach(exitAnchor))))
+            {
+                return false;
+            }
+
+            IPlayerStationInputMode mode = _activeInputMode;
+
+            bool completed = _transitions.TryTransition(
+                _transitions.Revision,
+                _returnLocation,
+                () =>
+                {
+                    if (!mode.TryDeactivate())
+                        return false;
+
+                    bool capabilitiesRestored = restoreBeforeAttach
+                        ? _capabilities.TryRestoreBeforeStation()
+                        : _capabilities.TryRestore();
+
+                    if (!capabilitiesRestored)
+                        return false;
+
+                    if (restoreBeforeAttach)
+                        return _body.TryRestoreBeforeAttach();
+
+                    return force
+                        ? _body.TryForceDetach(exitAnchor)
+                        : _body.TryDetach(exitAnchor);
+                },
+                () =>
+                {
+                    bool restored = true;
+
+                    if (!_body.IsAttached)
+                    {
+                        restored =
+                            _body.TryAttach(_seatAnchor) && restored;
+                    }
+
+                    if (!_capabilities.AreDisabledForStation)
+                    {
+                        restored =
+                            _capabilities.TryApplyForStation(
+                                _stationCapabilityProfile,
+                                _stationInteractionScope) &&
+                            restored;
+                    }
+
+                    restored =
+                        mode.TryRestoreAfterFailedExit() && restored;
+
+                    return restored;
+                });
+
+            if (completed)
+                ClearStationCache();
+
+            return completed;
+        }
+
+        private void ClearStationCache()
+        {
+            _seatAnchor = null;
+            _stationInteractionScope = null;
+            _stationCapabilityProfile = null;
+            _activeInputMode = null;
+            _returnLocation = null;
+        }
+
+        public bool ConsumeExitRequest()
+        {
+            return IsInStation &&
+                   _activeInputMode != null &&
+                   _activeInputMode.ConsumeExitRequest();
+        }
+
+        private IPlayerStationInputMode FindInputMode(
+            StationControlContext context)
         {
             IPlayerStationInputMode result = null;
 
             for (int i = 0; i < _inputModes.Count; i++)
             {
-                IPlayerStationInputMode candidate =
-                    _inputModes[i];
+                IPlayerStationInputMode candidate = _inputModes[i];
 
-                if (candidate == null ||
-                    candidate.Context != context)
-                {
+                if (candidate == null || candidate.Context != context)
                     continue;
-                }
 
                 if (result != null)
                 {
@@ -216,6 +272,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
             return result;
         }
+
         public bool TrySetReleaseHandler(Func<bool> releaseHandler)
         {
             if (releaseHandler == null || _releaseStation != null)
@@ -235,7 +292,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         {
             return _releaseStation != null
                 ? _releaseStation()
-                : IsInStation == false;
+                : !IsInStation;
         }
     }
 }

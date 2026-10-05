@@ -2,6 +2,7 @@ using System;
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
@@ -19,6 +20,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public CrewRoleId RoleId => _view.RoleId;
         public CrewStationState State => _station.State;
         public bool IsOccupied => _station.IsOccupied;
+        private long? _entryRevision;
         
         public CrewStationController(
             CrewStationOccupancy station,
@@ -54,31 +56,50 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public bool CanContinueEnter(IInteractionActor actor)
         {
             return actor != null &&
-                   _station.State == CrewStationState.Entering &&
-                   _station.OccupantId == actor.Id &&
-                   _view.CanEnter &&
-                   _roleAdapter.IsActive == false &&
-                   CanActorUseStation(actor);
+                _station.State == CrewStationState.Entering &&
+                _station.OccupantId == actor.Id &&
+                _view.CanEnter &&
+                !_roleAdapter.IsActive &&
+                CanActorUseStation(actor) &&
+                _entryRevision.HasValue &&
+                ((ICrewLocationReader)actor).Revision == _entryRevision.Value;
         }
 
         public bool TryBeginEnter(IInteractionActor actor)
         {
-            return CanBeginEnter(actor) &&
-                   _station.TryBeginEnter(actor.Id);
+            if (!CanBeginEnter(actor) ||
+                !_station.TryBeginEnter(actor.Id))
+            {
+                return false;
+            }
+
+            _entryRevision = ((ICrewLocationReader)actor).Revision;
+            return true;
         }
 
         public bool TryCompleteEnter(IInteractionActor actor)
         {
-            if (CanContinueEnter(actor) == false)
+            if (!CanContinueEnter(actor))
+            {
+                if (actor != null &&
+                    _station.State == CrewStationState.Entering &&
+                    _station.OccupantId == actor.Id)
+                {
+                    TryCancelEnter(actor);
+                }
+
                 return false;
+            }
 
             IStationOccupant occupant = (IStationOccupant)actor;
 
-            if (occupant.TryEnterStation(
+            if (!occupant.TryEnterStation(
+                    _entryRevision.Value,
+                    _view.RoleId,
                     _view.SeatAnchor,
                     _view.CameraAnchor,
                     _view.PanelRoot,
-                    _view.CapabilityProfile) == false)
+                    _view.CapabilityProfile))
             {
                 return CancelFailedEnter(actor.Id);
             }
@@ -108,9 +129,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     deactivateRole: true);
             }
 
+            _entryRevision = null;
             _currentOccupant = occupant;
             _stationIntentSource = (IStationIntentSource)actor;
-            _displayFeed.Activate();
+            if (!_displayFeed.TryActivate())
+            {
+                UnityEngine.Debug.LogWarning(
+                    $"Station {RoleId} was occupied without an active display.");
+            }
 
             return true;
         }
@@ -124,7 +150,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 _station.TryCancelEnter(actor.Id);
 
             if (wasCancelled)
+            {
+                _entryRevision = null;
                 _roleAdapter.ClearOutput();
+            }
 
             return wasCancelled;
         }
@@ -200,12 +229,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         private bool CanActorUseStation(IInteractionActor actor)
         {
-            IStationOccupant occupant = actor as IStationOccupant;
+            var occupant = actor as IStationOccupant;
+            var location = actor as ICrewLocationReader;
 
             return occupant != null &&
-                   occupant.IsInStation == false &&
-                   actor is IStationIntentSource &&
-                   _roleAdapter.CanUse(actor);
+                !occupant.IsInStation &&
+                location != null &&
+                location.Current.Kind == _view.RequiredEntryLocation &&
+                actor is IStationIntentSource &&
+                _roleAdapter.CanUse(actor);
         }
 
         private bool HasActiveOccupant()
@@ -219,6 +251,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
         private bool CancelFailedEnter(ulong occupantId)
         {
+            _entryRevision = null;
             _roleAdapter.ClearOutput();
 
             if (_station.TryCancelEnter(occupantId))
@@ -235,9 +268,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             else
                 _roleAdapter.ClearOutput();
 
-            bool occupantRolledBack = occupant.TryForceExitStation(_view.ExitAnchor);
+            bool occupantRolledBack = occupant.TryRollbackStationEntry();
 
             bool stationRolledBack = _station.TryCancelEnter(occupantId);
+            
+            if (stationRolledBack)
+                _entryRevision = null;
 
             if (occupantRolledBack && stationRolledBack)
             {
@@ -262,6 +298,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         {
             bool occupantRolledBack =
                 _currentOccupant.TryEnterStation(
+                    ((ICrewLocationReader)_currentOccupant).Revision,
+                    _view.RoleId,
                     _view.SeatAnchor,
                     _view.CameraAnchor,
                     _view.PanelRoot,

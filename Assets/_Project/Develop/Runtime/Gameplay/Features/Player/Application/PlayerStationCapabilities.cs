@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -16,6 +17,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private bool _cachedMovementEnabled;
         private bool _cachedLookEnabled;
         private bool _cachedInteractionEnabled;
+
+        private Quaternion _cachedWalkingView;
+        private bool _hasCachedWalkingView;
 
         public bool AreDisabledForStation
         {
@@ -120,9 +124,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             return true;
         }
 
-        private void CacheState(
-            PlayerInteraction interaction)
+        private void CacheState(PlayerInteraction interaction)
         {
+            _hasCachedWalkingView =
+                _look.TryCaptureWalkingView(out _cachedWalkingView);
             _cachedMovementEnabled =
                 _movement.IsGameplayEnabled;
 
@@ -131,6 +136,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
             _cachedInteractionEnabled =
                 interaction.IsGameplayEnabled;
+        }
+
+        public bool TryRestoreBeforeStation()
+        {
+            if (!TryRestore())
+                return false;
+
+            return !_hasCachedWalkingView ||
+                _look.TryRestoreWalkingView(_cachedWalkingView);
         }
     }
 }

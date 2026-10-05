@@ -203,7 +203,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                 return;
             }
 
-            if (!_targetFinder.TryFindTarget(_targetScope, out IInteractable target))
+            if (!_targetFinder.TryFindTarget(
+                    _targetScope,
+                    _context,
+                    out IInteractable target))
             {
                 ClearFocus();
                 return;

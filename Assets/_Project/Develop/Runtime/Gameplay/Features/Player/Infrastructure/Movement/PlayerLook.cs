@@ -200,6 +200,28 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movem
             _walkingInitialized = true;
         }
 
+
+        public bool TryCaptureWalkingView(out Quaternion localRotation)
+        {
+            localRotation = Quaternion.identity;
+
+            if (_cameraPivot == null || IsCockpitMode)
+                return false;
+
+            localRotation = _cameraPivot.localRotation;
+            return true;
+        }
+
+        public bool TryRestoreWalkingView(Quaternion localRotation)
+        {
+            if (_cameraPivot == null)
+                return false;
+
+            EnterWalkingMode();
+            _cameraPivot.localRotation = localRotation;
+
+            return true;
+        }
         private enum LookMode
         {
             Walking,

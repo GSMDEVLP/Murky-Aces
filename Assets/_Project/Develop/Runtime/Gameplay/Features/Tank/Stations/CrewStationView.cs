@@ -1,4 +1,5 @@
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using UnityEngine;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
@@ -21,6 +22,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         [SerializeField] private CrewRoleId _roleId = CrewRoleId.Driver;
 
         [SerializeField] private StationCapabilityProfile _capabilityProfile = new StationCapabilityProfile();
+        
+        [Header("Entry")]
+        [SerializeField]private CrewLocationKind _requiredEntryLocation = CrewLocationKind.Interior;
         public Transform SeatAnchor =>_seatAnchor;
 
         public Transform ExitAnchor => _exitAnchor;
@@ -34,9 +38,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
         public CrewRoleId RoleId => _roleId;
 
         public StationCapabilityProfile CapabilityProfile => _capabilityProfile;
+        public CrewLocationKind RequiredEntryLocation =>_requiredEntryLocation;
 
 
         public bool CanEnter =>
+            (_requiredEntryLocation == CrewLocationKind.Outside ||
+            _requiredEntryLocation == CrewLocationKind.Interior) &&
             _capabilityProfile != null &&
             _seatAnchor != null &&
             _exitAnchor != null &&

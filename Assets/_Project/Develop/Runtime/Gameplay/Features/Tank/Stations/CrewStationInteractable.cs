@@ -9,7 +9,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
     public sealed class CrewStationInteractable : MonoBehaviour, IInteractable
     {
         [SerializeField] private CrewStationView _stationView;
-        [SerializeField, Min(0.1f)] private float _holdDuration = 1f;
         [SerializeField] private InteractionPromts _prompt = InteractionPromts.Enter;
 
         private CrewStationController _controller;
@@ -39,7 +38,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     _controller.CanContinueEnter(context.Actor)
                 );
 
-            return InteractionInfo.Hold(_prompt, _holdDuration, isAvailable);
+            return InteractionInfo.Press(_prompt, isAvailable);
         }
 
         public bool Begin(in InteractionContext context)
