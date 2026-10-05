@@ -181,6 +181,20 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             _roleAdapter.ClearOutput();
         }
 
+        public bool CanExit(IInteractionActor actor)
+        {
+            return actor != null &&
+                HasActiveOccupant() &&
+                _station.IsOccupiedBy(actor.Id) &&
+                _view.CanExit;
+        }
+
+        public bool TryExit(IInteractionActor actor)
+        {
+            return CanExit(actor) &&
+                TryExitCurrentOccupant();
+        }
+
         private bool TryExitCurrentOccupant(bool force = false)
         {
             if (HasActiveOccupant() == false ||

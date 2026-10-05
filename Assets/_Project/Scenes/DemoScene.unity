@@ -1371,6 +1371,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TankRoot_Prototype
       objectReference: {fileID: 0}
+    - target: {fileID: 8462070969039635763, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: _interactableBehaviour
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -97,37 +97,6 @@ Transform:
   - {fileID: 5043048688575738518}
   m_Father: {fileID: 1498560307844761635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &678307519420051490
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7745328972883092788}
-  m_Layer: 0
-  m_Name: PanelPressTarget
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7745328972883092788
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 678307519420051490}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 7230000637721200808}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1145816635423166694
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,6 +590,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
   _interactableBehaviour: {fileID: 292932034854022138}
+--- !u!1 &3452380681730911090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6421800878444657822}
+  - component: {fileID: 8518957858425789112}
+  m_Layer: 0
+  m_Name: DriverHatchAction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6421800878444657822
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452380681730911090}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7230000637721200808}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8518957858425789112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452380681730911090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743a41ef6b2bcfb43ab7234a759c7bb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.CrewStationInteractable
+  _stationView: {fileID: 7360064975102790226}
+  _interactionMode: 1
+  _holdDuration: 1
+  _allowExitInteraction: 1
 --- !u!1 &3495725195949595575
 GameObject:
   m_ObjectHideFlags: 0
@@ -761,7 +778,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2194842911848063625}
-  - component: {fileID: 2371613702020574372}
   - component: {fileID: 7360064975102790226}
   m_Layer: 0
   m_Name: DriverStation
@@ -789,22 +805,6 @@ Transform:
   - {fileID: 7230000637721200808}
   m_Father: {fileID: 6495116284277946633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2371613702020574372
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4026931679424172668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 743a41ef6b2bcfb43ab7234a759c7bb4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.DriverStationInteractable
-  _stationView: {fileID: 7360064975102790226}
-  _prompt: 0
-  _requiresHold: 1
-  _holdDuration: 1
 --- !u!114 &7360064975102790226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1105,8 +1105,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.7906227, y: 0.09580297, z: 1.315495}
-  m_Center: {x: 0.06004715, y: 0.008764267, z: 0.01752901}
+  m_Size: {x: 1.7906227, y: 0.3791032, z: 1.315495}
+  m_Center: {x: 0.06004717, y: -0.13288592, z: 0.017529001}
 --- !u!114 &8462070969039635763
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,7 +1119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
-  _interactableBehaviour: {fileID: 2371613702020574372}
+  _interactableBehaviour: {fileID: 8518957858425789112}
 --- !u!1 &4972791870091558850
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,7 +1320,7 @@ Transform:
   m_GameObject: {fileID: 5272132546027216442}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.8629976, y: 0.75800014, z: -1.3149997}
+  m_LocalPosition: {x: -0.86299753, y: 0.7580001, z: -1.3149996}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1430,7 +1430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2679515355184916705}
-  - component: {fileID: 1904784831339631429}
+  - component: {fileID: 4734147428460489180}
   - component: {fileID: 3187210795879794721}
   m_Layer: 0
   m_Name: GunnerStation
@@ -1460,7 +1460,7 @@ Transform:
   - {fileID: 5148797256285744073}
   m_Father: {fileID: 6495116284277946633}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1904784831339631429
+--- !u!114 &4734147428460489180
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1473,9 +1473,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Stations.CrewStationInteractable
   _stationView: {fileID: 3187210795879794721}
-  _prompt: 0
-  _requiresHold: 1
-  _holdDuration: 1
+  _interactionMode: 0
+  _holdDuration: 0.1
+  _allowExitInteraction: 0
 --- !u!114 &3187210795879794721
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1491,7 +1491,7 @@ MonoBehaviour:
   _seatAnchor: {fileID: 7750144306849997823}
   _exitAnchor: {fileID: 5148797256285744073}
   _cameraAnchor: {fileID: 1346768087701321538}
-  _interactionPoint: {fileID: 8814739088732471874}
+  _interactionPoint: {fileID: 1027611920934413927}
   _panelRoot: {fileID: 8695180976629660236}
   _roleId: 1
   _capabilityProfile:
@@ -1603,7 +1603,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7745328972883092788}
+  - {fileID: 6421800878444657822}
   m_Father: {fileID: 2194842911848063625}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2403075095894574877
@@ -1702,7 +1702,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
-  _interactableBehaviour: {fileID: 1904784831339631429}
+  _interactableBehaviour: {fileID: 4734147428460489180}
 --- !u!1 &5744028030623648351
 GameObject:
   m_ObjectHideFlags: 0

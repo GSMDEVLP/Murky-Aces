@@ -9,20 +9,25 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
     public sealed class PlayerDrivingInputMode : IPlayerStationInputMode, IDrivingIntentSource
     {
         private readonly IPlayerInputContext _inputContext;
-        private readonly DrivingIntentBuffer _intent;
+        private readonly DrivingIntentBuffer _drivingIntent;
+        private readonly PlayerIntentBuffer _playerIntent;
 
         public StationControlContext Context => StationControlContext.Driving;
         public bool IsActive => _inputContext.IsUsingDrivingMap;
 
-        public PlayerDrivingInputMode(IPlayerInputContext inputContext, DrivingIntentBuffer intent)
+        public PlayerDrivingInputMode(IPlayerInputContext inputContext,
+                DrivingIntentBuffer intent,
+                PlayerIntentBuffer playerIntent)
         {
             _inputContext = inputContext ??
                 throw new ArgumentNullException(
                     nameof(inputContext));
 
-            _intent = intent ??
+            _drivingIntent = intent ??
                 throw new ArgumentNullException(
                     nameof(intent));
+            _playerIntent = playerIntent ??
+                throw new ArgumentNullException(nameof(playerIntent));
         }
 
         public bool TryActivate()
@@ -35,19 +40,23 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             if (_inputContext.TryUseDrivingMap())
                 return true;
 
-            _intent.Clear();
+            _drivingIntent.Clear();
+            _playerIntent.SuppressInteractionUntilReleased();
 
             return false;
         }
 
         public bool TryDeactivate()
         {
-            _intent.Clear();
+            _drivingIntent.Clear();
 
             if (_inputContext.TryUsePlayerMap())
+            {
+                _playerIntent.SuppressInteractionUntilReleased();
                 return true;
+            }
 
-            _intent.SuppressExitUntilReleased();
+            _drivingIntent.SuppressExitUntilReleased();
 
             return false;
         }
@@ -55,7 +64,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         public bool TryRestoreAfterFailedExit()
         {
             PrepareIntent();
-
+            _playerIntent.SuppressInteractionUntilReleased();
             return _inputContext.TryUseDrivingMap();
         }
 
@@ -65,9 +74,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 return DrivingIntentSnapshot.Neutral;
 
             return new DrivingIntentSnapshot(
-                _intent.Throttle,
-                _intent.Steering,
-                _intent.IsBraking);
+                _drivingIntent.Throttle,
+                _drivingIntent.Steering,
+                _drivingIntent.IsBraking);
         }
 
         public bool ConsumeExitRequest()
@@ -75,13 +84,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             if (IsActive == false)
                 return false;
 
-            return _intent.ConsumeExitRequest();
+            return _drivingIntent.ConsumeExitRequest();
         }
 
         private void PrepareIntent()
         {
-            _intent.Clear();
-            _intent.SuppressExitUntilReleased();
+            _drivingIntent.Clear();
+            _drivingIntent.SuppressExitUntilReleased();
         }
     }
 }

@@ -1184,28 +1184,6 @@
                 },
                 {
                     "name": "",
-                    "id": "e4cddf51-6c7a-42ea-8b90-95959096e01b",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "ExitStation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "da205827-91f5-49ef-b586-009ab9e3c02e",
-                    "path": "<Gamepad>/buttonNorth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Gamepad",
-                    "action": "ExitStation",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "2e6cf8b5-006f-4509-ae88-d1682fb8a645",
                     "path": "<Pointer>/delta",
                     "interactions": "",
