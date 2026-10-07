@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99fa6e9aac19deb4bb7beec7b22df386, type: 3}
+  m_Name: ShellDefinition
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Ammunition.ShellDefinition
+  _id: shell_test
+  _displayName: "\u0422\u0435\u0441\u0442\u043E\u0432\u044B\u0439 \u0441\u043D\u0430\u0440\u044F\u0434"
+  _compatibleWeaponId: main_gun
+  _projectilePrefab: {fileID: 3558969613062986172, guid: c05d58399f39ea64fae3d1ee1e731fb7, type: 3}
+  _muzzleSpeed: 50
+  _projectileMass: 1
+  _projectileLifetime: 10

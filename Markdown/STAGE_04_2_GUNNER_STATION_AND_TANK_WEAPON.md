@@ -18,20 +18,29 @@
 In Progress
 
 Current checkpoint:
-Stage E — hatch interactions and tank entry/exit flow. GunnerStation,
-turret aiming, camera display and zoom work according to the user;
-the hatch interaction model and detailed Stage E acceptance remain open
+Gunner station, shell pickup, Press breech loading and Rigidbody firing
+are implemented and wired in code. Full firing acceptance is not recorded.
+Current task: verify tank stability during turret rotation with the ammo rack
+enabled after linking Physics/Turret to Turret_Yaw.
 
 Checkpoint date:
-2026-10-05
+2026-10-07
 
 Next session:
-1. Finish one clear interaction flow for both hatches and crew seats
-2. Check driver hatch → DriverStation and turret hatch → free interior →
-   GunnerStation; verify that the prefab has no duplicate entry paths
-3. Verify exit and re-entry in Play Mode, then finish Stage E acceptance
-4. Only after Stage E: Stage F preloaded shot from Muzzle
+1. Verify the turret/ammo-rack collision fix in Play Mode
+2. Verify empty gun -> pickup -> Press load -> occupy Gunner -> LMB shot
+3. Verify chamber consumption, repeated dry fire, reload and projectile TTL
+4. Record remaining aiming, zoom, lifecycle and station regression checks
+5. Architecture refactoring, crew fallback, sounds and extra FX are deferred
 ```
+
+Уточнение пользователя от 2026-10-06 определяет первый обязательный поток:
+взять снаряд → вставить его в орудие → сесть на место наводчика → выстрелить.
+Орудие изначально пустое; тестовый preload не используется. Минимальные звуки
+и дополнительный визуальный отклик выстрела/зарядки пока исключены.
+Зарядка с занятого места и fallback роли CommanderLoader остаются последующим
+расширением. В рамках этого шага пользователь вносит код самостоятельно;
+архитектурный рефакторинг отложен.
 
 Manual acceptance Stage 04.1 завершён. Автоматические EditMode/PlayMode tests
 для этого acceptance flow в документе пока не зафиксированы.
@@ -54,8 +63,21 @@ Manual acceptance Stage 04.1 завершён. Автоматические Edit
 - подтверждено пользователем: Player входит через люк, находится внутри
   башни, садится на место стрелка, видит внешний мир на `Display_Gunner`
   и управляет башней; позднее пользователь подтвердил работу zoom по ПКМ;
-- `ZoomHeld` подключён к FOV `GunnerCamera`; `FireRequested` доходит до Gunner
-  intent, но выстрел и зарядка ещё не подключены.
+- `ZoomHeld` подключён к FOV `GunnerCamera`;
+- реализованы `IHoldableItem`, освобождение предмета из `HeldItemSlot`,
+  `ShellItem`, `ShellDefinition`, изначально пустой `GunChamber`,
+  `GunLoadingService` и `BreechLoadInteractable` с Press-взаимодействием;
+- реализованы `GunShotRequest`, `IGunLauncher`, `RigidbodyGunLauncher`,
+  `GunConfig`, `TankGun` и `TankWeaponModule`; `TankWeaponInstaller` создаёт
+  одну общую камору для зарядки и стрельбы;
+- `GunnerStationAdapter` передаёт `FireRequested` в `TankGun.TryFire`,
+  используя `MuzzlePose` и наследуемую скорость корпуса;
+- созданы отдельные `Shell_Pickup` и `TankProjectile_Prototype`;
+  летящий prefab очищен от компонентов подбора;
+- `ShellDefinition` настроен на projectile prefab: скорость 50 м/с,
+  масса 1 кг, время жизни 10 с. Это тестовые параметры прототипа;
+- полный цикл стрельбы и устранение опрокидывания ещё требуют подтверждения
+  в Play Mode. Наличие реализации не означает завершение acceptance.
 
 Отметка текущего среза (по сообщению пользователя и проверке кода/prefab):
 
@@ -63,14 +85,27 @@ Manual acceptance Stage 04.1 завершён. Автоматические Edit
 - [x] Player находится внутри башни и может занять GunnerStation.
 - [x] Изображение внешнего мира выводится на экран стрелка.
 - [x] Стрелок управляет башней с занятого места.
-- [ ] Проверены выход со станции внутрь башни и выход наружу через люк.
+- [x] Выход наводчика через F оставляет Player внутри башни; выход наружу
+      через люк работает по сообщению пользователя.
+- [x] Водитель входит и выходит через водительский люк; F для него не используется.
 - [ ] Проверены pitch, limits и оба режима отсчёта направления башни.
 - [x] Zoom по ПКМ работает по сообщению пользователя; точность 2x и сброс
       при выходе требуют отдельной проверки.
-- [ ] Приведены к единой схеме оба люка и входы на места экипажа.
-- [ ] Реализован первый выстрел из предварительно заряженного орудия.
+- [x] Для люков используется Hold, для сидений, pickup и казённика — Press.
+- [x] Реализован общий контракт предмета в руках и освобождение рук при зарядке.
+- [x] Реализованы пустая камора, проверка совместимости и запрет повторной загрузки.
+- [x] Реализован Rigidbody launcher с дочерним BoxCollider, начальной скоростью,
+      исключением столкновений со своим танком и удалением по времени жизни.
+- [x] Реализованы расход заряда после успешного запуска и cooldown.
+- [x] При отказе launcher заряд остаётся в каморе.
+- [x] Орудие зарегистрировано через TankWeaponModule в Gameplay-фазе.
+- [x] ЛКМ наводчика подключена к TankGun через существующий intent.
+- [x] SeatInteraction перенесён под constrained SeatAnchor и наследует его движение.
+- [x] В DemoScene добавлен ParentConstraint на Physics/Turret с источником Turret_Yaw.
+- [ ] Подтверждён в Play Mode полный цикл pickup → Press loading → посадка → выстрел.
+- [ ] Подтверждено отсутствие опрокидывания при повороте башни со включённой укладкой.
 
-Текущая задача этапа E — привести входы к понятной схеме:
+Зафиксированная схема взаимодействия:
 
 ```text
 E на любом люке → Hold → переход к назначенной цели
@@ -79,13 +114,43 @@ E на любом люке → Hold → переход к назначенной
 
 E на кресле внутри башни → Press → занять Station
 E на прочем доступном объекте → Press → выполнить его действие
+F на месте внутри башни → встать и остаться внутри Tank
+Выход водителя → Hold E на водительском люке
 ```
 
 Общая Interaction feature уже отвечает за поиск цели, нажатие/удержание,
 progress и отмену. Люк задаёт цель перехода; Station отвечает за занятие места.
-Это целевая схема, а не отметка о завершённой реализации. Перед приёмкой
-нужно проверить привязки interaction targets и убедиться, что у каждого
-люка остался один действующий путь входа.
+Базовый flow входа/выхода подтверждён пользователем; повторные regression
+и lifecycle-проверки остаются в разделе 22.
+
+## 1.1. Текущая задача — устойчивость Tank при повороте башни
+
+Симптом: при повороте башни вправо корпус опрокидывается влево.
+При диагностике обнаружены отдельные кинематические Rigidbody снарядов
+в TurretRack с включёнными физическими столкновениями. Укладка следовала
+за Turret_Yaw, а стенки Physics/Turret оставались относительно корпуса.
+Расчёт пересечений без изменения сцены показал контакт с TurretColliderLEFT
+при повороте на 30–60°, до примерно 8 см при 45°.
+Это подтверждённый геометрический конфликт; причинная связь с опрокидыванием
+и успешное устранение симптома требуют проверки в Play Mode.
+
+В сохранённой DemoScene ParentConstraint на Physics/Turret уже добавлен.
+TurretRack сохраняет существующий constraint на тот же Turret_Yaw.
+В root-prefab этот новый constraint пока отсутствует: изменение находится
+в scene override. При закреплении настройки нужно учесть это различие.
+
+- [ ] Проверить, что Physics/Turret и TurretRack следуют за одной башней.
+- [ ] При необходимости сравнить поворот с временно отключённым TurretRack,
+      затем включить его обратно.
+- [ ] Со включёнными четырьмя снарядами проверить поворот в обе стороны
+      без толчков, крена и опрокидывания корпуса.
+- [ ] Повторить проверку после подбора снаряда и после вставания через F.
+- [ ] После устойчивого поворота выполнить полный acceptance стрельбы.
+
+Следующий шаг после этой задачи — приёмка первого ручного цикла стрельбы,
+а не реализация нового оружейного механизма. Урон, пробитие, удаление projectile
+по попаданию, pooling, CommanderLoader fallback, звук и дополнительные FX
+в этом прототипе ещё не реализованы; архитектурный рефакторинг отложен.
 
 ---
 
@@ -96,6 +161,7 @@ progress и отмену. Люк задаёт цель перехода; Station
 - входит внутрь башни через верхний люк;
 - свободно перемещается внутри башни и взаимодействует с её предметами;
 - может выбрать одно из доступных мест экипажа — Gunner или CommanderLoader;
+- до посадки подбирает ShellItem и вручную заряжает орудие из walking mode;
 - занимает GunnerStation через существующую Interaction feature;
 - остаётся физически закреплённым в кресле;
 - управляет горизонтальным поворотом башни;
@@ -104,8 +170,8 @@ progress и отмену. Люк задаёт цель перехода; Station
 - наблюдает внешний мир через экран камеры прицела;
 - включает двукратное увеличение камеры;
 - производит выстрел только из заряженного и готового орудия;
-- при отсутствии командира-заряжающего может подобрать снаряд и зарядить
-  орудие, не покидая своего места;
+- в последующем расширении при отсутствии командира-заряжающего может подобрать
+  снаряд и зарядить орудие, не покидая своего места;
 - взаимодействует с пультом, казёнником и дополнительными модулями через
   общую Interaction feature;
 - корректно покидает GunnerStation, оставаясь внутри башни;
@@ -120,6 +186,12 @@ Player снаружи подходит к верхнему люку Tank
         ↓
 Player переходит в свободный walking mode внутри Tank
         ↓
+подбирает ShellItem через Interact
+        ↓
+наводится на BreechLoadPoint и нажимает Interact (Press)
+        ↓
+ShellItem извлекается из рук, GunChamber переходит в Loaded
+        ↓
 взаимодействует с GunnerStation или CommanderLoaderStation
         ↓
 нажимает Interact и занимает место
@@ -131,12 +203,6 @@ Player прикрепляется к GunnerSeatAnchor
 GunnerCamera выводится на Display_Gunner
         ↓
 Player наводит башню и орудие
-        ↓
-при свободной роли CommanderLoader подбирает ShellItem
-        ↓
-наводится на BreechLoadPoint и удерживает Interact
-        ↓
-GunChamber переходит в Loaded
         ↓
 Player нажимает Fire
         ↓
@@ -234,7 +300,8 @@ Turret_Yaw
 - проверка точности 2x zoom и сброса FOV при выходе;
 - детальная Play Mode проверка выхода со станции, выхода через люк,
   reference modes и освобождения ресурсов display;
-- работа с предметами в руках, ручная зарядка и выстрел.
+- приёмка уже реализованных предметов в руках, Press-зарядки и Rigidbody-выстрела;
+- устойчивость корпуса при повороте башни с физическими снарядами в укладке.
 
 ---
 
@@ -400,8 +467,9 @@ CommanderLoader — одна совмещённая роль и одна Station
 
 В `CODEX_Murky_Aces.md` ballistic model помечена `TBD`.
 
-До решения разрешено определить только контракт `IGunLauncher`. Конкретная
-реализация выбирается отдельно:
+Пользователь выбрал Rigidbody projectile для первого прототипа.
+Реализован `RigidbodyGunLauncher` через контракт `IGunLauncher`.
+Выбор не фиксирует финальную боевую баллистику; альтернативы для дальнейшей работы:
 
 - физический Rigidbody projectile;
 - custom ballistic simulation;
@@ -504,6 +572,9 @@ Gun_Pitch
 
 Ручная зарядка работает отдельно от WASD-команд:
 
+В первом обязательном потоке Player выполняет её в walking mode внутри башни,
+до посадки. Доступность зарядки не требует занятой GunnerStation.
+
 ```text
 PlayerInteraction
         ↓
@@ -511,7 +582,7 @@ ShellPickupInteractable
         ↓
 HeldItemSlot
         ↓
-BreechLoadInteractable (Hold)
+BreechLoadInteractable (Press)
         ↓
 GunChamber.Load(shell)
 ```
@@ -552,8 +623,10 @@ Enter → Drive → Interact → Exit
 
 # 9. Этап B — обобщение Station foundation
 
-**Статус: выполняется.** Общий lifecycle и registry уже внедрены для Driver,
-но второй независимо созданный station runtime ещё не добавлен.
+**Статус на 2026-10-07: базовое обобщение реализовано.** Driver и Gunner
+имеют отдельные controllers в общем CrewStationRegistry и используют общий
+lifecycle. CommanderLoaderStation и дополнительные display feeds остаются
+расширениями; regression/lifecycle acceptance ещё не завершён.
 
 ## 9.1. CrewStationView
 
@@ -709,8 +782,9 @@ Look                 Pointer Delta
 
 ## 10.2. Intent data
 
-**Статус: реализовано в коде; сквозная проверка после подключения
-GunnerStation ещё не выполнена.**
+**Статус на 2026-10-07: реализовано и подключено.** Пользователь подтвердил
+управление башней и zoom через GunnerStation; FireRequested теперь связан
+с TankGun. Полная проверка suppression и стрельбы остаётся в acceptance.
 
 Завершено:
 
@@ -895,20 +969,21 @@ Adapter:
 
 # 12. Этап E — GunnerStation и камера прицела
 
-**Статус: сейчас работа над люками и переходами; этап E ещё открыт.**
+**Статус на 2026-10-07: основной flow реализован и подтверждён пользователем;
+детальный acceptance ещё открыт.**
 Основной поток станции и экрана работает по сообщению пользователя.
 `GunnerCameraPresenter` зарегистрирован после применения
 углов башни. `GunnerStation` имеет `CameraAnchor`, собственный display feed
 и controller; `StationDisplayFeed` создаёт runtime `RenderTexture`.
 Пользователь подтвердил посадку, изображение внешнего мира, управление
-башней и работу zoom. Остались проверка точности 2x zoom и детальная
-проверка exit, hatch и lifecycle feed.
+башней, работу zoom, выход через F внутрь башни и отдельный выход через люк.
+Остались проверка точности 2x zoom, повторных циклов и lifecycle feed.
 
-Для завершения работы с люками нужно сохранить два разных маршрута после
+Для люков используются два разных маршрута после
 одинакового Hold-взаимодействия: люк водителя ведёт прямо в DriverStation,
 верхний люк ведёт в свободное состояние внутри башни. Посадка на место
-стрелка изнутри выполняется через Press. Текущие компоненты и ссылки prefab
-ещё требуют согласования с этой схемой и проверки в Play Mode.
+стрелка изнутри выполняется через Press. Базовые переходы работают;
+оставшиеся regression-проверки перечислены в разделе 22.
 
 ## 12.1. Anchors
 
@@ -1000,6 +1075,19 @@ zoomFactor = 2
 
 # 13. Этап F — состояние орудия и первый выстрел
 
+**Статус на 2026-10-07:** реализация и подключение завершены в коде;
+Play Mode acceptance раздела 13.6 / 22.4 остаётся открытым.
+
+- [x] GunChamber хранит идентификатор заряда и изначально пуст.
+- [x] TankGun проверяет заряд и cooldown, расходует заряд только после успешного launch.
+- [x] GunShotRequest и IGunLauncher передают данные запуска.
+- [x] RigidbodyGunLauncher создаёт отдельный projectile из MuzzlePose.
+- [x] GunnerStationAdapter подключает ЛКМ; TankWeaponModule обновляет cooldown.
+- [ ] Подтверждён полный цикл ручной зарядки и выстрела в Play Mode.
+
+Первый выстрел выполняется только после ручного pickup и loading из этапов G/H.
+Сначала реализуется состояние каморы, затем предметы/зарядка, затем firing.
+
 ## 13.1. GunChamber
 
 Минимальные состояния:
@@ -1018,6 +1106,10 @@ Cooldown
 
 `GunChamber` хранит ссылку/идентификатор `ShellDefinition`, а не GameObject
 снаряда в руках.
+
+В текущем прототипе Domain-камора хранит только shell id и состояния Empty/Loaded.
+ShellDefinition хранится в GunLoadingService, cooldown — в TankGun.
+Продолжительного Loading/Firing state и очереди запросов нет.
 
 ## 13.2. TankGun
 
@@ -1048,11 +1140,19 @@ Actor / Tank identity
 
 ## 13.4. Первый vertical slice
 
-До ручной зарядки разрешён тестовый preloaded shell:
+Подтверждённый первый поток использует изначально пустую камору:
 
 ```text
-GunnerStation occupied
-GunChamber preloaded
+Player walking inside turret
+GunChamber Empty
+        ↓
+pickup ShellItem
+        ↓
+manual loading at BreechLoadPoint
+        ↓
+GunChamber Loaded, hands free
+        ↓
+Player occupies GunnerStation
         ↓
 Player наводится
         ↓
@@ -1065,26 +1165,22 @@ GunChamber Empty
 повторный Fire отклонён
 ```
 
-Preload существует только для изоляции проверки наведения и firing pipeline.
-Он удаляется или выключается до финального acceptance.
+Preload не используется. После первого выстрела для повторного запуска Player
+встаёт с места, берёт следующий снаряд, заряжает орудие и снова занимает место.
 
 ## 13.5. Presentation
 
-Первый slice должен предусмотреть события для:
-
-- muzzle flash;
-- shot audio;
-- recoil animation;
-- camera impulse;
-- smoke;
-- dry fire feedback.
-
-Конкретные assets могут быть временными. Gameplay-состояние не должно зависеть
-от успешного воспроизведения эффекта.
+Звуки выстрела/зарядки и дополнительный визуальный отклик отложены:
+muzzle flash, recoil animation, camera impulse, smoke и dry fire feedback
+не входят в текущий slice. Проверка выполняется по запуску из Muzzle,
+состоянию каморы и расходованию загруженного снаряда.
+Существующий Interaction HUD сохраняется; новые эффекты для него не требуются.
 
 ## 13.6. Критерий завершения
 
 - ЛКМ создаёт один запрос на одно нажатие;
+- камора изначально Empty и получает снаряд только через ручную зарядку;
+- Player может зарядить орудие до посадки, затем занять GunnerStation;
 - заряженное орудие производит один выстрел;
 - пустое орудие не создаёт projectile;
 - projectile/launch pose совпадает с `Muzzle`;
@@ -1095,6 +1191,17 @@ Preload существует только для изоляции проверк
 ---
 
 # 14. Этап G — предметы, снаряды и руки
+
+**Статус на 2026-10-07:** базовая реализация завершена в коде;
+drop, failure recovery и подробный Play Mode acceptance остаются открытыми.
+
+- [x] HeldItemSlot работает через IHoldableItem и IPickupReceiver.
+- [x] PickupInteractable реализует общий holdable contract.
+- [x] ShellItem хранит ShellDefinition; pickup physics остаётся в PickupInteractable.
+- [x] Поиск целей доступен с предметом в руках; held item исключается из targeting.
+- [x] ShellDefinition содержит projectile prefab, скорость, массу и время жизни.
+- [x] Pickup prefab отделён от летящего projectile; укладка вынесена из модели.
+- [ ] Подтверждены pickup/drop и recovery в Play Mode.
 
 ## 14.1. Общий holdable item contract
 
@@ -1174,67 +1281,70 @@ World item:
 
 # 15. Этап H — ручная зарядка
 
+**Статус на 2026-10-07:** Press-зарядка реализована;
+сквозная приёмка вместе с выстрелом ещё не зафиксирована.
+Hold используется только на люках. Длительная loading session,
+progress и reservations для неё в первый прототип не входят.
+
+- [x] BreechLoadInteractable расположен вне модели и возвращает Press.
+- [x] GunLoadingService проверяет interior context, held item, совместимость и пустую камору.
+- [x] Успешная загрузка освобождает руки и удаляет pickup-представление снаряда.
+- [x] Зарядка и стрельба используют одну камору из TankWeaponInstaller.
+- [ ] Подтверждён полный повторяемый цикл зарядки и выстрела в Play Mode.
+
 ## 15.1. BreechLoadInteractable
 
 Компонент связывает Interaction feature и application service загрузки.
 
-`GetInteractionInfo` возвращает Hold только если:
+`GetInteractionInfo` возвращает Press только если:
 
-- actor занимает подходящую Station либо имеет loader capability;
-- permission policy разрешает fallback-loading;
+- для первого потока actor находится в Interior, свободно перемещается и не
+  занимает Station; занятая GunnerStation не требуется;
+- для последующего seated-loading потока actor занимает подходящую Station,
+  а permission policy разрешает fallback-loading;
 - actor держит совместимый ShellItem;
 - chamber пуста;
-- gun не firing и не cooldown в запрещающем состоянии;
-- другой actor не зарезервировал breech.
+- компонент казённика и TankWeaponView активны.
+
+В текущем коде GunLoadingService проверяет interior context, но отдельного
+запрета занятой Station и проверки cooldown при зарядке нет.
+Seated-loading permission и межакторные reservations остаются расширениями.
 
 ## 15.2. Begin
 
-- повторно проверить условия;
-- зарезервировать breech за actor id;
-- зарезервировать ShellItem;
-- включить loading audio;
-- при необходимости запустить presentation state.
+- повторно проверить доступность Press-взаимодействия;
+- использовать обычный Press lifecycle общей Interaction feature;
+- не вводить Hold progress, звук или дополнительные эффекты.
 
 ShellItem остаётся в руках до успешного Complete.
 
 ## 15.3. Cancel
 
-Причины:
-
-- InputReleased;
-- TargetLost;
-- TargetUnavailable;
-- ContextChanged;
-- Station exit;
-- Tank disable/destroy.
-
-Действия:
-
-- остановить loading audio;
-- снять reservations;
-- оставить ShellItem в руках;
-- вернуть chamber в Empty;
-- очистить presentation state.
+В первом прототипе нет длительной загрузки по удержанию.
+Cancel не изменяет камору и предмет в руках; отдельные reservations не создаются.
+Если Complete не проходит повторную проверку, предмет остаётся в руках.
 
 ## 15.4. Complete
 
-- повторно подтвердить actor и reservations;
-- извлечь ShellItem из carrier без world drop;
-- поместить его `ShellDefinition` в GunChamber;
-- уничтожить или перевести world representation в pooled state;
-- снять reservations;
-- остановить loading audio;
-- сообщить presentation о Loaded state.
+- повторно подтвердить actor, held item и совместимость;
+- записать shell id в пустую GunChamber;
+- освободить HeldItemSlot без world drop; при отказе откатить запись каморы;
+- сохранить ShellDefinition в GunLoadingService;
+- отключить и уничтожить world representation после успешной загрузки.
 
 ## 15.5. Interaction scope
 
-Текущий `StationPanelRoot`, разрешающий только дочерние targets, недостаточен
-для снарядов и казённика.
+В walking mode внутри Tank ограничение StationInteractionScope снято;
+pickup и breech доступны через обычный поиск целей и проверки самого target.
+Для первого потока дополнительный scope зарядки с занятого места не требуется.
+
+Для последующего seated-loading потока используется отдельный
+`StationInteractionScope`, а `StationPanelRoot` отвечает за экран панели.
 
 Нужен составной scope:
 
 ```text
-GunnerInteractionScope
+StationInteractionScope
 ├── GunnerPanelRoot
 ├── BreechInteractionRoot
 ├── AllowedAmmoRoots / AmmoReachVolume
@@ -1251,18 +1361,21 @@ Scope должен:
 
 ## 15.6. Критерий завершения
 
-- Gunner подбирает видимый снаряд, не покидая места;
+- Player в walking mode внутри башни подбирает видимый снаряд до посадки;
 - наведение на breech показывает корректный prompt;
-- удержание E воспроизводит звук и progress;
-- отпускание E отменяет загрузку без потери снаряда;
-- потеря цели отменяет загрузку;
+- одно нажатие E выполняет загрузку без Hold progress, нового звука и эффектов;
+- несовместимый снаряд или занятая камора не расходуют предмет;
+- отказ освобождения HeldItemSlot откатывает загрузку;
 - Complete помещает shell в chamber;
-- после загрузки можно немедленно произвести выстрел;
+- после загрузки Player занимает GunnerStation и может произвести выстрел;
 - два actors не могут одновременно загрузить один breech или shell.
 
 ---
 
 # 16. Этап I — fallback роли командира-заряжающего
+
+Последующее расширение: зарядка с занятого места. Оно не блокирует первый
+поток pickup → loading в walking mode → посадка → выстрел.
 
 ## 16.1. Permission policy
 
@@ -1508,7 +1621,7 @@ sessions очищаются.
 - успешный exit очищает gunner intents;
 - успешный exit перемещает Player к внутреннему anchor рядом с сидением;
 - station exit не переносит Player наружу;
-- активный loading Hold отменяется;
+- pending interaction очищается; длительной loading Hold session в прототипе нет;
 - held shell остаётся у Player либо обрабатывается отдельным подтверждённым
   правилом;
 - camera feed отключается после завершения exit.
@@ -1591,11 +1704,11 @@ sessions очищаются.
 
 - несовместимый shell отклонён;
 - занятый chamber отклоняет Begin;
-- Begin создаёт reservations;
-- Cancel снимает reservations и сохраняет shell у carrier;
+- Press Begin повторно проверяет доступность;
+- Cancel не меняет shell и chamber;
 - Complete перемещает definition в chamber;
-- второй actor не может начать Hold;
-- потеря permission отменяет session;
+- отказ освобождения held item откатывает chamber;
+- повторная загрузка занятой каморы отклоняется;
 - свободная CommanderLoader role разрешает fallback;
 - занятая role запрещает fallback.
 
@@ -1620,26 +1733,27 @@ sessions очищаются.
 
 ## 22.1. Enter / Exit
 
-- [ ] Player входит внутрь Tank через Hold interaction с верхним люком.
-- [ ] После входа Player свободно перемещается внутри башни.
+- [x] Player входит внутрь Tank через Hold interaction с верхним люком.
+- [x] После входа Player свободно перемещается внутри башни.
 - [ ] Внутри доступны как минимум GunnerStation и CommanderLoaderStation.
-- [ ] Player входит в GunnerStation через отдельный Press interaction.
-- [ ] Player закрепляется в GunnerSeatAnchor.
+- [x] Player входит в GunnerStation через отдельный Press interaction.
+- [x] Player закрепляется в GunnerSeatAnchor.
 - [ ] Tank не получает случайный Fire от кнопки входа.
 - [ ] Main Camera остаётся на Player.CameraPivot.
-- [ ] ExitStation возвращает walking input и interaction внутри Tank.
-- [ ] ExitStation перемещает Player к GunnerExitAnchor рядом с сидением.
-- [ ] ExitStation не перемещает Player наружу.
+- [x] ExitStation возвращает walking input и interaction внутри Tank.
+- [x] ExitStation перемещает Player к GunnerExitAnchor рядом с сидением.
+- [x] ExitStation не перемещает Player наружу.
 - [ ] После вставания Player может взаимодействовать со вторым сидением и
       предметами внутри башни.
-- [ ] Выйти наружу можно только через взаимодействие с верхним люком.
+- [x] Экипаж башни выходит наружу через Hold-взаимодействие с верхним люком.
+- [x] Водитель входит и выходит через водительский люк, без F.
 - [ ] Цикл Enter → Exit работает минимум три раза.
 
 ## 22.2. Look и экран
 
 - [ ] Mouse Look осматривает cockpit в заданных пределах.
 - [ ] Player body не вращается относительно кресла.
-- [ ] Display_Gunner показывает внешний вид по направлению прицела.
+- [x] Display_Gunner показывает внешний вид по направлению прицела.
 - [ ] Экран не показывает сам себя.
 - [ ] ПКМ даёт корректное 2x увеличение.
 - [ ] После отпускания ПКМ базовый FOV восстанавливается.
@@ -1663,19 +1777,19 @@ sessions очищаются.
 - [ ] Projectile/shot event появляется из Muzzle.
 - [ ] После выстрела chamber становится Empty.
 - [ ] Cooldown запрещает слишком частый повторный выстрел.
-- [ ] Выстрел имеет звук и минимальный visual feedback.
+- [ ] Первый выстрел выполняется после ручной зарядки; preload отсутствует.
 
 ## 22.5. Pickup и loading
 
-- [ ] Gunner видит доступный shell в зоне interaction.
+- [ ] Player в walking mode внутри башни видит доступный shell.
 - [ ] E подбирает shell в руки.
 - [ ] Удерживаемый shell не блокирует targeting breech.
 - [ ] На BreechLoadPoint отображается правильный prompt.
-- [ ] Hold E запускает звук и progress.
-- [ ] Отпускание E отменяет loading.
-- [ ] Потеря цели отменяет loading.
-- [ ] Успешный Hold загружает chamber.
-- [ ] После загрузки можно сразу выстрелить.
+- [ ] Одно нажатие E (Press) загружает chamber; Hold используется только на люках.
+- [ ] Несовместимый shell не расходуется и остаётся в руках.
+- [ ] Попытка загрузить занятую камору не расходует shell.
+- [ ] После успешной Press-зарядки chamber становится Loaded.
+- [ ] После загрузки руки свободны; Player садится в GunnerStation и стреляет.
 - [ ] Один shell нельзя загрузить дважды.
 
 ## 22.6. Role fallback
@@ -1699,6 +1813,14 @@ sessions очищаются.
 - [ ] Destroy Tank освобождает camera resources.
 - [ ] Scene unload не оставляет runtime RenderTexture.
 - [ ] После recovery Player имеет Main Camera, walking look и interaction.
+
+## 22.9. Текущая проверка физики башни
+
+- [ ] Physics/Turret и TurretRack движутся вместе с Turret_Yaw.
+- [ ] При повороте в обе стороны с четырьмя снарядами танк не получает боковой толчок.
+- [ ] При подборе снаряда и вставании через F не возникает крен или опрокидывание.
+- [ ] Изменение ParentConstraint из DemoScene закреплено в нужном wrapper-prefab
+      после подтверждения результата.
 
 ---
 
@@ -1744,7 +1866,7 @@ Tank/Stations/
 ├── StationCapabilityProfile
 ├── StationDisplayFeed
 ├── GunnerStationAdapter
-└── GunnerInteractionScope
+└── StationInteractionScope
 
 Tank/Interior/
 ├── upper hatch interactable
@@ -1774,7 +1896,7 @@ Tank/Ammunition/
 ├── ShellItem
 ├── BreechLoadInteractable
 ├── GunLoadingPermission
-└── loading presentation/audio
+└── loading presentation/audio (отложено)
 
 Tank/Modules/
 ├── ITankSearchlightModule
@@ -1833,30 +1955,30 @@ WASD
 + zoom
 ```
 
-## Slice 5 — Preloaded shot
-
-```text
-GunChamber Loaded
-+ Fire
-+ Muzzle launch event
-+ Empty state
-```
-
-## Slice 6 — Items and ShellItem
+## Slice 5 — Items and ShellItem
 
 ```text
 generic holdable contract
-+ pickup/drop
++ pickup/drop in walking mode
 + interaction while hands occupied
 ```
 
-## Slice 7 — Manual loading
+## Slice 6 — Empty chamber and manual loading
 
 ```text
-Breech Hold
-+ audio/progress
-+ chamber load
-+ cancellation/recovery
+GunChamber initially Empty
++ Breech Press before occupying Station
++ chamber load / shell consumption / hands free
++ validation / failed load recovery
+```
+
+## Slice 7 — First shot after manual loading
+
+```text
+manual loading completed
++ occupy GunnerStation
++ FireRequested / Muzzle launch event
++ Empty state / repeated dry fire rejected
 ```
 
 ## Slice 8 — Crew fallback
@@ -1893,6 +2015,8 @@ searchlights
 - полноценный inventory UI;
 - ammo stacking;
 - все финальные типы shell;
+- минимальные звуки выстрела/зарядки и дополнительный визуальный отклик
+  (временно отложены по указанию пользователя);
 - финальные VFX/audio assets;
 - сложную gyro-stabilization по pitch и roll;
 - AI gunner;
@@ -1915,6 +2039,12 @@ Player входит в Tank через верхний люк
         ↓
 свободно перемещается внутри башни
         ↓
+Player подбирает ShellItem
+        ↓
+Press E загружает изначально пустой GunChamber с проверкой условий
+        ↓
+ShellItem извлекается из рук; руки свободны
+        ↓
 Player занимает GunnerStation
         ↓
 Main Camera остаётся на Player
@@ -1926,10 +2056,6 @@ WASD управляет Turret_Yaw и Gun_Pitch
 Space переключает подтверждённые reference modes
         ↓
 ПКМ даёт 2x zoom
-        ↓
-при свободной CommanderLoader role Player подбирает ShellItem
-        ↓
-Hold E загружает GunChamber со звуком и cancellation
         ↓
 ЛКМ производит один выстрел из Muzzle
         ↓
@@ -1947,8 +2073,9 @@ Player взаимодействует с верхним люком и выход
 
 - DriverStation и GunnerStation используют один station lifecycle;
 - station exit и Tank exit являются разными lifecycle;
-- освобождение Station всегда оставляет Player внутри Tank;
-- внешний вход и выход выполняются только через верхний люк;
+- освобождение станции внутри башни через F оставляет Player внутри Tank;
+- экипаж башни входит и выходит наружу через верхний люк;
+- DriverStation использует водительский люк для входа и выхода, без F;
 - Player может свободно находиться внутри Tank без занятой Station;
 - role-specific код ограничен adapters и конкретными gameplay features;
 - Gunner input проходит через Action Map и intent buffer;
@@ -1956,7 +2083,7 @@ Player взаимодействует с верхним люком и выход
 - interaction с shell/breech использует общую Interaction feature;
 - camera feed владеет instance-safe resources;
 - ballistic implementation заменяема через контракт;
-- role fallback определяется отдельной policy;
+- последующий seated-loading fallback определяется отдельной policy;
 - все failure paths снимают reservations и восстанавливают Player;
 - DriverStation не получает regression.
 

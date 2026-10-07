@@ -195,13 +195,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         private void RefreshFocus()
         {
-            IPickupReceiver pickupReceiver = _context.Actor as IPickupReceiver;
-
-            if (pickupReceiver != null && pickupReceiver.IsOccupied)
-            {
-                ClearFocus();
-                return;
-            }
 
             if (!_targetFinder.TryFindTarget(
                     _targetScope,

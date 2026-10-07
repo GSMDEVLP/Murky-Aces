@@ -98,7 +98,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     _view.RoleId,
                     _view.SeatAnchor,
                     _view.CameraAnchor,
-                    _view.PanelRoot,
+                    _view.InteractionScope,
                     _view.CapabilityProfile))
             {
                 return CancelFailedEnter(actor.Id);
@@ -316,7 +316,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                     _view.RoleId,
                     _view.SeatAnchor,
                     _view.CameraAnchor,
-                    _view.PanelRoot,
+                    _view.InteractionScope,
                     _view.CapabilityProfile);
 
             bool stationRolledBack = _station.TryCancelExit(occupantId);

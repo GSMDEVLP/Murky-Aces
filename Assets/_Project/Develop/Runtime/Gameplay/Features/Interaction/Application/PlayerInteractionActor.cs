@@ -29,7 +29,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         public ulong Id { get; }
 
         public bool IsOccupied => _pickupReceiver.IsOccupied;
-
+        public IHoldableItem HeldItem => _pickupReceiver.HeldItem;
         public bool IsInStation => _stationOccupant.IsInStation;
 
         public CrewLocation Current =>
@@ -83,6 +83,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         public bool TryReceive(IInteractable item)
         {
             return _pickupReceiver.TryReceive(item);
+        }
+        
+        public bool TryReleaseHeldItem(IHoldableItem expectedItem)
+        {
+            return _pickupReceiver.TryReleaseHeldItem(expectedItem);
         }
 
         public bool TryDrop()

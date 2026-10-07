@@ -51,6 +51,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 
             Container.Bind<GunnerZoomState>()
                 .FromInstance(zoomState).AsSingle();
+                
             Container.Bind<TurretAimRuntime>()
                 .FromInstance(runtime).AsSingle();
 
