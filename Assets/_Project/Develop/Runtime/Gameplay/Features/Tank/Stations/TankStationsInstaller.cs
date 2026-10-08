@@ -7,6 +7,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 {
     public sealed class TankStationsInstaller : MonoInstaller
     {
+        [Header("Commander Station")]
+        [SerializeField] private CrewStationView _commanderStationView;
+
         [Header("Driver Station")]
         [SerializeField] private CrewStationView _driverStationView;
         [SerializeField] private StationDisplayFeed _driverDisplayFeed;
@@ -19,18 +22,25 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
        public override void InstallBindings()
         {
             if (_driverStationView == null || _driverDisplayFeed == null ||
-                _gunnerStationView == null || _gunnerDisplayFeed == null)
+                _gunnerStationView == null || _gunnerDisplayFeed == null ||
+                _commanderStationView == null)
             {
                 throw new InvalidOperationException(
-                    "Driver or gunner station references are not assigned.");
+                    "Crew station references are not assigned.");
             }
 
             Container.Bind<DriverStationAdapter>().AsSingle();
             Container.Bind<GunnerStationAdapter>().AsSingle();
+            Container.Bind<CommanderStationAdapter>().AsSingle();
 
             Container.Bind<CrewStationRegistry>()
                 .FromMethod(context =>
                 {
+                    var commander = new CrewStationController(
+                        new CrewStationOccupancy(),
+                        _commanderStationView,
+                        context.Container.Resolve<CommanderStationAdapter>());
+
                     var driver = new CrewStationController(
                         new CrewStationOccupancy(),
                         _driverStationView,
@@ -43,8 +53,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                         context.Container.Resolve<GunnerStationAdapter>(),
                         _gunnerDisplayFeed);
 
-                    return new CrewStationRegistry(
-                        new List<CrewStationController> { driver, gunner });
+                        return new CrewStationRegistry(
+                            new List<CrewStationController> { driver, gunner, commander });
                 })
                 .AsSingle();
 

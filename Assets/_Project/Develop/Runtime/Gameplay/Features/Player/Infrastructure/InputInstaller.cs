@@ -65,16 +65,20 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 
             Container.BindInterfacesAndSelfTo<PlayerActionsReader>().AsSingle();
             Container.BindInterfacesAndSelfTo<DrivingActionsReader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GunnerActionsReader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<CommanderActionsReader>().AsSingle();
             Container.Bind<ActiveCommonActionsReader>().AsSingle();
             
             Container.Bind<PlayerIntentBuffer>().AsSingle();
             Container.Bind<DrivingIntentBuffer>().AsSingle();
-            Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
-            Container.BindInterfacesAndSelfTo<PlayerDrivingInputMode>().AsSingle();
-
-            Container.BindInterfacesAndSelfTo<GunnerActionsReader>().AsSingle();
+            Container.Bind<CommanderIntentBuffer>().AsSingle();
             Container.Bind<GunnerIntentBuffer>().AsSingle();
+
+            Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<PlayerDrivingInputMode>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerGunnerInputMode>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerCommanderInputMode>().AsSingle();
             
             Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
         }

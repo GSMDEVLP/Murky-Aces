@@ -26,7 +26,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             CrewStationOccupancy station,
             CrewStationView  view,
             ICrewStationRoleAdapter roleAdapter,
-            StationDisplayFeed displayFeed)
+            StationDisplayFeed displayFeed = null)
         {
             _station = station ??
                 throw new ArgumentNullException(
@@ -40,8 +40,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
                 throw new ArgumentNullException(
                     nameof(roleAdapter));
 
-            _displayFeed = displayFeed ??
-                throw new ArgumentNullException(nameof(displayFeed));
+            _displayFeed = displayFeed;
         }
 
         public bool CanBeginEnter(IInteractionActor actor)
@@ -132,7 +131,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             _entryRevision = null;
             _currentOccupant = occupant;
             _stationIntentSource = (IStationIntentSource)actor;
-            if (!_displayFeed.TryActivate())
+            if (_displayFeed != null && !_displayFeed.TryActivate())
             {
                 UnityEngine.Debug.LogWarning(
                     $"Station {RoleId} was occupied without an active display.");
@@ -227,7 +226,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
             }
 
             _currentOccupant.ClearReleaseHandler(TryForceReleaseCurrentOccupant);
-            _displayFeed.Deactivate();
+            if (_displayFeed != null)
+                _displayFeed.Deactivate();
             _roleAdapter.Deactivate();
 
             _currentOccupant = null;

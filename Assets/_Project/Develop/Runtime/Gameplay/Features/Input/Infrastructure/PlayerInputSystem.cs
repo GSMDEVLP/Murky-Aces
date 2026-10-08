@@ -16,13 +16,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
 
         private PlayerActionsReader _playerActions;
         private DrivingActionsReader _drivingActions;
+        private GunnerActionsReader _gunnerActions;
+        private CommanderActionsReader _commanderActions;
         private ActiveCommonActionsReader _commonActions;
 
         private PlayerIntentBuffer _playerIntent;
         private DrivingIntentBuffer _drivingIntent;
-
-        private GunnerActionsReader _gunnerActions;
         private GunnerIntentBuffer _gunnerIntent;
+        private CommanderIntentBuffer _commanderIntent;
 
         [Inject]
         public void Construct(
@@ -32,7 +33,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             PlayerIntentBuffer playerIntent,
             DrivingIntentBuffer drivingIntent,
             GunnerActionsReader gunnerActions,
-            GunnerIntentBuffer gunnerIntent)
+            GunnerIntentBuffer gunnerIntent,
+            CommanderActionsReader commanderActions,
+            CommanderIntentBuffer commanderIntent)
         {
             _playerActions = playerActions;
             _drivingActions = drivingActions;
@@ -41,6 +44,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             _drivingIntent = drivingIntent;
             _gunnerActions = gunnerActions;
             _gunnerIntent = gunnerIntent;
+            _commanderActions = commanderActions;
+            _commanderIntent = commanderIntent;
         }
 
         public void Tick(float deltaTime)
@@ -52,10 +57,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             DrivingActionsSnapshot driving = _drivingActions.ReadDrivingActions();
 
             GunnerActionsSnapshot gunner = _gunnerActions.ReadGunnerActions();
+            CommanderActionsSnapshot commander = _commanderActions.ReadCommanderActions();
 
             UpdatePlayerIntent(common, player, deltaTime);
             UpdateDrivingIntent(driving);
             _gunnerIntent.SetActions(gunner);
+            _commanderIntent.SetExitInput(commander.ExitPressedThisFrame, commander.ExitHeld);
         }
 
         private void UpdatePlayerIntent(CommonInputSnapshot common, PlayerActionsSnapshot player, float deltaTime)

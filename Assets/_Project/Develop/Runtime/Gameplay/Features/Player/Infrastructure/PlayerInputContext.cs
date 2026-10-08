@@ -10,6 +10,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         private const string PlayerMapName = "Player";
         private const string DrivingMapName = "Driving";
         private const string GunnerMapName = "Gunner";
+        private const string CommanderMapName = "Commander";
 
         private readonly PlayerInput _playerInput;
 
@@ -38,7 +39,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 
                     case GunnerMapName:
                         return InputMapId.Gunner;
-
+                    case CommanderMapName:
+                        return InputMapId.Commander;    
                     default:
                         return InputMapId.None;
                 }
@@ -63,6 +65,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 
                 case InputMapId.Gunner:
                     return TrySwitchMap(GunnerMapName);
+
+                case InputMapId.Commander:
+                    return TrySwitchMap(CommanderMapName);
 
                 default:
                     return false;

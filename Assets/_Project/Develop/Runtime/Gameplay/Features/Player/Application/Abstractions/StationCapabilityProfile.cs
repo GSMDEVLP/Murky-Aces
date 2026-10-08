@@ -6,7 +6,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstract
     public enum StationControlContext
     {
         Driving = 0,
-        Gunner = 1
+        Gunner = 1,
+        Commander = 2
     }
 
     [Serializable]
