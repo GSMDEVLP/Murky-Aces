@@ -18,7 +18,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
         private readonly InputAction _brake;
         private readonly InputAction _look;
         private readonly InputAction _interact;
-        private readonly InputAction _exitStation;
 
         public InputMapId MapId => InputMapId.Driving;
 
@@ -45,7 +44,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
             _brake = _map.FindAction("Brake", true);
             _look = _map.FindAction("Look", true);
             _interact = _map.FindAction("Interact", true);
-            _exitStation = _map.FindAction("ExitStation", true);
         }
 
         public DrivingActionsSnapshot ReadDrivingActions()
@@ -56,9 +54,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
             return new DrivingActionsSnapshot(
                 _throttle.ReadValue<float>(),
                 _steering.ReadValue<float>(),
-                _brake.IsPressed(),
-                _exitStation.WasPressedThisFrame(),
-                _exitStation.IsPressed());
+                _brake.IsPressed());
         }
 
         public CommonInputSnapshot ReadCommonActions()

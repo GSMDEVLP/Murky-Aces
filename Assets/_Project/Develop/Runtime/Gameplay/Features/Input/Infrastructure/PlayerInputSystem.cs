@@ -105,9 +105,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
                 driving.Steering,
                 driving.BrakeHeld);
 
-            _drivingIntent.SetExitInput(
-                driving.ExitPressedThisFrame,
-                driving.ExitHeld);
         }
     }
 }

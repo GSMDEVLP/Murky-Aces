@@ -42,6 +42,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations
 
             _displayFeed = displayFeed;
         }
+        public bool IsOccupiedBy(ulong occupantId)
+        {
+            return HasActiveOccupant() &&
+                _station.IsOccupiedBy(occupantId);
+        }
 
         public bool CanBeginEnter(IInteractionActor actor)
         {

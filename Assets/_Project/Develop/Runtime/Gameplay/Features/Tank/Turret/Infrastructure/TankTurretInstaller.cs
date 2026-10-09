@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 {
