@@ -18,7 +18,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Pr
         public bool IsAvailable =>
             isActiveAndEnabled &&
             HasValidReferences &&
-            _volume.isActiveAndEnabled &&
+            _volume.enabled &&
             _displayFeed.IsActive;
 
         private void Awake()
@@ -46,7 +46,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Pr
             if (_volume == null)
                 return;
 
-            _volume.weight = enabled ? 1f : 0f;
+            // При включении профиль должен иметь полный вес.
+            if (enabled)
+                _volume.weight = 1f;
+
+            GameObject volumeObject = _volume.gameObject;
+
+            if (volumeObject.activeSelf != enabled)
+                volumeObject.SetActive(enabled);
         }
     }
 }

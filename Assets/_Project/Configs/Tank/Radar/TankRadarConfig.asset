@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07b315546753d7b43ade887e988b46e5, type: 3}
+  m_Name: TankRadarConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Configs.TankRadarConfig
+  _range: 100
+  _scanInterval: 0.5
+  _targetTypes:
+  - {fileID: 11400000, guid: 64411e63f2e5d424e8def1812d5b64e2, type: 2}
+  - {fileID: 11400000, guid: c64bf60f1f938cc4ea71ce86fc08ef68, type: 2}
+  _initiallyEnabled: 0
