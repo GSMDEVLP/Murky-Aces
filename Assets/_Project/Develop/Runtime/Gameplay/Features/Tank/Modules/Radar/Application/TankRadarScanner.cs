@@ -21,8 +21,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Applicat
         private readonly float _rangeSquared;
         private readonly float _scanInterval;
         private readonly ulong? _ownTargetId;
-
         private float _timeUntilNextScan;
+
+
+        public bool IsRegistered { get; private set; }
 
         public TankRadarScanner(TankRadar radar, RadarTargetRegistry targets, ITankMotionBody body, TankRadarConfig config, ulong? ownTargetId)
         {
@@ -56,12 +58,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Applicat
         {
             _timeUntilNextScan = 0f;
             registry.RegisterGameplay(this);
+
+            IsRegistered = true;
         }
 
         public void Unregister(GameLoopRegistry registry)
         {
             registry.UnregisterGameplay(this);
 
+            IsRegistered = false;
             _timeUntilNextScan = 0f;
             _buffer.Clear();
             _radar.ClearContacts();
@@ -69,7 +74,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Applicat
 
         public void Tick(float deltaTime)
         {
-            if (!_radar.IsEnabled)
+            if (!IsRegistered || !_radar.IsEnabled)
             {
                 _timeUntilNextScan = 0f;
                 return;

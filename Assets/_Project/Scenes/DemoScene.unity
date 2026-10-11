@@ -382,11 +382,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0511354e2a8484c990d904fc22f855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Presentation.GameplayCameraRig
---- !u!1 &358356548 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7279852895327544394, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &462585833
 GameObject:
   m_ObjectHideFlags: 0
@@ -418,21 +413,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 767181885}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &499871117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 358356548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 511994d2d73a4dd4da696d3a2fdb4dda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Presentation.TankNightVisionIlluminator
-  _nightVisionCamera: {fileID: 1849050407}
-  _nightVisionVolume: {fileID: 781577890}
-  _infraredLight: {fileID: 1172180477}
 --- !u!1 &528887623
 GameObject:
   m_ObjectHideFlags: 0
@@ -787,17 +767,6 @@ Transform:
   - {fileID: 462585834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &781577890 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3499213492064629060, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
 --- !u!1 &840163029
 GameObject:
   m_ObjectHideFlags: 0
@@ -894,7 +863,7 @@ Transform:
   m_GameObject: {fileID: 858568423}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.9, y: 0.44, z: -3.36}
+  m_LocalPosition: {x: -37.1, y: 0.44, z: 39.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -992,37 +961,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858568423}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &866477603
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 866477604}
-  m_Layer: 0
-  m_Name: RadarRuntime
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &866477604
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 866477603}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1892297618}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1127272880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1166,11 +1104,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 630284584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!108 &1172180477 stripped
-Light:
-  m_CorrespondingSourceObject: {fileID: 5357015430293682581, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1251150508
 GameObject:
   m_ObjectHideFlags: 0
@@ -1421,11 +1354,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce28bbbdd8bb184bb4fea74f1ba2727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameLoop
---- !u!4 &1505175072 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1246684052181143846, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1608219296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,21 +1492,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3297655606603251361, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: _monoInstallers.Array.size
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 3297655606603251361, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: '_monoInstallers.Array.data[7]'
-      value: 
-      objectReference: {fileID: 2102974633}
     - target: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_Name
       value: TankRoot_Prototype
-      objectReference: {fileID: 0}
-    - target: {fileID: 5357015430293682581, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      propertyPath: m_Enabled
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6896901685877027689, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_Material
@@ -1586,17 +1502,8 @@ PrefabInstance:
       objectReference: {fileID: 1471348193}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 1246684052181143846, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2102974634}
-    - targetCorrespondingSourceObject: {fileID: 2278191552433277419, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 866477604}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7279852895327544394, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 499871117}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
 --- !u!1 &1803477704
 GameObject:
@@ -1629,16 +1536,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 630284584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1849050407 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 3253706929761468515, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1892297618 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2278191552433277419, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1963938490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1812,7 +1709,7 @@ Transform:
   m_GameObject: {fileID: 2031626790}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.89, y: 0.44, z: 5.68}
+  m_LocalPosition: {x: 51.2, y: 0.44, z: 41.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1988,52 +1885,6 @@ MonoBehaviour:
   _body: {fileID: 2072673970}
   _worldColliders:
   - {fileID: 1251150511}
---- !u!1 &2102974632
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2102974634}
-  - component: {fileID: 2102974633}
-  m_Layer: 0
-  m_Name: TankRadarInstaller
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2102974633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102974632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b18ec8ef64a3c243b84fad1b77bcdee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure.TankRadarInstaller
-  _config: {fileID: 11400000, guid: 9b92ecc13c455474bb2ee748084b7a58, type: 2}
-  _ownTarget: {fileID: 0}
---- !u!4 &2102974634
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102974632}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1505175072}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

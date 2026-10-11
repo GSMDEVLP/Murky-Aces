@@ -5,6 +5,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Presentation;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure
 {
@@ -12,13 +13,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
     {
         [SerializeField] private TankRadarConfig _config;
         [SerializeField] private RadarTarget _ownTarget;
+        [SerializeField] private TankRadarDisplayView _view;
 
         public override void InstallBindings()
         {
-            if (_config == null || !_config.IsValid)
+            if (_view == null || !_view.HasValidReferences)
             {
                 throw new InvalidOperationException(
-                    "Tank radar config is missing or invalid.");
+                    "Radar display view or screen material is missing or invalid.");
             }
 
             var radar = new TankRadar();
@@ -47,6 +49,24 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
                 .To<TankRadarScanner>()
                 .FromResolve()
                 .AsCached()
+                .NonLazy();
+
+            Container.Bind<TankRadarCommands>()
+                .AsSingle()
+                .NonLazy();
+
+            Container.Bind<RadarSwitchInteractable>()
+                .FromComponentsInHierarchy()
+                .AsCached()
+                .NonLazy();
+
+            Container.Bind<TankRadarDisplayView>()
+                .FromInstance(_view)
+                .AsSingle();
+
+            Container.Bind<ITankRuntimeModule>()
+                .To<TankRadarPresenter>()
+                .AsSingle()
                 .NonLazy();
         }
     }
