@@ -55,5 +55,25 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Present
                     light.enabled = enabled;
             }
         }
+
+        public bool SharesLightsWith(TankLightsView other)
+        {
+            if (other == null || _lights == null || other._lights == null)
+                return false;
+
+            foreach (Light light in _lights)
+            {
+                if (light == null)
+                    continue;
+
+                foreach (Light otherLight in other._lights)
+                {
+                    if (light == otherLight)
+                        return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

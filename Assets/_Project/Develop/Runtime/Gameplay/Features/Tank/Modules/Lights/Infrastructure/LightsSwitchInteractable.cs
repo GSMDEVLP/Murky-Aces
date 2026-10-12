@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Application;
@@ -17,8 +16,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrast
         private TankLightsCommands _commands;
         private TankLightsView _view;
 
-        [Inject]
-        public void Construct(TankLights lights, TankLightsCommands commands, TankLightsView view)
+
+        public void Initialize(TankLights lights, TankLightsCommands commands, TankLightsView view)
         {
             _lights = lights ??
                 throw new ArgumentNullException(nameof(lights));

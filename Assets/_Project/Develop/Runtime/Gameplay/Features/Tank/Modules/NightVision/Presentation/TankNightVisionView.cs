@@ -10,6 +10,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Pr
         [SerializeField] private Volume _volume;
         [SerializeField] private StationDisplayFeed _displayFeed;
 
+        public Volume EffectVolume => _volume;
+        public StationDisplayFeed DisplayFeed => _displayFeed;
+
         public bool HasValidReferences =>
             _volume != null &&
             _volume.sharedProfile != null &&

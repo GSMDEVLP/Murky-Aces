@@ -9,32 +9,36 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Applica
     {
         private readonly TankLights _lights;
         private readonly CrewStationRegistry _stations;
+        private readonly CrewRoleId _role;
 
         public TankLightsCommands(
             TankLights lights,
-            CrewStationRegistry stations)
+            CrewStationRegistry stations,
+            CrewRoleId role)
         {
             _lights = lights ??
                 throw new ArgumentNullException(nameof(lights));
 
             _stations = stations ??
                 throw new ArgumentNullException(nameof(stations));
+
+            _role = role;
         }
 
         public bool CanControl(IInteractionActor actor)
         {
             return actor != null &&
                    _stations.TryGet(
-                       CrewRoleId.Driver,
-                       out CrewStationController driver) &&
-                   driver.IsOccupiedBy(actor.Id);
+                       _role,
+                       out CrewStationController station) &&
+                   station.IsOccupiedBy(actor.Id);
         }
 
         public bool TrySetEnabled(
             IInteractionActor actor,
             bool enabled)
         {
-            if (!CanControl(actor))
+            if (CanControl(actor) == false)
                 return false;
 
             _lights.SetEnabled(enabled);

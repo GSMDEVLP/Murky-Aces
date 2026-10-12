@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Application;
@@ -9,18 +8,13 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Presen
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Infrastructure
 {
-    [DisallowMultipleComponent]
     public sealed class NightVisionSwitchInteractable : MonoBehaviour, IInteractable
     {
         private TankNightVision _nightVision;
         private TankNightVisionCommands _commands;
         private TankNightVisionView _view;
 
-        [Inject]
-        public void Construct(
-            TankNightVision nightVision,
-            TankNightVisionCommands commands,
-            TankNightVisionView view)
+        public void Initialize(TankNightVision nightVision, TankNightVisionCommands commands, TankNightVisionView view)
         {
             _nightVision = nightVision ??
                 throw new ArgumentNullException(nameof(nightVision));
@@ -32,12 +26,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.In
                 throw new ArgumentNullException(nameof(view));
         }
 
-        public InteractionInfo GetInteractionInfo(
-            in InteractionContext context)
+        public InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
-            return InteractionInfo.Press(
-                InteractionPromts.Toggle,
-                CanInteract(context.Actor));
+            return InteractionInfo.Press(InteractionPromts.Toggle, CanInteract(context.Actor));
         }
 
         public bool Begin(in InteractionContext context)

@@ -9,28 +9,33 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Ap
     {
         private readonly TankNightVision _nightVision;
         private readonly CrewStationRegistry _stations;
+        private readonly CrewRoleId _role;
 
-        public TankNightVisionCommands(TankNightVision nightVision, CrewStationRegistry stations)
+        public TankNightVisionCommands(TankNightVision nightVision, CrewStationRegistry stations, CrewRoleId role)
         {
             _nightVision = nightVision ??
                 throw new ArgumentNullException(nameof(nightVision));
 
             _stations = stations ??
                 throw new ArgumentNullException(nameof(stations));
+
+            _role = role;
         }
 
         public bool CanControl(IInteractionActor actor)
         {
             return actor != null &&
                    _stations.TryGet(
-                       CrewRoleId.Driver,
-                       out CrewStationController driver) &&
-                   driver.IsOccupiedBy(actor.Id);
+                       _role,
+                       out CrewStationController station) &&
+                   station.IsOccupiedBy(actor.Id);
         }
 
-        public bool TrySetEnabled(IInteractionActor actor, bool enabled)
+        public bool TrySetEnabled(
+            IInteractionActor actor,
+            bool enabled)
         {
-            if (!CanControl(actor))
+            if (CanControl(actor) == false)
                 return false;
 
             _nightVision.SetEnabled(enabled);

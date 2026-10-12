@@ -4,41 +4,103 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Presentation;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrastructure
 {
-    [DisallowMultipleComponent]
     public sealed class TankLightsInstaller : MonoInstaller
     {
-        [SerializeField] private TankLightsView _view;
+        [Serializable]
+        private sealed class Connection
+        {
+            [SerializeField] private CrewRoleId _role;
+            [SerializeField] private TankLightsView _view;
+            [SerializeField] private LightsSwitchInteractable _switch;
+
+            public CrewRoleId Role => _role;
+            public TankLightsView View => _view;
+            public LightsSwitchInteractable Switch => _switch;
+        }
+
+        [SerializeField]
+        private Connection[] _connections = Array.Empty<Connection>();
 
         public override void InstallBindings()
         {
-            if (_view == null || !_view.HasValidLights)
+            ValidateConnections();
+
+            foreach (Connection connection in _connections)
+                InstallConnection(connection);
+        }
+
+        private void ValidateConnections()
+        {
+            if (_connections == null)
             {
                 throw new InvalidOperationException(
-                    "Tank lights view or light references are not assigned.");
+                    "Lights connections array is null.");
             }
 
-            Container.Bind<TankLights>()
-                .AsSingle()
-                .NonLazy();
+            for (int i = 0; i < _connections.Length; i++)
+            {
+                Connection current = _connections[i];
 
-            Container.Bind<TankLightsCommands>()
-                .AsSingle()
-                .NonLazy();
+                if (current == null ||
+                    current.View == null ||
+                    current.View.HasValidLights == false ||
+                    current.Switch == null ||
+                    Enum.IsDefined(typeof(CrewRoleId), current.Role) == false)
+                {
+                    throw new InvalidOperationException(
+                        $"Lights connection {i} is missing or invalid.");
+                }
 
-            Container.Bind<TankLightsView>()
-                .FromInstance(_view)
-                .AsSingle();
+                for (int j = 0; j < i; j++)
+                {
+                    Connection previous = _connections[j];
 
+                    if (current.Switch == previous.Switch ||
+                        current.View == previous.View ||
+                        current.View.SharesLightsWith(previous.View))
+                    {
+                        throw new InvalidOperationException(
+                            $"Lights connections {j} and {i} share a switch, view or Light.");
+                    }
+                }
+            }
+        }
+
+        private void InstallConnection(Connection connection)
+        {
             Container.Bind<ITankRuntimeModule>()
-                .To<TankLightsPresenter>()
-                .AsSingle()
-                .NonLazy();
+                .FromMethod(context =>
+                {
+                    CrewStationRegistry stations =
+                        context.Container.Resolve<CrewStationRegistry>();
 
-            Container.Bind<LightsSwitchInteractable>()
-                .FromComponentsInHierarchy()
+                    if (stations.TryGet(connection.Role, out _) == false)
+                    {
+                        throw new InvalidOperationException(
+                            $"Lights station {connection.Role} is not installed.");
+                    }
+
+                    TankLights lights = new TankLights();
+
+                    TankLightsCommands commands =
+                        new TankLightsCommands(
+                            lights,
+                            stations,
+                            connection.Role);
+
+                    connection.Switch.Initialize(
+                        lights,
+                        commands,
+                        connection.View);
+
+                    return new TankLightsPresenter(
+                        lights,
+                        connection.View);
+                })
                 .AsCached()
                 .NonLazy();
         }
