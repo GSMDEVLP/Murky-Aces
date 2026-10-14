@@ -19,11 +19,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
         private GunnerActionsReader _gunnerActions;
         private CommanderActionsReader _commanderActions;
         private ActiveCommonActionsReader _commonActions;
+        private GpsActionsReader _gpsActions;
 
         private PlayerIntentBuffer _playerIntent;
         private DrivingIntentBuffer _drivingIntent;
         private GunnerIntentBuffer _gunnerIntent;
         private CommanderIntentBuffer _commanderIntent;
+        private GpsIntentBuffer _gpsIntent;
 
         [Inject]
         public void Construct(
@@ -35,7 +37,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             GunnerActionsReader gunnerActions,
             GunnerIntentBuffer gunnerIntent,
             CommanderActionsReader commanderActions,
-            CommanderIntentBuffer commanderIntent)
+            CommanderIntentBuffer commanderIntent,
+            GpsActionsReader gpsActions,
+            GpsIntentBuffer gpsIntent)
         {
             _playerActions = playerActions;
             _drivingActions = drivingActions;
@@ -46,6 +50,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             _gunnerIntent = gunnerIntent;
             _commanderActions = commanderActions;
             _commanderIntent = commanderIntent;
+            _gpsActions = gpsActions;
+            _gpsIntent = gpsIntent;
         }
 
         public void Tick(float deltaTime)
@@ -63,6 +69,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             UpdateDrivingIntent(driving);
             _gunnerIntent.SetActions(gunner);
             _commanderIntent.SetExitInput(commander.ExitPressedThisFrame, commander.ExitHeld);
+            _gpsIntent.SetZoom(_gpsActions.ReadZoom());
+            _gpsIntent.SetCursorDelta(_gpsActions.ReadCursorDelta());
+            _gpsIntent.SetSelectionInput(_gpsActions.ReadSelectionPressed(), _gpsActions.ReadSelectionHeld());
         }
 
         private void UpdatePlayerIntent(CommonInputSnapshot common, PlayerActionsSnapshot player, float deltaTime)

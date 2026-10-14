@@ -576,6 +576,55 @@ MonoBehaviour:
   _lights:
   - {fileID: 8054317235948520454}
   - {fileID: 7542170520013436027}
+--- !u!1 &1751592673243708286
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8633784267668970736}
+  - component: {fileID: 6530279834794586888}
+  m_Layer: 0
+  m_Name: GPSRuntime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8633784267668970736
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751592673243708286}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4046231384164407485}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6530279834794586888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751592673243708286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17907905900f0474ea715e12bdb1d2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.TestMapView
+  _source: {fileID: 0}
+  _screen: {fileID: 180409336718530390}
+  _resolution: 512
+  _visibleWorldHeight: 80
+  _screenAspect: 1.3333334
 --- !u!1 &2024804050400846451
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,6 +861,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
   _interactableBehaviour: {fileID: 3602526306201669825}
+--- !u!1 &2431624744926202111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1483869789157890025}
+  - component: {fileID: 5528037701568042969}
+  m_Layer: 0
+  m_Name: 'TankGpsInstaller '
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1483869789157890025
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431624744926202111}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1246684052181143846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5528037701568042969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431624744926202111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef38c43e9300896469e54e9729a6f86e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure.TankGpsInstaller
 --- !u!1 &2459541201945749735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1029,7 +1122,7 @@ Transform:
   m_GameObject: {fileID: 2612724215273589969}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000013623919, y: -0.00000017029899, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000017029899, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1167,6 +1260,8 @@ Transform:
   - {fileID: 8844641392007382255}
   - {fileID: 8108216547454468456}
   - {fileID: 8936183522363238181}
+  - {fileID: 4011262060466225816}
+  - {fileID: 1483869789157890025}
   m_Father: {fileID: 31915234037634501}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2910217953583290611
@@ -1541,6 +1636,8 @@ MonoBehaviour:
   - {fileID: 236314646296278423}
   - {fileID: 872833171242428488}
   - {fileID: 7924423863201927689}
+  - {fileID: 4847398626480748067}
+  - {fileID: 5528037701568042969}
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
@@ -2580,7 +2677,7 @@ Transform:
   m_GameObject: {fileID: 5039969048887808989}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.0299996, y: 3.4799998, z: -2.54}
+  m_LocalPosition: {x: -1.0300009, y: 3.4799998, z: -2.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2858,7 +2955,7 @@ Transform:
   m_GameObject: {fileID: 5347565764133818866}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.920996, y: 0.83399993, z: -1.3189998}
+  m_LocalPosition: {x: -0.92099875, y: 0.83399993, z: -1.3189998}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3311,7 +3408,7 @@ Transform:
   m_GameObject: {fileID: 5920011986590971166}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: -0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: -0.0000013623919, y: 2.4099996, z: -1.8700027}
+  m_LocalPosition: {x: 0, y: 2.4099996, z: -1.8700027}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4762,6 +4859,7 @@ Transform:
   - {fileID: 8725922689251960092}
   - {fileID: 8242137881347897922}
   - {fileID: 7179988549344081757}
+  - {fileID: 8633784267668970736}
   m_Father: {fileID: 2278191552433277419}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7865536469554169636
@@ -4870,6 +4968,51 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.384068, y: 0.14192922, z: 4.437772}
   m_Center: {x: -0.058926176, y: -0.0068102567, z: 0.01560654}
+--- !u!1 &8046080921814508111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4011262060466225816}
+  - component: {fileID: 4847398626480748067}
+  m_Layer: 0
+  m_Name: TestGPSInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4011262060466225816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8046080921814508111}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1246684052181143846}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4847398626480748067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8046080921814508111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2752ba22d53f4c42a36bc75b4c974be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.TestGpsInstaller
+  _view: {fileID: 6530279834794586888}
 --- !u!1 &8104703033726946228
 GameObject:
   m_ObjectHideFlags: 0
@@ -4896,7 +5039,7 @@ Transform:
   m_GameObject: {fileID: 8104703033726946228}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000013623919, y: -0.00000017029899, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000017029899, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5042,7 +5185,7 @@ Transform:
   m_GameObject: {fileID: 8565949349598530554}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000013623919, y: -0.00000017029899, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000017029899, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5223,7 +5366,7 @@ Transform:
   m_GameObject: {fileID: 8715844252224623499}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000013623919, y: -0.00000017029899, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000017029899, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5456,7 +5599,7 @@ Transform:
   m_GameObject: {fileID: 8902841978067895976}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0000013623919, y: -0.00000017029899, z: 0}
+  m_LocalPosition: {x: 0, y: -0.00000017029899, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5574,6 +5717,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 585100673894733149, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2c434e550c998748982053e58e6f61b, type: 2}
     - target: {fileID: 863413406023538245, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
       propertyPath: m_Name
       value: TankHull
@@ -5833,6 +5980,11 @@ PrefabInstance:
       addedObject: {fileID: 7655308317631778556}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+--- !u!23 &180409336718530390 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 585100673894733149, guid: d93db2b6c8390844783823a0b94451a8, type: 3}
+  m_PrefabInstance: {fileID: 765120057605079563}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &181854368711967445 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 583307646560223454, guid: d93db2b6c8390844783823a0b94451a8, type: 3}

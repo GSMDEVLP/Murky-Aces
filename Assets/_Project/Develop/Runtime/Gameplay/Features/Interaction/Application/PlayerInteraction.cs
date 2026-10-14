@@ -121,7 +121,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             if (FocusedInfo.Mode == InteractionMode.Press)
             {
                 FocusedTarget.Complete(_context);
-                RefreshFocus();
+
+                if (_gameplayEnabled)
+                    RefreshFocus();
+
                 return;
             }
 

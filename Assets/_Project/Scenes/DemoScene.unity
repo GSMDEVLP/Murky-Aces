@@ -165,6 +165,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawningInstaller
   _playerPrefab: {fileID: 4685068223650277509, guid: b5e2c554421a21a469df9eab66fb3027, type: 3}
   _gameplayCameraRig: {fileID: 330585548}
+--- !u!4 &245614374 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7381831243170683777, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &301282935
 GameObject:
   m_ObjectHideFlags: 0
@@ -382,6 +387,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0511354e2a8484c990d904fc22f855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Presentation.GameplayCameraRig
+--- !u!4 &351298480 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2278191552433277419, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &354072269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 354072270}
+  - component: {fileID: 354072271}
+  m_Layer: 0
+  m_Name: LocationGeneration
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &354072270
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354072269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1461974008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &354072271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354072269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be8bba8161cf7294cbe5145a41def6fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.LocationGenerationPreview
+  _seed: 12345
+  _center: {x: 0, y: 0}
+  _size: {x: 200, y: 200}
+  _pointCount: 4
+  _previewHeight: 0.5
 --- !u!1 &462585833
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,6 +645,11 @@ MonoBehaviour:
   _prompt: 2
   _holdDuration: 2
   _visual: {fileID: 1282239622}
+--- !u!4 &611167151 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6764707235945862349, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &630284583
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,6 +684,37 @@ Transform:
   - {fileID: 2006458579}
   - {fileID: 533412147}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &660838552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 660838553}
+  m_Layer: 0
+  m_Name: GpsViewAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &660838553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660838552}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.06, z: -0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 245614374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &737686649
 GameObject:
@@ -767,6 +862,11 @@ Transform:
   - {fileID: 462585834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &834372226 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4092472789971032766, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &840163029
 GameObject:
   m_ObjectHideFlags: 0
@@ -961,6 +1061,94 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 858568423}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1058336630 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 8724008492085173443, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1077484491
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1077484492}
+  - component: {fileID: 1077484494}
+  - component: {fileID: 1077484493}
+  - component: {fileID: 1077484495}
+  m_Layer: 0
+  m_Name: GpsScreenInteractable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1077484492
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077484491}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.631, y: 0.203, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 834372226}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1077484493
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077484491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7804c2ebda4836b4cb59ebba8ff83a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure.GpsScreenInteractable
+  _role: 0
+  _viewAnchor: {fileID: 1544850341}
+  _mapView: {fileID: 1802187876}
+--- !u!65 &1077484494
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077484491}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.74158806, y: 0.58399284, z: 0.07004466}
+  m_Center: {x: 0.0073296684, y: 0.019798003, z: -0.0073807556}
+--- !u!114 &1077484495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1077484491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _interactableBehaviour: {fileID: 1077484493}
 --- !u!1 &1127272880
 GameObject:
   m_ObjectHideFlags: 0
@@ -1295,6 +1483,8 @@ Transform:
   - {fileID: 737686650}
   - {fileID: 858568424}
   - {fileID: 2031626791}
+  - {fileID: 354072270}
+  - {fileID: 2079166476}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!134 &1471348193
@@ -1354,6 +1544,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dce28bbbdd8bb184bb4fea74f1ba2727, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameLoop
+--- !u!1 &1544850340
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1544850341}
+  m_Layer: 0
+  m_Name: GpsViewAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1544850341
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1544850340}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.6, y: 1.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1829600193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1608219296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,7 +1675,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -12.3443575
+      value: 88.3
       objectReference: {fileID: 0}
     - target: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1462,7 +1683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.304879
+      value: -16.4
       objectReference: {fileID: 0}
     - target: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1496,15 +1717,65 @@ PrefabInstance:
       propertyPath: m_Name
       value: TankRoot_Prototype
       objectReference: {fileID: 0}
+    - target: {fileID: 4847398626480748067, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: _commanderView
+      value: 
+      objectReference: {fileID: 1996277499}
+    - target: {fileID: 6530279834794586888, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: _source
+      value: 
+      objectReference: {fileID: 354072271}
     - target: {fileID: 6896901685877027689, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 1471348193}
+    - target: {fileID: 6936852764287977948, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: m_Name
+      value: RadarInteractableSwitch
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107165309385397532, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: _allowedTargets.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8107165309385397532, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: '_allowedTargets.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1077484493}
+    - target: {fileID: 8724008492085173443, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2c434e550c998748982053e58e6f61b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2278191552433277419, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1807388626}
+    - targetCorrespondingSourceObject: {fileID: 4665340012629540046, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1544850341}
+    - targetCorrespondingSourceObject: {fileID: 4092472789971032766, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1077484492}
+    - targetCorrespondingSourceObject: {fileID: 7381831243170683777, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 660838553}
+    - targetCorrespondingSourceObject: {fileID: 6764707235945862349, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2118909096}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+--- !u!114 &1802187876 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6530279834794586888, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17907905900f0474ea715e12bdb1d2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.TestMapView
 --- !u!1 &1803477704
 GameObject:
   m_ObjectHideFlags: 0
@@ -1530,12 +1801,49 @@ Transform:
   m_GameObject: {fileID: 1803477704}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.48, y: 5.33, z: -8.15}
+  m_LocalPosition: {x: 95.8, y: 5.33, z: -5.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 630284584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1807388625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1807388626}
+  m_Layer: 0
+  m_Name: CommanderModulesRuntime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1807388626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1807388625}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1996277498}
+  m_Father: {fileID: 351298480}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1829600193 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4665340012629540046, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1963938490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,12 +1951,66 @@ Transform:
   m_GameObject: {fileID: 1963938490}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.84756, y: 0, z: -0.54613}
-  m_LocalScale: {x: 10, y: 1, z: 10}
+  m_LocalPosition: {x: 11.4582, y: 0, z: -15.2308}
+  m_LocalScale: {x: 19.462614, y: 1, z: 12.937}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1461974008}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1996277497
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1996277498}
+  - component: {fileID: 1996277499}
+  m_Layer: 0
+  m_Name: GPSRuntime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1996277498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996277497}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1807388626}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1996277499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1996277497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17907905900f0474ea715e12bdb1d2e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.TestMapView
+  _source: {fileID: 354072271}
+  _screen: {fileID: 1058336630}
+  _resolution: 512
+  _visibleWorldHeight: 80
+  _screenAspect: 1.3333334
+  _routeColor: {r: 1, g: 0.25, b: 0.8, a: 1}
+  _routeRadius: 2
+  _minimumVisibleHeight: 20
+  _maximumVisibleHeight: 300
+  _zoomStepFactor: 1.2
 --- !u!1 &2006458578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1885,6 +2247,218 @@ MonoBehaviour:
   _body: {fileID: 2072673970}
   _worldColliders:
   - {fileID: 1251150511}
+--- !u!1 &2079166475
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2079166476}
+  - component: {fileID: 2079166480}
+  - component: {fileID: 2079166479}
+  - component: {fileID: 2079166478}
+  - component: {fileID: 2079166477}
+  m_Layer: 0
+  m_Name: TestRoad
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2079166476
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079166475}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1461974008}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2079166477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079166475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4a75effb6676324e8ff42db4c51beab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox.TestRoadView
+  _source: {fileID: 354072271}
+  _width: 8
+  _height: 0.05
+--- !u!64 &2079166478
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079166475}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
+--- !u!23 &2079166479
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079166475}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 768e0baf20ec7f349a8e0c712fd097f7, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &2079166480
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2079166475}
+  m_Mesh: {fileID: 0}
+--- !u!1 &2118909095
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2118909096}
+  - component: {fileID: 2118909097}
+  - component: {fileID: 2118909099}
+  - component: {fileID: 2118909098}
+  m_Layer: 0
+  m_Name: GpsScreenInteractable
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2118909096
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118909095}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.013, y: 1.312, z: -1.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 611167151}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2118909097
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118909095}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.51908237, y: 0.4738393, z: 0.13338363}
+  m_Center: {x: 0.019084482, y: -0.0375829, z: -0.0044223187}
+--- !u!114 &2118909098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118909095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _interactableBehaviour: {fileID: 2118909099}
+--- !u!114 &2118909099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118909095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7804c2ebda4836b4cb59ebba8ff83a63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure.GpsScreenInteractable
+  _role: 2
+  _viewAnchor: {fileID: 660838553}
+  _mapView: {fileID: 1996277499}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

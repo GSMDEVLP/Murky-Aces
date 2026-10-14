@@ -6,6 +6,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Domain
         Player = 1,
         Driving = 2,
         Gunner = 3,
-        Commander = 4
+        Commander = 4,
+        GPS = 5
     }
 }

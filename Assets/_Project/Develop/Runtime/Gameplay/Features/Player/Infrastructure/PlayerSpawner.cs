@@ -29,7 +29,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             PlayerFacade player = _factory.Create();
 
             player.transform.SetPositionAndRotation(position, rotation);
-
+            Physics.SyncTransforms();
             _playerRegistry.Register(player);
             RegisterPhases(player);
 

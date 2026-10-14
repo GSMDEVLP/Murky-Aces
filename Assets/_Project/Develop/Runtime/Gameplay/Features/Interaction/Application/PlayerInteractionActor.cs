@@ -6,6 +6,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 {
@@ -16,7 +17,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         ITankInteriorOccupant, 
         IDrivingIntentSource, 
         IStationIntentSource, 
-        IGunnerIntentSource
+        IGunnerIntentSource,
+        IGpsSessionOwner
 
     {
         private readonly IPickupReceiver _pickupReceiver;
@@ -26,6 +28,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         private readonly IStationIntentSource _stationIntentSource;
         private readonly IGunnerIntentSource _gunnerIntentSource;
         
+        public PlayerGpsSession GpsSession { get; }
         public ulong Id { get; }
 
         public bool IsOccupied => _pickupReceiver.IsOccupied;
@@ -43,13 +46,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         public bool CanUseHatch =>
             _tankInteriorOccupant.CanUseHatch;
+
             
         public PlayerInteractionActor(ulong id, 
             IPickupReceiver pickupReceiver, 
             IStationOccupant stationOccupant, 
             IDrivingIntentSource drivingIntentSource, 
             IGunnerIntentSource gunnerIntentSource,
-            ITankInteriorOccupant tankInteriorOccupant)
+            ITankInteriorOccupant tankInteriorOccupant,
+            PlayerGpsSession gpsSession)
         {
             Id = id;
 
@@ -77,6 +82,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             _gunnerIntentSource = gunnerIntentSource
                 ?? throw new ArgumentNullException(
                     nameof(gunnerIntentSource));
+            GpsSession = gpsSession ??
+                throw new ArgumentNullException(nameof(gpsSession));
 
         }
 

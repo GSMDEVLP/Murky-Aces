@@ -12,20 +12,30 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Phases
         private readonly PlayerLook _playerLook;
         private readonly PlayerInteraction _playerInteraction;
         private readonly PlayerStationController _stationController;
+        private readonly PlayerGpsSession _gpsSession;
 
         public GameplayPhase(PlayerMovement playerMovement, 
             PlayerLook playerLook, 
             PlayerInteraction playerInteraction, 
-            PlayerStationController stationController)
+            PlayerStationController stationController,
+            PlayerGpsSession gpsSession)
         {
             _playerMovement = playerMovement;
             _playerLook = playerLook;
             _playerInteraction = playerInteraction;
             _stationController = stationController;
+            _gpsSession = gpsSession;
         }
 
         public void Tick(float deltaTime)
         {
+            bool gpsWasActive = _gpsSession.IsActive;
+
+            _gpsSession.Tick(deltaTime);
+
+            if (gpsWasActive || _gpsSession.IsActive)
+                return;
+
             _playerLook.Tick(deltaTime);
             _playerInteraction.Tick(deltaTime);
         }
@@ -39,6 +49,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Phases
 
         public bool TryPrepareDespawn()
         {
+            if (!_gpsSession.TryForceClose())
+                return false;
+
             _playerInteraction.CancelActiveInteraction(
                 InteractionCancelReason.ActorDisabled);
 

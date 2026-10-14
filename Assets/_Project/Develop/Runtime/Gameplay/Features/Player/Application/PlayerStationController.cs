@@ -10,14 +10,13 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
-    public sealed class PlayerStationController :
-        IStationOccupant,
-        IStationIntentSource
+    public sealed class PlayerStationController : IStationOccupant, IStationIntentSource
     {
         private readonly IPlayerStationBody _body;
         private readonly PlayerStationCapabilities _capabilities;
         private readonly IReadOnlyList<IPlayerStationInputMode> _inputModes;
         private readonly CrewTransitionCoordinator _transitions;
+        private readonly PlayerGpsSession _gpsSession;
 
         private IPlayerStationInputMode _activeInputMode;
         private Func<bool> _releaseStation;
@@ -36,7 +35,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             IPlayerStationBody body,
             PlayerStationCapabilities capabilities,
             List<IPlayerStationInputMode> inputModes,
-            CrewTransitionCoordinator transitions)
+            CrewTransitionCoordinator transitions,
+            PlayerGpsSession gpsSession)
         {
             _body = body ??
                 throw new ArgumentNullException(nameof(body));
@@ -49,6 +49,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
             _transitions = transitions ??
                 throw new ArgumentNullException(nameof(transitions));
+
+            _gpsSession = gpsSession ??
+                throw new ArgumentNullException(nameof(gpsSession));
 
             if (_inputModes.Count == 0)
             {
@@ -154,10 +157,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             return TryLeaveStation(null, true, true);
         }
 
-        private bool TryLeaveStation(
-            Transform exitAnchor,
-            bool force,
-            bool restoreBeforeAttach)
+        private bool TryLeaveStation(Transform exitAnchor, bool force, bool restoreBeforeAttach)
         {
             if (!IsInStation ||
                 _transitions.Current.StationRole != _stationRole ||
@@ -177,6 +177,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             {
                 return false;
             }
+            if (!_gpsSession.TryForceClose())
+                return false;
 
             IPlayerStationInputMode mode = _activeInputMode;
 
@@ -244,9 +246,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public bool ConsumeExitRequest()
         {
-            return IsInStation &&
-                   _activeInputMode != null &&
-                   _activeInputMode.ConsumeExitRequest();
+            return !_gpsSession.IsActive &&
+                IsInStation &&
+                _activeInputMode != null &&
+                _activeInputMode.ConsumeExitRequest();
         }
 
         private IPlayerStationInputMode FindInputMode(

@@ -13,6 +13,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Interior;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Readers;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {
@@ -23,6 +24,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         [SerializeField] private UnityPlayerStationBody _stationBody;
         [SerializeField] private PlayerLook _playerLook;
         [SerializeField] private PlayerTankInteriorBody _interiorBody;
+        [SerializeField] private PlayerGpsCameraView _gpsCameraView;
 
 
         private PlayerInput _playerInput;
@@ -67,12 +69,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.BindInterfacesAndSelfTo<DrivingActionsReader>().AsSingle();
             Container.BindInterfacesAndSelfTo<GunnerActionsReader>().AsSingle();
             Container.BindInterfacesAndSelfTo<CommanderActionsReader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GpsActionsReader>().AsSingle();
             Container.Bind<ActiveCommonActionsReader>().AsSingle();
             
             Container.Bind<PlayerIntentBuffer>().AsSingle();
             Container.Bind<DrivingIntentBuffer>().AsSingle();
             Container.Bind<CommanderIntentBuffer>().AsSingle();
             Container.Bind<GunnerIntentBuffer>().AsSingle();
+            Container.Bind<GpsIntentBuffer>().AsSingle();
 
             Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
 
@@ -81,6 +85,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.BindInterfacesAndSelfTo<PlayerCommanderInputMode>().AsSingle();
             
             Container.Bind<PlayerInputSystem>().FromInstance(_playerInputSystem);
+            
         }
 
         private void BindMovementAndLook()
@@ -98,6 +103,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
             Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
             Container.Bind<ITankInteriorOccupant>().To<PlayerTankInteriorController>().AsSingle();
+            Container.Bind<PlayerGpsCameraView>().FromInstance(_gpsCameraView).AsSingle();
+            Container.Bind<PlayerGpsSession>().AsSingle();
         }
 
         private void BindPhases()
