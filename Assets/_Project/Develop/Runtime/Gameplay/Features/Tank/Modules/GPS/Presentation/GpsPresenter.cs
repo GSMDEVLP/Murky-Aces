@@ -2,21 +2,21 @@ using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain;
 
-namespace _Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox
+namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Presentation
 {
-    public sealed class TestGpsPresenter : IPresentationTickable, ITankRuntimeModule
+    public sealed class GpsPresenter : IPresentationTickable, ITankRuntimeModule
     {
         private readonly IGpsRouteReader _route;
         private readonly ITankMotionBody _body;
-        private readonly TestMapView _view;
+        private readonly GpsMapView _view;
 
         private Vector2 _lastForward = Vector2.up;
 
-        public TestGpsPresenter(ITankMotionBody body, TestMapView view, IGpsRouteReader route)
+        public GpsPresenter(ITankMotionBody body, GpsMapView view, IGpsRouteReader route)
         {
             _body = body ??
                 throw new ArgumentNullException(nameof(body));
@@ -45,7 +45,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox
             if (_view == null || !_view.isActiveAndEnabled)
                 return;
 
-            LocationLayout layout = _view.DisplayedLayout;
+           GpsMapData layout = _view.DisplayedMap;
 
             if (layout == null)
             {

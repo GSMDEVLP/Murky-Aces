@@ -8,24 +8,22 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
-    public sealed class PlayerGpsSession
+    public sealed class PlayerGpsSession : IPlayerGpsSession
     {
         private readonly IPlayerInputContext _inputContext;
         private readonly PlayerIntentBuffer _playerIntent;
         private readonly DrivingIntentBuffer _drivingIntent;
         private readonly CommanderIntentBuffer _commanderIntent;
         private readonly GpsIntentBuffer _gpsIntent;
-        private readonly PlayerGpsCameraView _camera;
+        private readonly IPlayerGpsCamera  _camera;
         private readonly ICrewLocationReader _location;
         private readonly LazyInject<PlayerInteraction> _interaction;
 
-        private GpsScreenInteractable _screen;
+        private IGpsScreen  _screen;
         private IInteractionActor _actor;
 
         private InputMapId _returnMap;
@@ -40,6 +38,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             IsActive &&
             !_isClosing &&
             _camera != null &&
+            _camera.IsAvailable &&
             _camera.IsFocused;
 
         public PlayerGpsSession(
@@ -47,7 +46,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             PlayerIntentBuffer playerIntent,
             DrivingIntentBuffer drivingIntent,
             CommanderIntentBuffer commanderIntent,
-            PlayerGpsCameraView camera,
+            IPlayerGpsCamera camera,
             ICrewLocationReader location,
             LazyInject<PlayerInteraction> interaction,
             GpsIntentBuffer gpsIntent)
@@ -78,14 +77,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         }
 
         public bool CanBegin(
-            GpsScreenInteractable screen,
+            IGpsScreen screen,
             IInteractionActor actor)
         {
             if (IsActive ||
                 screen == null ||
                 !screen.CanUse(actor) ||
                 _camera == null ||
-                !_camera.isActiveAndEnabled ||
+                !_camera.IsAvailable ||
                 _camera.IsActive ||
                 _location.Current.Kind != CrewLocationKind.Station ||
                 _location.Current.StationRole != screen.Role)
@@ -100,7 +99,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             return _inputContext.CurrentMap == expectedMap;
         }
 
-        public bool TryBegin(GpsScreenInteractable screen, IInteractionActor actor)
+        public bool TryBegin(IGpsScreen screen, IInteractionActor actor)
         {
             if (!CanBegin(screen, actor))
                 return false;
@@ -151,7 +150,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 _screen == null ||
                 !_screen.CanUse(_actor) ||
                 _camera == null ||
-                !_camera.isActiveAndEnabled ||
+                !_camera.IsAvailable ||
                 _inputContext.CurrentMap != InputMapId.GPS)
             {
                 TryForceClose();

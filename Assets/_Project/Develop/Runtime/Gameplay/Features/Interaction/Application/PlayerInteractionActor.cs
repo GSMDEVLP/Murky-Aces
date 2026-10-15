@@ -28,7 +28,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         private readonly IStationIntentSource _stationIntentSource;
         private readonly IGunnerIntentSource _gunnerIntentSource;
         
-        public PlayerGpsSession GpsSession { get; }
+        public IPlayerGpsSession GpsSession { get; }
         public ulong Id { get; }
 
         public bool IsOccupied => _pickupReceiver.IsOccupied;
@@ -54,7 +54,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             IDrivingIntentSource drivingIntentSource, 
             IGunnerIntentSource gunnerIntentSource,
             ITankInteriorOccupant tankInteriorOccupant,
-            PlayerGpsSession gpsSession)
+            IPlayerGpsSession gpsSession)
         {
             Id = id;
 

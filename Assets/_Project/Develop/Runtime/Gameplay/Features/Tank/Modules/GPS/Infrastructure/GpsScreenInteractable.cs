@@ -2,20 +2,19 @@ using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
-using _Project.Develop.Runtime.Gameplay.Features.WorldGeneration.Sandbox;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Presentation;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure
 {
-    public sealed class GpsScreenInteractable : MonoBehaviour, IInteractable
+    public sealed class GpsScreenInteractable : MonoBehaviour, IInteractable, IGpsScreen
     {
         [SerializeField] private CrewRoleId _role;
         [SerializeField] private Transform _viewAnchor;
-        [SerializeField] private TestMapView _mapView;
+        [SerializeField] private GpsMapView _mapView;
         [SerializeField, Min(0.00001f)] private float _cursorSensitivity = 0.002f;
 
         public float CursorSensitivity => Mathf.Max(0.00001f, _cursorSensitivity);
@@ -23,7 +22,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
         public float ScreenAspect => _mapView != null ? _mapView.ScreenAspect : 1f;
 
         private CrewStationRegistry _stations;
-        private PlayerGpsSession _session;
+        private IPlayerGpsSession  _session;
         private GpsRouteService _routeService;
 
         public CrewRoleId Role => _role;
@@ -38,7 +37,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
 
         public bool CanUse(IInteractionActor actor)
         {
-            return isActiveAndEnabled &&
+            return this != null &&
+                    isActiveAndEnabled &&
                    _viewAnchor != null &&
                    _viewAnchor.gameObject.activeInHierarchy &&
                    actor != null &&
@@ -70,18 +70,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
                 owner.GpsSession.TryBegin(this, context.Actor);
         }
 
-        public void Cancel(
-            in InteractionContext context,
-            InteractionCancelReason reason)
+        public void Cancel(in InteractionContext context, InteractionCancelReason reason)
         {
         }
 
-        internal void AttachSession(PlayerGpsSession session)
+        public void AttachSession(IPlayerGpsSession session)
         {
             _session = session;
         }
 
-        internal void DetachSession(PlayerGpsSession session)
+        public void DetachSession(IPlayerGpsSession session)
         {
             if (ReferenceEquals(_session, session))
                 _session = null;
@@ -128,7 +126,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
             return true;
         }
 
-        internal void HideCursor()
+        void IGpsScreen.HideCursor()
         {
             if (_mapView != null)
                 _mapView.SetCursor(Vector2.zero, false);

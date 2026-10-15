@@ -1,17 +1,17 @@
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Presentation;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Phases
 {
     public sealed class PresentationPhase : IPresentationTickable
     {
         private readonly InteractionHudPresenter _interactionHudPresenter;
-        private readonly PlayerGpsCameraView _gpsCameraView;
+        private readonly IPlayerGpsCamera _gpsCameraView;
 
         public PresentationPhase(
             InteractionHudPresenter interactionHudPresenter,
-            PlayerGpsCameraView gpsCameraView)
+            IPlayerGpsCamera gpsCameraView)
         {
             _interactionHudPresenter = interactionHudPresenter;
             _gpsCameraView = gpsCameraView;
@@ -19,7 +19,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Phases
 
         public void Tick(float deltaTime)
         {
-            _gpsCameraView.Tick(deltaTime);
+            if (_gpsCameraView.IsAvailable)
+                _gpsCameraView.Tick(deltaTime);
+
             _interactionHudPresenter.UpdateView();
         }
     }

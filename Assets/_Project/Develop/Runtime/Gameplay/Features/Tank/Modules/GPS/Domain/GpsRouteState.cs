@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Abstractions;
 
@@ -7,8 +8,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain
     {
         private readonly List<GpsRoutePoint> _points = new();
         private readonly IReadOnlyList<GpsRoutePoint> _readOnlyPoints;
-        public GpsRoutePoint? Destination { get; private set; }
+
         public IReadOnlyList<GpsRoutePoint> Points => _readOnlyPoints;
+        public GpsRoutePoint? Destination { get; private set; }
         public long Revision { get; private set; }
 
         public GpsRouteState()
@@ -16,28 +18,28 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain
             _readOnlyPoints = _points.AsReadOnly();
         }
 
-        internal void SetDestination(GpsRoutePoint destination)
+        internal void SetRoute(IReadOnlyList<GpsRoutePoint> points)
         {
-            Destination = destination;
+            if (points == null)
+                throw new ArgumentNullException(nameof(points));
+
+            if (points.Count == 0)
+            {
+                throw new ArgumentException(
+                    "GPS route must contain at least one point.",
+                    nameof(points));
+            }
+
+            var copy = new GpsRoutePoint[points.Count];
+
+            for (int i = 0; i < points.Count; i++)
+                copy[i] = points[i];
+
             _points.Clear();
+            _points.AddRange(copy);
+
+            Destination = copy[copy.Length - 1];
             Revision++;
-        }
-
-        internal void AppendPoint(GpsRoutePoint point)
-        {
-            _points.Add(point);
-            Revision++;
-        }
-
-        internal bool TryRemoveLastPoint()
-        {
-            if (_points.Count == 0)
-                return false;
-
-            _points.RemoveAt(_points.Count - 1);
-            Revision++;
-
-            return true;
         }
 
         internal bool TryClear()

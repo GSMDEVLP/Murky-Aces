@@ -21,7 +21,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 
         public override void InstallBindings()
         {
-            TankRoot owner = GetComponentInParent<TankRoot>();
+            TankRoot owner = GetComponentInParent<TankRoot>(true);
 
             if (owner == null ||
                 _weaponView == null ||

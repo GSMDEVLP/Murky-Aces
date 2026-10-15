@@ -5,10 +5,11 @@ using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS
 {
-    public sealed class PlayerGpsCameraView : MonoBehaviour
+    public sealed class PlayerGpsCameraView : MonoBehaviour, IPlayerGpsCamera
     {
         [SerializeField] private Transform _cameraPivot;
 
@@ -34,6 +35,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS
         private bool _isReturning;
 
         public bool IsActive { get; private set; }
+        public bool IsAvailable => this != null && isActiveAndEnabled;
 
         public bool IsFocused =>
             IsActive &&
@@ -41,9 +43,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS
             _elapsed >= Mathf.Max(0f, _transitionDuration);
 
         [Inject]
-        public void Construct(
-            PlayerLook look,
-            ICrewLocationReader location)
+        public void Construct(PlayerLook look, ICrewLocationReader location)
         {
             _look = look ??
                 throw new ArgumentNullException(nameof(look));
@@ -55,7 +55,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS
         public bool TryFocus(Transform anchor)
         {
             if (IsActive ||
-                !isActiveAndEnabled ||
+                !IsAvailable  ||
                 _cameraPivot == null ||
                 _cameraPivot.parent == null ||
                 anchor == null ||

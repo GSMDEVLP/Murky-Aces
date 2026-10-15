@@ -103,8 +103,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
             Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
             Container.Bind<ITankInteriorOccupant>().To<PlayerTankInteriorController>().AsSingle();
-            Container.Bind<PlayerGpsCameraView>().FromInstance(_gpsCameraView).AsSingle();
-            Container.Bind<PlayerGpsSession>().AsSingle();
+            Container.Bind<IPlayerGpsCamera>().FromInstance(_gpsCameraView).AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerGpsSession>().AsSingle();
         }
 
         private void BindPhases()
