@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 
@@ -13,15 +12,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
         private readonly GpsRouteState _route;
         private readonly CrewStationRegistry _stations;
         private readonly ITankMotionBody _body;
-        private readonly IGpsMapSource _mapSource;
-        private readonly GpsPolylineRoutePlanner _planner;
 
         public GpsRouteService(
             GpsRouteState route,
             CrewStationRegistry stations,
-            ITankMotionBody body,
-            IGpsMapSource mapSource,
-            GpsPolylineRoutePlanner planner)
+            ITankMotionBody body)
         {
             _route = route ??
                 throw new ArgumentNullException(nameof(route));
@@ -31,12 +26,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
 
             _body = body ??
                 throw new ArgumentNullException(nameof(body));
-
-            _mapSource = mapSource ??
-                throw new ArgumentNullException(nameof(mapSource));
-
-            _planner = planner ??
-                throw new ArgumentNullException(nameof(planner));
         }
 
         public bool CanEdit(IInteractionActor actor)
@@ -48,34 +37,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
                    station.IsOccupiedBy(actor.Id);
         }
 
-        public bool TrySetDestination(
-            IInteractionActor actor,
-            GpsRoutePoint destination)
+        public bool TrySetDestination(IInteractionActor actor, GpsRoutePoint destination)
         {
             if (!CanEdit(actor))
                 return false;
 
-            if (!_mapSource.TryGetMap(out GpsMapData map) ||
-                map == null)
-            {
-                return false;
-            }
-
-            Vector3 position = _body.Position;
-
-            var start = new GpsRoutePoint(
-                new Vector2(position.x, position.z));
-
-            if (!_planner.TryBuild(
-                    map.RoadPoints,
-                    start,
-                    destination,
-                    out var points))
-            {
-                return false;
-            }
-
-            _route.SetRoute(points);
+            SetDirectRoute(ReadCurrentPosition(), destination);
             return true;
         }
 
@@ -85,6 +52,64 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
                 return false;
 
             return _route.TryClear();
+        }
+
+        internal bool TryRefreshRoute(float minimumMovement)
+        {
+            GpsRoutePoint? destination = _route.Destination;
+
+            if (!destination.HasValue || _route.Points.Count == 0)
+                return false;
+
+            GpsRoutePoint start = ReadCurrentPosition();
+
+            Vector2 offset = start.WorldPosition -
+                            _route.Points[0].WorldPosition;
+
+            if (offset.sqrMagnitude < minimumMovement * minimumMovement)
+                return false;
+
+            SetDirectRoute(start, destination.Value);
+            return true;
+        }
+        
+        internal bool TryCompleteRoute(float arrivalRadius)
+        {
+            GpsRoutePoint? destination = _route.Destination;
+
+            if (!destination.HasValue)
+                return false;
+
+            GpsRoutePoint current = ReadCurrentPosition();
+
+            Vector2 offset = current.WorldPosition -
+                            destination.Value.WorldPosition;
+
+            if (offset.sqrMagnitude > arrivalRadius * arrivalRadius)
+                return false;
+
+            return _route.TryClear();
+        }
+
+        private GpsRoutePoint ReadCurrentPosition()
+        {
+            Vector3 position = _body.Position;
+
+            return new GpsRoutePoint(
+                new Vector2(position.x, position.z));
+        }
+
+        private void SetDirectRoute(
+            GpsRoutePoint start,
+            GpsRoutePoint destination)
+        {
+            var points = new[]
+            {
+                start,
+                destination
+            };
+
+            _route.SetRoute(points, destination);
         }
     }
 }

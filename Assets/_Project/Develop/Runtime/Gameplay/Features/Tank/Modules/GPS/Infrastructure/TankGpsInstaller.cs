@@ -20,7 +20,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
 
             var route = new GpsRouteState();
 
-            Container.Bind<GpsPolylineRoutePlanner>().AsSingle();
             Container.BindInterfacesAndSelfTo<GpsRouteState>()
                 .FromInstance(route)
                 .AsSingle();
@@ -29,12 +28,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
                 .AsSingle()
                 .NonLazy();
 
+            Container.Bind<ITankRuntimeModule>()
+                .To<GpsRouteUpdater>()
+                .AsSingle()
+                .NonLazy();    
+
             Container.Bind<GpsScreenInteractable>()
                 .FromComponentsInHierarchy()
                 .AsCached()
                 .NonLazy();
 
-            InstallView(_view);
+            if (_view != null)
+                InstallView(_view);
 
             if (_commanderView != null)
                 InstallView(_commanderView);
@@ -42,13 +47,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
 
         private void ValidateViews()
         {
-            if (_view == null)
+            if (_view == null && _commanderView == null)
             {
                 throw new InvalidOperationException(
-                    "Driver GPS map view is not assigned.");
+                    "At least one GPS map view must be assigned.");
             }
 
-            if (_commanderView != null && _commanderView == _view)
+            if (_view != null && _commanderView == _view)
             {
                 throw new InvalidOperationException(
                     "GPS screens must use separate map views.");

@@ -140,6 +140,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         public void Tick(float deltaTime)
         {
             bool selectionRequested = _gpsIntent.ConsumeSelectionRequest();
+            bool clearRequested = _gpsIntent.ConsumeClearRequest();
             float zoom = _gpsIntent.ConsumeZoom();
             Vector2 cursorDelta = _gpsIntent.ConsumeCursorDelta();
 
@@ -200,8 +201,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                         cursorDelta.y * sensitivity));
 
                 _screen.TrySetCursor(_actor, _cursorUv);
-                if (selectionRequested)
+
+                if (clearRequested)
+                {
+                    _screen.TryClearRoute(_actor);
+                }
+                else if (selectionRequested)
+                {
                     _screen.TrySelectDestination(_actor, _cursorUv);
+                }
             }
         }
         public bool TryForceClose()

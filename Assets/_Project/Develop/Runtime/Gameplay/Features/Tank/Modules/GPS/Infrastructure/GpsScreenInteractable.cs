@@ -39,20 +39,21 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
         {
             return this != null &&
                     isActiveAndEnabled &&
-                   _viewAnchor != null &&
-                   _viewAnchor.gameObject.activeInHierarchy &&
-                   actor != null &&
-                   _stations != null &&
-                   (_role == CrewRoleId.Driver ||
+                    _mapView != null &&
+                    _mapView.HasMap &&
+                    _viewAnchor != null &&
+                    _viewAnchor.gameObject.activeInHierarchy &&
+                    actor != null &&
+                    _stations != null &&
+                    (_role == CrewRoleId.Driver ||
                     _role == CrewRoleId.CommanderLoader) &&
-                   _stations.TryGet(
+                    _stations.TryGet(
                        _role,
                        out CrewStationController station) &&
-                   station.IsOccupiedBy(actor.Id);
+                    station.IsOccupiedBy(actor.Id);
         }
 
-        public InteractionInfo GetInteractionInfo(
-            in InteractionContext context)
+        public InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             return InteractionInfo.Press(
                 InteractionPromts.Enter,
@@ -126,11 +127,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
             return true;
         }
 
-        void IGpsScreen.HideCursor()
+        public void HideCursor()
         {
             if (_mapView != null)
                 _mapView.SetCursor(Vector2.zero, false);
         }
+
         public bool TrySelectDestination(IInteractionActor actor, Vector2 screenUv)
         {
             if (_role != CrewRoleId.CommanderLoader ||
@@ -153,6 +155,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
             return _routeService.TrySetDestination(
                 actor,
                 new GpsRoutePoint(worldPosition));
+        }
+        public bool TryClearRoute(IInteractionActor actor)
+        {
+            if (_role != CrewRoleId.CommanderLoader ||
+                !CanUse(actor) ||
+                _session == null ||
+                !_session.IsReady ||
+                _routeService == null)
+            {
+                return false;
+            }
+
+            return _routeService.TryClear(actor);
         }
     }
 }

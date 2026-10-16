@@ -18,7 +18,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain
             _readOnlyPoints = _points.AsReadOnly();
         }
 
-        internal void SetRoute(IReadOnlyList<GpsRoutePoint> points)
+        internal void SetRoute(IReadOnlyList<GpsRoutePoint> points, GpsRoutePoint destination)
         {
             if (points == null)
                 throw new ArgumentNullException(nameof(points));
@@ -38,7 +38,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain
             _points.Clear();
             _points.AddRange(copy);
 
-            Destination = copy[copy.Length - 1];
+            Destination = destination;
             Revision++;
         }
 

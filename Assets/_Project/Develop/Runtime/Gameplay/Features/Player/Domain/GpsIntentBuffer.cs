@@ -8,6 +8,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Domain
         private Vector2 _cursorDelta;
         private bool _selectionPending;
         private bool _selectionSuppressed;
+        private bool _clearPending;
+        private bool _clearSuppressed;
 
         public void SetZoom(float zoom)
         {
@@ -41,6 +43,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Domain
             _cursorDelta = Vector2.zero;
             _selectionPending = false;
             _selectionSuppressed = true;
+            _clearPending = false;
+            _clearSuppressed = true;
         }
 
         public void SetSelectionInput(bool pressedThisFrame, bool held)
@@ -60,6 +64,26 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Domain
         {
             bool requested = _selectionPending;
             _selectionPending = false;
+
+            return requested;
+        }
+        public void SetClearInput(bool pressedThisFrame, bool held)
+        {
+            if (_clearSuppressed)
+            {
+                if (!held)
+                    _clearSuppressed = false;
+
+                return;
+            }
+
+            _clearPending |= pressedThisFrame;
+        }
+
+        public bool ConsumeClearRequest()
+        {
+            bool requested = _clearPending;
+            _clearPending = false;
 
             return requested;
         }

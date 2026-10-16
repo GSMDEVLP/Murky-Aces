@@ -13,6 +13,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstract
         float ScreenAspect { get; }
 
         bool CanUse(IInteractionActor actor);
+        bool TryClearRoute(IInteractionActor actor);
 
         void AttachSession(IPlayerGpsSession session);
         void DetachSession(IPlayerGpsSession session);

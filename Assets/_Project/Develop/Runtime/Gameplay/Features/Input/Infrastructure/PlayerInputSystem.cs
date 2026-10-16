@@ -72,6 +72,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             _gpsIntent.SetZoom(_gpsActions.ReadZoom());
             _gpsIntent.SetCursorDelta(_gpsActions.ReadCursorDelta());
             _gpsIntent.SetSelectionInput(_gpsActions.ReadSelectionPressed(), _gpsActions.ReadSelectionHeld());
+            _gpsIntent.SetClearInput(_gpsActions.ReadClearPressed(), _gpsActions.ReadClearHeld());
         }
 
         private void UpdatePlayerIntent(CommonInputSnapshot common, PlayerActionsSnapshot player, float deltaTime)

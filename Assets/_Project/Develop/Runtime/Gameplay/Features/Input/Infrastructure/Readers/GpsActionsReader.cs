@@ -14,7 +14,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
         private readonly InputAction _zoom;
         private readonly InputAction _cursorDelta;
         private readonly InputAction _selectDestination;
-
+        private readonly InputAction _clearRoute;
         public InputMapId MapId => InputMapId.GPS;
 
         public bool IsActive =>
@@ -38,6 +38,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
             _zoom = _map.FindAction("Zoom", true);
             _cursorDelta = _map.FindAction("CursorDelta", true);
             _selectDestination = _map.FindAction("SelectDestination", true);
+            _clearRoute = _map.FindAction("ClearRoute", true);
         }
 
         public CommonInputSnapshot ReadCommonActions()
@@ -74,6 +75,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
         public bool ReadSelectionHeld()
         {
             return IsActive && _selectDestination.IsPressed();
+        }
+        public bool ReadClearPressed()
+        {
+            return IsActive && _clearRoute.WasPressedThisFrame();
+        }
+
+        public bool ReadClearHeld()
+        {
+            return IsActive && _clearRoute.IsPressed();
         }
     }
 }
