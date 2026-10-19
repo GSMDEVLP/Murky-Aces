@@ -4,7 +4,9 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Presentation;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrastructure
 {

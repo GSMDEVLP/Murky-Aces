@@ -1,6 +1,6 @@
 using System;
-using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstraction;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Crew.Application
 {

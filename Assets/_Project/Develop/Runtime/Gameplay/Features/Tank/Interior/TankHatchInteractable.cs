@@ -1,6 +1,7 @@
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Abstraction;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Interior
 {

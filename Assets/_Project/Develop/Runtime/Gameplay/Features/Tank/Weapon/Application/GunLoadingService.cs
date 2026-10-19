@@ -2,6 +2,7 @@ using System;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Ammunition;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Abstraction;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application
 {

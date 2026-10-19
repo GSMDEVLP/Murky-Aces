@@ -5,8 +5,10 @@ using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {

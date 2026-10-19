@@ -5,8 +5,10 @@ using System.Threading;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Infrastructure;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 {

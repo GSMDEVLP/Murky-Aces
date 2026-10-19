@@ -4,7 +4,9 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Presentation;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Infrastructure
 {

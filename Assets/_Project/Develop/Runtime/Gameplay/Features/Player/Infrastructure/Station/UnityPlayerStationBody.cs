@@ -1,5 +1,5 @@
 using UnityEngine;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station
 {

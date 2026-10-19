@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Rendering;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Presentation
 {

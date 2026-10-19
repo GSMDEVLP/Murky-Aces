@@ -7,6 +7,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
         bool TryFindTarget(
             IInteractionScope scope,
             in InteractionContext context,
-            out IInteractable target);
+            out IInteractionTarget target);
     }
 }

@@ -18,7 +18,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
         public bool TryFindTarget(
             IInteractionScope scope,
             in InteractionContext context,
-            out IInteractable target)
+            out IInteractionTarget  target)
         {
             target = null;
 
@@ -46,14 +46,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 
                 if (collider.TryGetComponent(
                         out InteractionTargetLink link) &&
-                    link.TryGetInteractable(
-                        out IInteractable candidate))
+                    link.TryGetTarget(
+                        out IInteractionTarget  candidate))
                 {
                     bool allowedByScope =
                         scope == null || scope.Allows(candidate);
 
                     if (allowedByScope &&
-                        candidate.GetInteractionInfo(context).IsAvailable)
+                        (!(candidate is IInteractable interactable) ||
+                        interactable.GetInteractionInfo(context).IsAvailable))
                     {
                         target = candidate;
                         return true;

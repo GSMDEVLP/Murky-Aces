@@ -1,5 +1,5 @@
 using System;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Crew.Domain
 {

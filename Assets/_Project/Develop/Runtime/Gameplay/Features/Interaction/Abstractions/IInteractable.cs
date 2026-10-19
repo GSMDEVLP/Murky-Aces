@@ -2,7 +2,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
 {
-    public interface IInteractable
+    public interface IInteractable : IInteractionTarget
     {
         InteractionInfo GetInteractionInfo(in InteractionContext context);
 

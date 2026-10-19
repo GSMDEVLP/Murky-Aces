@@ -1,6 +1,7 @@
 using System;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 {

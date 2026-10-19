@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application
 {

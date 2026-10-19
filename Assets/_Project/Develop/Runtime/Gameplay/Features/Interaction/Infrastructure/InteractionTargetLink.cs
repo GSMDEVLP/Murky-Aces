@@ -1,35 +1,42 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 {
-public sealed class InteractionTargetLink : MonoBehaviour
-{
-    [SerializeField] private MonoBehaviour _interactableBehaviour;
-
-    public bool TryGetInteractable(out IInteractable interactable)
+    public sealed class InteractionTargetLink : MonoBehaviour
     {
-        if (_interactableBehaviour == null)
+        [FormerlySerializedAs("_interactableBehaviour")]
+        [SerializeField] private MonoBehaviour _targetBehaviour;
+
+        public bool TryGetTarget(out IInteractionTarget target)
         {
-            interactable = null;
-            return false;
+            target = null;
+
+            if (!isActiveAndEnabled ||
+                _targetBehaviour == null ||
+                !_targetBehaviour.isActiveAndEnabled)
+            {
+                return false;
+            }
+
+            target = _targetBehaviour as IInteractionTarget;
+            return target != null;
         }
 
-        interactable = _interactableBehaviour as IInteractable;
-        return interactable != null;
+        private void OnValidate()
+        {
+            if (_targetBehaviour == null ||
+                _targetBehaviour is IInteractionTarget)
+            {
+                return;
+            }
+
+            Debug.LogError(
+                $"{_targetBehaviour.name} must implement {nameof(IInteractionTarget)}.",
+                this);
+
+            _targetBehaviour = null;
+        }
     }
-
-    private void OnValidate()
-    {
-        if (_interactableBehaviour == null)
-            return;
-
-        if (_interactableBehaviour is IInteractable)
-            return;
-
-        Debug.LogError($"{_interactableBehaviour.name} must implement {nameof(IInteractable)}.", this);
-
-        _interactableBehaviour = null;
-    }
-}
 }

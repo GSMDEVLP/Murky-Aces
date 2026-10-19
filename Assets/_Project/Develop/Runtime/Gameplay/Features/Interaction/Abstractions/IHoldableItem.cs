@@ -6,8 +6,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions
     {
         bool IsHeld { get; }
 
-        bool TryHold(Transform anchor);
+        bool TryHold(ulong actorId, Transform anchor);
 
-        bool TryDrop(Vector3 position, Vector3 impulse);
+        bool TryDrop(
+            ulong actorId,
+            Vector3 position,
+            Vector3 impulse);
     }
 }

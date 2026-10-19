@@ -28,16 +28,31 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         }
 
         public bool IsOccupied => HeldItem != null;
+        private ulong _actorId;
+        private bool _isInitialized;
+
+
+        public void Initialize(ulong actorId)
+        {
+            if (_isInitialized && _actorId != actorId)
+            {
+                throw new System.InvalidOperationException(
+                    "HeldItemSlot already belongs to another actor.");
+            }
+
+            _actorId = actorId;
+            _isInitialized = true;
+        }
 
         public bool TryReceive(IInteractable item)
         {
-            if (IsOccupied || _anchor == null)
+            if (!_isInitialized || IsOccupied || _anchor == null)
                 return false;
 
             if (item is not IHoldableItem holdableItem)
                 return false;
 
-            if (!holdableItem.TryHold(_anchor))
+            if (!holdableItem.TryHold(_actorId, _anchor))
                 return false;
 
             _heldItem = holdableItem;
@@ -48,14 +63,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         {
             IHoldableItem item = HeldItem;
 
-            if (item == null || _anchor == null)
+            if (!_isInitialized || item == null || _anchor == null)
                 return false;
 
             Vector3 direction = _anchor.forward;
             Vector3 position =
                 _anchor.position + direction * _dropDistance;
 
-            if (!item.TryDrop(position, direction * _dropForce))
+            if (!item.TryDrop(_actorId, position, direction * _dropForce))
                 return false;
 
             _heldItem = null;

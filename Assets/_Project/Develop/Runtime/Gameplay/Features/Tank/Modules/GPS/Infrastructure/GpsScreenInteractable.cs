@@ -2,11 +2,12 @@ using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Presentation;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure
 {

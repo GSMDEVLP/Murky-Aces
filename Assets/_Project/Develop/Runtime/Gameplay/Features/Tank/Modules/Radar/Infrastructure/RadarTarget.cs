@@ -3,7 +3,6 @@ using Zenject;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Configs;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure
 {

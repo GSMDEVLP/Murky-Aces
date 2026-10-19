@@ -15,7 +15,7 @@ MonoBehaviour:
   _id: shell_test
   _displayName: "\u0422\u0435\u0441\u0442\u043E\u0432\u044B\u0439 \u0441\u043D\u0430\u0440\u044F\u0434"
   _compatibleWeaponId: main_gun
-  _projectilePrefab: {fileID: 3558969613062986172, guid: c05d58399f39ea64fae3d1ee1e731fb7, type: 3}
+  _projectilePrefab: {fileID: 3558969613062986172, guid: e8aaead83b3a7ad459a078f58da5bcd7, type: 3}
   _muzzleSpeed: 50
   _projectileMass: 1
   _projectileLifetime: 10

@@ -15,7 +15,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         private HoldInteractionSession _activeHold;
 
         public bool HasFocusedTarget { get; private set; }
-        public IInteractable FocusedTarget { get; private set; }
+        public IInteractionTarget FocusedTarget { get; private set; }
         public InteractionInfo FocusedInfo { get; private set; }
 
         public bool IsHolding =>_activeHold != null;
@@ -109,10 +109,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             if (!HasFocusedTarget)
                 return;
 
-            if (!FocusedInfo.IsAvailable)
+            IInteractable interactable = FocusedTarget as IInteractable;
+
+            if (interactable == null || !FocusedInfo.IsAvailable)
                 return;
 
-            if (!FocusedTarget.Begin(_context))
+            if (!interactable.Begin(_context))
             {
                 RefreshFocus();
                 return;
@@ -120,7 +122,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
             if (FocusedInfo.Mode == InteractionMode.Press)
             {
-                FocusedTarget.Complete(_context);
+                interactable.Complete(_context);
 
                 if (_gameplayEnabled)
                     RefreshFocus();
@@ -129,7 +131,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             }
 
             _activeHold = new HoldInteractionSession(
-                FocusedTarget,
+                interactable,
                 FocusedInfo);
         }
 
@@ -198,18 +200,20 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         private void RefreshFocus()
         {
-
             if (!_targetFinder.TryFindTarget(
                     _targetScope,
                     _context,
-                    out IInteractable target))
+                    out IInteractionTarget target))
             {
                 ClearFocus();
                 return;
             }
 
             FocusedTarget = target;
-            FocusedInfo = target.GetInteractionInfo(_context);
+
+            FocusedInfo = target is IInteractable interactable
+                ? interactable.GetInteractionInfo(_context)
+                : default;
 
             HasFocusedTarget = true;
         }

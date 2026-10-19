@@ -1052,6 +1052,24 @@ Assets/_Project/
 
 Папка появляется только тогда, когда появляется соответствующая feature.
 
+## Структура Tank — уточнение 2026-10-19
+
+Для `Gameplay/Features/Tank` пользователь выбрал порядок **система → используемые архитектурные слои**. Весь код конкретной системы находится рядом: `Movement`, `Turret`, `Weapon`, `Stations`, `Exterior`, `Fuel`, `Interior`, `Ammunition`; функциональные приборы остаются в `Modules/GPS`, `Modules/Radar`, `Modules/Lights`, `Modules/NightVision`.
+
+Внутри системы используются `Abstractions`, `Domain`, `Application`, `Infrastructure`, `Presentation` только при наличии соответствующего кода. Не создавать пустые слои и папки под каждую задачу. Небольшие однослойные системы могут оставаться плоскими. Unity ScriptableObject-конфиги относятся к Infrastructure своей системы.
+
+Общий код танка собран в `Tank/Core`: `Core/Abstractions/ITankRuntimeModule.cs` и `Core/Infrastructure/TankRoot.cs`. Старый `TankDebugInputSource` пользователь удалил как ненужный. Общие папки слоёв в корне Tank для разнесения разных систем не используются. Префабы остаются ресурсами в `Tank/Prefabs`.
+
+Карта систем и текущих путей: [Tank/README.md](../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/README.md). При структурном переносе 2026-10-19 сохранены существующие namespace, C#-содержимое и GUID; совпадение namespace с новым физическим путём не вводилось отдельным рефакторингом.
+
+## Структура Player — уточнение 2026-10-19
+
+Для `Gameplay/Features/Player` пользователь явно выбрал **пять общих слоёв в корне**: `Abstractions`, `Application`, `Domain`, `Infrastructure`, `Presentation`. Отдельно хранится ресурсная папка `Prefabs`. Полную карту размещения см. в [Player/README.md](../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/README.md).
+
+Восемь интерфейсов вынесены из Application/Abstractions в Player/Abstractions. Сериализуемый StationCapabilityProfile размещён в Infrastructure/Station, PlayerGpsCameraView — в Presentation/GPS, реестр Unity-объектов PlayerRegistry — в Infrastructure, адаптер PlayerStationCapabilities — в Infrastructure/Station. Существующие InputInstaller и InteractionInstaller остаются частью сборки конкретного игрока в Infrastructure.
+
+Пути изменены с сохранением C#-содержимого, namespace и GUID. Переименование типов и namespace, изменение логики и устранение существующих зависимостей между слоями не выполняются автоматически вместе с реорганизацией папок.
+
 ---
 
 # 22. Code Style
@@ -1061,6 +1079,8 @@ Assets/_Project/
 ## 22.1. Namespace
 
 Namespace повторяет путь от `Assets/`.
+
+После реорганизации папок 2026-10-19 пользователь отдельно разрешил актуализацию namespace. В Develop обновлены объявления и связанные using согласно текущим путям, с сохранением GUID и игровой логики. Это последующий шаг после описанных выше переносов с сохранением прежних namespace. Обе части partial-класса TurretAimRuntime находятся в Tank/Turret/Application и используют один namespace.
 
 Префикс:
 

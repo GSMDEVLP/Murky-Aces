@@ -2,18 +2,20 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Phases;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Phases;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Interior;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Readers;
-using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.GPS;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstraction;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Presentation.GPS;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Abstraction;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {

@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Fuel.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Fuel.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Fuel.Presentation;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Fuel.Infrastructure
 {

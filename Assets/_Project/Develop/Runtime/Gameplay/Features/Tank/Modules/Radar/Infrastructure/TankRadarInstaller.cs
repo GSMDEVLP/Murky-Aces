@@ -2,10 +2,10 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Presentation;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure
 {

@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 using Zenject;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Presentation;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 {

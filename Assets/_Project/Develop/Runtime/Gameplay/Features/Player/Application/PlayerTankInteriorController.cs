@@ -3,7 +3,8 @@ using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Abstraction;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {

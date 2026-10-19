@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Configs;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application
 {

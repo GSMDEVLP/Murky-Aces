@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.InputSystem;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 {

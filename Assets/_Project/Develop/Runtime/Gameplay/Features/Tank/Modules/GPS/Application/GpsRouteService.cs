@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Application
 {
@@ -13,10 +14,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
         private readonly CrewStationRegistry _stations;
         private readonly ITankMotionBody _body;
 
-        public GpsRouteService(
-            GpsRouteState route,
-            CrewStationRegistry stations,
-            ITankMotionBody body)
+        public GpsRouteService(GpsRouteState route, CrewStationRegistry stations, ITankMotionBody body)
         {
             _route = route ??
                 throw new ArgumentNullException(nameof(route));
@@ -31,10 +29,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Applicatio
         public bool CanEdit(IInteractionActor actor)
         {
             return actor != null &&
-                   _stations.TryGet(
+                    _stations.TryGet(
                        CrewRoleId.CommanderLoader,
                        out CrewStationController station) &&
-                   station.IsOccupiedBy(actor.Id);
+                    station.IsOccupiedBy(actor.Id);
         }
 
         public bool TrySetDestination(IInteractionActor actor, GpsRoutePoint destination)
