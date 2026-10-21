@@ -59,6 +59,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 
             return true;
         }
+        internal bool TryRollbackInstall(ExteriorMountSlotState expectedSlot, long expectedRevision)
+        {
+            if (!IsInstalled ||
+                Revision != expectedRevision ||
+                !ReferenceEquals(Slot, expectedSlot) ||
+                !Slot.TryRelease(this, allowSecured: true))
+            {
+                return false;
+            }
+
+            Slot = null;
+            IsSecured = false;
+            Revision++;
+
+            return true;
+        }
 
         public bool TryWeld(ExteriorMountSlotState expectedSlot)
         {

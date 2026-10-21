@@ -4,10 +4,11 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station
 {
-    public sealed class PlayerStationCapabilities
+    public sealed class PlayerStationCapabilities : IPlayerStationCapabilities
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerLook _look;
@@ -26,10 +27,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             private set;
         }
 
-        public PlayerStationCapabilities(
-            PlayerMovement movement,
-            PlayerLook look,
-            LazyInject<PlayerInteraction> interaction)
+        public PlayerStationCapabilities(PlayerMovement movement, PlayerLook look, LazyInject<PlayerInteraction> interaction)
         {
             _movement = movement ??
                 throw new ArgumentNullException(
@@ -44,7 +42,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
                     nameof(interaction));
         }
 
-        public bool TryApplyForStation(StationCapabilityProfile profile, IInteractionScope interactionScope)
+        public bool TryApplyForStation(IStationCapabilityProfile profile, IInteractionScope interactionScope)
         {
             if (AreDisabledForStation || profile == null)
             {

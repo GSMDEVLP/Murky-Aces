@@ -1,29 +1,22 @@
 using System;
 using UnityEngine;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station
 {
-    public enum StationControlContext
-    {
-        Driving = 0,
-        Gunner = 1,
-        Commander = 2
-    }
-
     [Serializable]
-    public sealed class StationCapabilityProfile
+    public sealed class StationCapabilityProfile : IStationCapabilityProfile
     {
         [SerializeField] private StationControlContext _controlContext = StationControlContext.Driving;
-
         [SerializeField] private bool _blocksLocomotion = true;
-
         [SerializeField] private bool _usesCockpitLook = true;
-
         [SerializeField] private bool _allowsInteraction = true;
-
         [SerializeField] private Vector2 _yawLimits = new Vector2(-75f, 75f);
         [SerializeField] private Vector2 _pitchLimits = new Vector2(-35f, 55f);
         [SerializeField] private Vector2 _initialLookAngles = Vector2.zero;
+
+        
         public StationControlContext ControlContext => _controlContext;
         public bool BlocksLocomotion => _blocksLocomotion;
         public bool UsesCockpitLook => _usesCockpitLook;

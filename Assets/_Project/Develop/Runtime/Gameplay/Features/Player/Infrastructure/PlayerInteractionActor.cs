@@ -4,9 +4,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Abstraction;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
@@ -111,7 +109,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Transform seatAnchor,
             Transform cameraAnchor,
             IInteractionScope interactionScope,
-            StationCapabilityProfile capabilityProfile)
+            IStationCapabilityProfile capabilityProfile)
         {
             return _stationOccupant.TryEnterStation(
                 expectedRevision,

@@ -44,7 +44,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             if (player.Gameplay.TryPrepareDespawn() == false)
             {
                 Debug.LogError(
-                    "Player despawn cancelled: station release failed.",
+                    "Player despawn cancelled: preparation failed.",
                     player);
                 return false;
             }

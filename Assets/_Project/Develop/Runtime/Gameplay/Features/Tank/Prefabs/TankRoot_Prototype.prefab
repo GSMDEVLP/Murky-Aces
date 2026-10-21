@@ -5803,6 +5803,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5471548454918593240}
+  - component: {fileID: 4894724959418482082}
   - component: {fileID: 3590583179025291212}
   - component: {fileID: 1718922231436843728}
   - component: {fileID: 1915310544719941027}
@@ -5830,6 +5831,19 @@ Transform:
   - {fileID: 6022568801186545770}
   m_Father: {fileID: 1726772568630431431}
   m_LocalEulerAnglesHint: {x: 20, y: 0, z: 0}
+--- !u!114 &4894724959418482082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8474022525346405715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcb48e762ff4dc4c9c1d3b451d7bd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountInstallInteractable
+  _slot: {fileID: 3590583179025291212}
 --- !u!114 &3590583179025291212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5845,6 +5859,9 @@ MonoBehaviour:
   _owner: {fileID: 2633657251670143667}
   _mountTypeId: armor_plate_hooks
   _placementAnchor: {fileID: 6022568801186545770}
+  _tankBody: {fileID: 4908985420495970726}
+  _maxInstallLinearSpeed: 0.03
+  _maxInstallAngularSpeed: 0.01
 --- !u!114 &1718922231436843728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5857,7 +5874,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
-  _targetBehaviour: {fileID: 3590583179025291212}
+  _targetBehaviour: {fileID: 4894724959418482082}
 --- !u!65 &1915310544719941027
 BoxCollider:
   m_ObjectHideFlags: 0

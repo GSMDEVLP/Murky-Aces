@@ -13,16 +13,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
         [SerializeField] private Rigidbody _body;
         [SerializeField] private Collider[] _worldColliders;
 
-        // Текущий проверочный сценарий — один несущий.
         private readonly CarrySession _carrySession = new(1);
-
         private HoldableItemBody _itemBody;
+        public bool IsHeld => _carrySession.ParticipantCount > 0;
+        public int CarrierCount => _carrySession.ParticipantCount;
+        public long CarryRevision => _carrySession.Revision;
 
-        public bool IsHeld =>
-            _carrySession.ParticipantCount > 0;
-
-        public int CarrierCount =>
-            _carrySession.ParticipantCount;
+        public bool IsCarriedBy(ulong actorId)
+        {
+            return CarrierCount == 1 &&
+                _carrySession.Contains(actorId);
+        }
 
         private void Awake()
         {
@@ -41,8 +42,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                 _worldColliders);
         }
 
-        public InteractionInfo GetInteractionInfo(
-            in InteractionContext context)
+        public InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             bool available =
                 isActiveAndEnabled &&
@@ -95,10 +95,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
             return false;
         }
 
-        public bool TryDrop(
-            ulong actorId,
-            Vector3 position,
-            Vector3 impulse)
+        public bool TryDrop(ulong actorId, Vector3 position, Vector3 impulse)
         {
             if (!_carrySession.Contains(actorId) ||
                 _itemBody == null)
@@ -109,6 +106,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
             if (!_itemBody.TryDrop(position, impulse))
                 return false;
 
+            return _carrySession.TryRemoveParticipant(actorId);
+        }
+
+        public bool TryEndCarry(ulong actorId)
+        {
             return _carrySession.TryRemoveParticipant(actorId);
         }
 

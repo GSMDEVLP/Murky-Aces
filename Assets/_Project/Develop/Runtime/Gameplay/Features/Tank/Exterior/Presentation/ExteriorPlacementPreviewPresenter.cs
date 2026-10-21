@@ -26,9 +26,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Presentation
         {
             if (!_interaction.IsGameplayEnabled ||
                 !_interaction.HasFocusedTarget ||
-                !(_interaction.FocusedTarget is ExteriorMountSlotAuthoring slot) ||
-                slot == null ||
-                !(_context.Actor is IPickupReceiver receiver))
+                _interaction.FocusedTarget is not
+                    ExteriorMountInstallInteractable install ||
+                install == null ||
+                !install.isActiveAndEnabled ||
+                _context.Actor is not IPickupReceiver receiver)
+            {
+                _view.Hide();
+                return;
+            }
+
+            ExteriorMountSlotAuthoring slot = install.Slot;
+
+            if (slot == null || !slot.CanInstallNow)
             {
                 _view.Hide();
                 return;
@@ -36,19 +46,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Presentation
 
             IHoldableItem item = receiver.HeldItem;
 
-            if (!(item is Component component) ||
+            if (item is not Component component ||
                 component == null ||
                 !item.IsHeld ||
-                !component.TryGetComponent(out ExteriorAttachmentAuthoring attachment) ||
+                !component.TryGetComponent(
+                    out ExteriorAttachmentAuthoring attachment) ||
                 !slot.CanAccept(attachment))
             {
                 _view.Hide();
                 return;
             }
 
-            _view.TryShow(
-                attachment.Config.PreviewPrefab,
-                slot.PlacementAnchor);
+            _view.TryShow(attachment.Config.PreviewPrefab, slot.PlacementAnchor);
         }
     }
 }

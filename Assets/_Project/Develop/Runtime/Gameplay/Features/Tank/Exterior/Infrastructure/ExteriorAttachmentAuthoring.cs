@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure
 {
@@ -9,9 +10,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
     {
         [SerializeField] private ExteriorAttachmentConfig _config;
 
+        private ExteriorAttachmentMountBody _mountBody;
         private ExteriorAttachmentState _state;
-
         public ExteriorAttachmentConfig Config => _config;
+
+        public ExteriorAttachmentMountBody MountBody
+        {
+            get
+            {
+                EnsureInitialized();
+                return _mountBody;
+            }
+        }
 
         public ExteriorAttachmentState State
         {
@@ -41,6 +51,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
             _state = new ExteriorAttachmentState(
                 _config.CompatibleMountTypeId,
                 _config.RequiresWelding);
+                
+            _mountBody = new ExteriorAttachmentMountBody(
+                transform,
+                GetComponent<Rigidbody>(),
+                GetComponent<PickupInteractable>());
         }
     }
 }

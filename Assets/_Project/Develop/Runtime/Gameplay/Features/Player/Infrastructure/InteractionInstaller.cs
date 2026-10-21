@@ -25,7 +25,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             
             ulong actorId = EntityId.ToULong(_playerFacade.GetEntityId());
             _heldItemSlot.Initialize(actorId);
-
+            Container.Bind<HeldItemSlot>().FromInstance(_heldItemSlot).AsSingle();
             Container.Bind<ExteriorPlacementPreviewView>().FromInstance(_exteriorPreviewView);
             Container.Bind<ExteriorPlacementPreviewPresenter>().AsSingle();
             Container.Bind<PlayerInteractionActor>().AsSingle().WithArguments(actorId,(IPickupReceiver)_heldItemSlot);

@@ -44,10 +44,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                 if (collider == null)
                     continue;
 
-                if (collider.TryGetComponent(
-                        out InteractionTargetLink link) &&
-                    link.TryGetTarget(
-                        out IInteractionTarget  candidate))
+                if (TryResolveTarget(collider, out IInteractionTarget candidate))
                 {
                     bool allowedByScope =
                         scope == null || scope.Allows(candidate);
@@ -64,6 +61,37 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                 if (!collider.isTrigger)
                     return false;
 
+            }
+
+            return false;
+        }
+        private static bool TryResolveTarget(Collider collider, out IInteractionTarget target)
+        {
+            target = null;
+
+            if (collider == null)
+                return false;
+
+            Rigidbody body = collider.attachedRigidbody;
+
+            Transform boundary = body != null
+                ? body.transform
+                : null;
+
+            Transform current = collider.transform;
+
+            while (current != null)
+            {
+                if (current.TryGetComponent(
+                        out InteractionTargetLink link))
+                {
+                    return link.TryGetTarget(out target);
+                }
+
+                if (current == boundary)
+                    return false;
+
+                current = current.parent;
             }
 
             return false;

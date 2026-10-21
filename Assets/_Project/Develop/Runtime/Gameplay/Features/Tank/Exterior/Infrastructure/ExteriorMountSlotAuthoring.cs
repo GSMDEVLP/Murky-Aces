@@ -13,12 +13,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
         [SerializeField] private string _mountTypeId;
         [SerializeField] private Transform _placementAnchor;
 
+        [Header("Installation")]
+        [SerializeField] private Rigidbody _tankBody;
+
+        [SerializeField, Min(0f)] private float _maxInstallLinearSpeed = 0.03f;
+
+        [SerializeField, Min(0f)] private float _maxInstallAngularSpeed = 0.01f;
+
         private ExteriorMountSlotState _state;
-
         public TankRoot Owner => _owner;
-
         public Transform PlacementAnchor => _placementAnchor;
-
+        public bool CanRemoveNow => CanInstallNow;
         public ExteriorMountSlotState State
         {
             get
@@ -27,6 +32,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
                 return _state;
             }
         }
+        public bool CanInstallNow =>
+            isActiveAndEnabled &&
+            _owner != null &&
+            _owner.isActiveAndEnabled &&
+            transform.IsChildOf(_owner.transform) &&
+            _placementAnchor != null &&
+            _placementAnchor.gameObject.activeInHierarchy &&
+            _placementAnchor.IsChildOf(transform) &&
+            _tankBody != null &&
+            _tankBody.transform == _owner.transform &&
+            _maxInstallLinearSpeed >= 0f &&
+            _maxInstallAngularSpeed >= 0f &&
+            _tankBody.linearVelocity.sqrMagnitude <=
+                _maxInstallLinearSpeed * _maxInstallLinearSpeed &&
+            _tankBody.angularVelocity.sqrMagnitude <=
+                _maxInstallAngularSpeed * _maxInstallAngularSpeed;
 
         private void Awake()
         {
@@ -68,6 +89,29 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
             }
 
             _state = new ExteriorMountSlotState(_mountTypeId);
+        }
+        public bool TryGetInstalledAttachment(out ExteriorAttachmentAuthoring attachment)
+        {
+            attachment = null;
+
+            if (!CanRemoveNow || State.Attachment == null)
+                return false;
+
+            for (int i = 0; i < _placementAnchor.childCount; i++)
+            {
+                Transform child = _placementAnchor.GetChild(i);
+
+                if (child.TryGetComponent(
+                        out ExteriorAttachmentAuthoring candidate) &&
+                    candidate.isActiveAndEnabled &&
+                    ReferenceEquals(candidate.State, State.Attachment))
+                {
+                    attachment = candidate;
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

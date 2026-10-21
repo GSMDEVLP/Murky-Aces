@@ -80,9 +80,37 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         {
             IHoldableItem currentItem = HeldItem;
 
-            if (currentItem == null ||
+            if (!_isInitialized ||
+                currentItem == null ||
                 !currentItem.IsHeld ||
                 !ReferenceEquals(currentItem, expectedItem))
+            {
+                return false;
+            }
+
+            if (!currentItem.TryEndCarry(_actorId))
+                return false;
+
+            _heldItem = null;
+            return true;
+        }
+        public bool TryPrepareDespawn()
+        {
+            IHoldableItem item = HeldItem;
+
+            if (item == null)
+            {
+                _heldItem = null;
+                return true;
+            }
+
+            if (_isInitialized == false || _anchor == null)
+                return false;
+
+            if (item.TryDrop(
+                    _actorId,
+                    _anchor.position,
+                    Vector3.zero) == false)
             {
                 return false;
             }

@@ -1,13 +1,15 @@
-using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using UnityEngine;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
+using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructure;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
 {
-    public sealed class CrewStationView : MonoBehaviour
+    public sealed class CrewStationView : MonoBehaviour, ICrewStationContext
     {
         [Header("Interaction")]
         [SerializeField]
@@ -37,7 +39,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
         public Transform InteractionPoint => _interactionPoint;
         public StationPanelRoot PanelRoot => _panelRoot;
         public CrewRoleId RoleId => _roleId;
-        public StationCapabilityProfile CapabilityProfile => _capabilityProfile;
+        public IStationCapabilityProfile CapabilityProfile => _capabilityProfile;
         public CrewLocationKind RequiredEntryLocation =>_requiredEntryLocation;
         public IInteractionScope InteractionScope => _interactionScope;
 

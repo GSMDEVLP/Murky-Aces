@@ -6,16 +6,16 @@ using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 {
     public sealed class PlayerStationController : IStationOccupant, IStationIntentSource
     {
         private readonly IPlayerStationBody _body;
-        private readonly PlayerStationCapabilities _capabilities;
+        private readonly IPlayerStationCapabilities _capabilities;
         private readonly IReadOnlyList<IPlayerStationInputMode> _inputModes;
         private readonly CrewTransitionCoordinator _transitions;
         private readonly PlayerGpsSession _gpsSession;
@@ -24,7 +24,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private Func<bool> _releaseStation;
 
         private IInteractionScope _stationInteractionScope;
-        private StationCapabilityProfile _stationCapabilityProfile;
+        private IStationCapabilityProfile _stationCapabilityProfile;
         private Transform _seatAnchor;
 
         private CrewLocation _returnLocation;
@@ -35,7 +35,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public PlayerStationController(
             IPlayerStationBody body,
-            PlayerStationCapabilities capabilities,
+            IPlayerStationCapabilities capabilities,
             List<IPlayerStationInputMode> inputModes,
             CrewTransitionCoordinator transitions,
             PlayerGpsSession gpsSession)
@@ -69,7 +69,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             Transform seatAnchor,
             Transform cameraAnchor,
             IInteractionScope interactionScope,
-            StationCapabilityProfile capabilityProfile)
+            IStationCapabilityProfile capabilityProfile)
         {
             CrewLocation source = _transitions.Current;
 
@@ -254,8 +254,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
                 _activeInputMode.ConsumeExitRequest();
         }
 
-        private IPlayerStationInputMode FindInputMode(
-            StationControlContext context)
+        private IPlayerStationInputMode FindInputMode(StationControlContext context)
         {
             IPlayerStationInputMode result = null;
 

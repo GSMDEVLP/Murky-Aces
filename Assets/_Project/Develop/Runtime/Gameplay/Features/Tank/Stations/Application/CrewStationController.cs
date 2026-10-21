@@ -5,45 +5,37 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstraction;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
 {
     public sealed class CrewStationController : IGameplayTickable
     {
         private readonly CrewStationOccupancy _station;
-        private readonly CrewStationView  _view;
+        private readonly ICrewStationContext _context;
         private readonly ICrewStationRoleAdapter _roleAdapter;
-        private readonly StationDisplayFeed _displayFeed;
 
         private IStationOccupant _currentOccupant;
         private IStationIntentSource _stationIntentSource;
 
 
-        public CrewRoleId RoleId => _view.RoleId;
+        public CrewRoleId RoleId => _context.RoleId;
         public CrewStationState State => _station.State;
         public bool IsOccupied => _station.IsOccupied;
         private long? _entryRevision;
         
         public CrewStationController(
             CrewStationOccupancy station,
-            CrewStationView  view,
-            ICrewStationRoleAdapter roleAdapter,
-            StationDisplayFeed displayFeed = null)
+            ICrewStationContext context,
+            ICrewStationRoleAdapter roleAdapter)
         {
             _station = station ??
-                throw new ArgumentNullException(
-                    nameof(station));
+                throw new ArgumentNullException(nameof(station));
 
-            _view = view ??
-                throw new ArgumentNullException(
-                    nameof(view));
+            _context = context ??
+                throw new ArgumentNullException(nameof(context));
 
             _roleAdapter = roleAdapter ??
-                throw new ArgumentNullException(
-                    nameof(roleAdapter));
-
-            _displayFeed = displayFeed;
+                throw new ArgumentNullException(nameof(roleAdapter));
         }
         public bool IsOccupiedBy(ulong occupantId)
         {
@@ -55,7 +47,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
         {
             return actor != null &&
                    _station.IsFree &&
-                   _view.CanEnter &&
+                   _context.CanEnter &&
                    _roleAdapter.IsActive == false &&
                    CanActorUseStation(actor);
         }
@@ -65,7 +57,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             return actor != null &&
                 _station.State == CrewStationState.Entering &&
                 _station.OccupantId == actor.Id &&
-                _view.CanEnter &&
+                _context.CanEnter &&
                 !_roleAdapter.IsActive &&
                 CanActorUseStation(actor) &&
                 _entryRevision.HasValue &&
@@ -102,11 +94,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
 
             if (!occupant.TryEnterStation(
                     _entryRevision.Value,
-                    _view.RoleId,
-                    _view.SeatAnchor,
-                    _view.CameraAnchor,
-                    _view.InteractionScope,
-                    _view.CapabilityProfile))
+                    _context.RoleId,
+                    _context.SeatAnchor,
+                    _context.CameraAnchor,
+                    _context.InteractionScope,
+                    _context.CapabilityProfile))
             {
                 return CancelFailedEnter(actor.Id);
             }
@@ -139,11 +131,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             _entryRevision = null;
             _currentOccupant = occupant;
             _stationIntentSource = (IStationIntentSource)actor;
-            if (_displayFeed != null && !_displayFeed.TryActivate())
-            {
-                UnityEngine.Debug.LogWarning(
-                    $"Station {RoleId} was occupied without an active display.");
-            }
 
             return true;
         }
@@ -193,7 +180,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             return actor != null &&
                 HasActiveOccupant() &&
                 _station.IsOccupiedBy(actor.Id) &&
-                _view.CanExit;
+                _context.CanExit;
         }
 
         public bool TryExit(IInteractionActor actor)
@@ -205,7 +192,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
         private bool TryExitCurrentOccupant(bool force = false)
         {
             if (HasActiveOccupant() == false ||
-                _view.CanExit == false)
+                _context.CanExit == false)
             {
                 return false;
             }
@@ -218,8 +205,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             _roleAdapter.ClearOutput();
 
             bool exited = force
-                ? _currentOccupant.TryForceExitStation(_view.ExitAnchor)
-                : _currentOccupant.TryExitStation(_view.ExitAnchor);
+                ? _currentOccupant.TryForceExitStation(_context.ExitAnchor)
+                : _currentOccupant.TryExitStation(_context.ExitAnchor);
 
             if (exited == false)
             {
@@ -234,8 +221,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             }
 
             _currentOccupant.ClearReleaseHandler(TryForceReleaseCurrentOccupant);
-            if (_displayFeed != null)
-                _displayFeed.Deactivate();
+
             _roleAdapter.Deactivate();
 
             _currentOccupant = null;
@@ -257,7 +243,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             return occupant != null &&
                 !occupant.IsInStation &&
                 location != null &&
-                location.Current.Kind == _view.RequiredEntryLocation &&
+                location.Current.Kind == _context.RequiredEntryLocation &&
                 actor is IStationIntentSource &&
                 _roleAdapter.CanUse(actor);
         }
@@ -321,11 +307,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
             bool occupantRolledBack =
                 _currentOccupant.TryEnterStation(
                     ((ICrewLocationReader)_currentOccupant).Revision,
-                    _view.RoleId,
-                    _view.SeatAnchor,
-                    _view.CameraAnchor,
-                    _view.InteractionScope,
-                    _view.CapabilityProfile);
+                    _context.RoleId,
+                    _context.SeatAnchor,
+                    _context.CameraAnchor,
+                    _context.InteractionScope,
+                    _context.CapabilityProfile);
 
             bool stationRolledBack = _station.TryCancelExit(occupantId);
 

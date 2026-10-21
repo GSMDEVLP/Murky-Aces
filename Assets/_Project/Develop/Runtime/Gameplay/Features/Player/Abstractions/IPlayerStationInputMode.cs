@@ -1,4 +1,4 @@
-using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Station;
+using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions
 {

@@ -50,13 +50,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
             return true;
         }
 
-        internal bool TryRelease(
-            ExteriorAttachmentState expectedAttachment)
+        internal bool TryRelease(ExteriorAttachmentState expectedAttachment, bool allowSecured = false)
         {
             if (!IsOccupied ||
                 !ReferenceEquals(Attachment, expectedAttachment) ||
                 !ReferenceEquals(expectedAttachment.Slot, this) ||
-                expectedAttachment.IsSecured)
+                (!allowSecured && expectedAttachment.IsSecured))
             {
                 return false;
             }

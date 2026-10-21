@@ -7,6 +7,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain
         Hold,
         Toggle,
         Exit,
-        Load
+        Load,
+        Install,
+        Remove,
+        Weld
     }
 }

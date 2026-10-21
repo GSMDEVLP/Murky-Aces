@@ -13,18 +13,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Phase
         private readonly PlayerInteraction _playerInteraction;
         private readonly PlayerStationController _stationController;
         private readonly PlayerGpsSession _gpsSession;
+        private readonly HeldItemSlot _heldItemSlot;
 
-        public GameplayPhase(PlayerMovement playerMovement, 
-            PlayerLook playerLook, 
-            PlayerInteraction playerInteraction, 
+        public GameplayPhase(
+            PlayerMovement playerMovement,
+            PlayerLook playerLook,
+            PlayerInteraction playerInteraction,
             PlayerStationController stationController,
-            PlayerGpsSession gpsSession)
+            PlayerGpsSession gpsSession,
+            HeldItemSlot heldItemSlot)
         {
             _playerMovement = playerMovement;
             _playerLook = playerLook;
             _playerInteraction = playerInteraction;
             _stationController = stationController;
             _gpsSession = gpsSession;
+            _heldItemSlot = heldItemSlot;
         }
 
         public void Tick(float deltaTime)
@@ -49,13 +53,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Phase
 
         public bool TryPrepareDespawn()
         {
-            if (!_gpsSession.TryForceClose())
+            if (_gpsSession.TryForceClose() == false)
                 return false;
 
             _playerInteraction.CancelActiveInteraction(
                 InteractionCancelReason.ActorDisabled);
 
-            return _stationController.TryReleaseStation();
+            if (_stationController.TryReleaseStation() == false)
+                return false;
+
+            return _heldItemSlot.TryPrepareDespawn();
         }
     }
 }

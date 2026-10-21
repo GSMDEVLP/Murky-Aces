@@ -48,14 +48,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
                     var driver = new CrewStationController(
                         new CrewStationOccupancy(),
                         _driverStationView,
-                        context.Container.Resolve<DriverStationAdapter>(),
-                        _driverDisplayFeed);
+                        context.Container.Resolve<DriverStationAdapter>());
 
                     var gunner = new CrewStationController(
                         new CrewStationOccupancy(),
                         _gunnerStationView,
-                        context.Container.Resolve<GunnerStationAdapter>(),
-                        _gunnerDisplayFeed);
+                        context.Container.Resolve<GunnerStationAdapter>());
 
                         return new CrewStationRegistry(
                             new List<CrewStationController> { driver, gunner, commander });
@@ -66,8 +64,33 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
                 .To<TankStationsModule>()
                 .AsCached();
 
+            InstallDisplay(CrewRoleId.Driver, _driverDisplayFeed);
+            InstallDisplay(CrewRoleId.Gunner, _gunnerDisplayFeed);
             Container.Bind<CrewStationInteractable>()
                 .FromComponentsInHierarchy()
+                .AsCached()
+                .NonLazy();
+        }
+        private void InstallDisplay(CrewRoleId role, StationDisplayFeed display)
+        {
+            Container.Bind<ITankRuntimeModule>()
+                .FromMethod(context =>
+                {
+                    CrewStationRegistry stations =
+                        context.Container.Resolve<CrewStationRegistry>();
+
+                    if (stations.TryGet(
+                            role,
+                            out CrewStationController station) == false)
+                    {
+                        throw new InvalidOperationException(
+                            $"Station {role} is not installed.");
+                    }
+
+                    return new CrewStationDisplayPresenter(
+                        station,
+                        display);
+                })
                 .AsCached()
                 .NonLazy();
         }

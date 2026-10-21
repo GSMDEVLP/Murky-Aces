@@ -1,6 +1,6 @@
+using Zenject;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Phases;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
@@ -93,14 +93,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         private void BindMovementAndLook()
         {
             Container.Bind<PlayerMovement>().FromInstance(_playerMovement);
-
             Container.Bind<PlayerLook>().FromInstance(_playerLook);
         }
 
         private void BindStation()
         {
             Container.Bind<IPlayerStationBody>().FromInstance(_stationBody).AsSingle();
-            Container.Bind<PlayerStationCapabilities>().AsSingle();
+            Container.Bind<IPlayerStationCapabilities>().To<PlayerStationCapabilities>().AsSingle();
             Container.Bind<PlayerStationController>().AsSingle();
             Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
             Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
