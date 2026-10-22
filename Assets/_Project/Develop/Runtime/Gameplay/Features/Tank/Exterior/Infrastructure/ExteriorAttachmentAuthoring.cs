@@ -36,6 +36,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
         {
             EnsureInitialized();
         }
+        private void OnDestroy()
+        {
+            if (_state == null)
+                return;
+
+            if (_state.TryDestroy() == false)
+            {
+                Debug.LogError(
+                    "Failed to release the attachment state on destroy.",
+                    this);
+            }
+        }
 
         private void EnsureInitialized()
         {

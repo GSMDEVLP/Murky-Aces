@@ -27,12 +27,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 
             MountTypeId = mountTypeId;
         }
-
         public bool CanAccept(ExteriorAttachmentState attachment)
         {
             return attachment != null &&
-                !IsOccupied &&
-                !attachment.IsInstalled &&
+                attachment.IsDestroyed == false &&
+                IsOccupied == false &&
+                attachment.IsInstalled == false &&
                 string.Equals(
                     MountTypeId,
                     attachment.CompatibleMountTypeId,

@@ -11,8 +11,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 
         public bool IsInstalled => Slot != null;
         public bool IsSecured { get; private set; }
-
         public long Revision { get; private set; }
+        public bool IsDestroyed { get; private set; }
 
         public ExteriorAttachmentState(
             string compatibleMountTypeId,
@@ -87,6 +87,24 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
             }
 
             IsSecured = true;
+            Revision++;
+
+            return true;
+        }
+        public bool TryDestroy()
+        {
+            if (IsDestroyed)
+                return true;
+
+            if (IsInstalled &&
+                Slot.TryRelease(this, allowSecured: true) == false)
+            {
+                return false;
+            }
+
+            Slot = null;
+            IsSecured = false;
+            IsDestroyed = true;
             Revision++;
 
             return true;

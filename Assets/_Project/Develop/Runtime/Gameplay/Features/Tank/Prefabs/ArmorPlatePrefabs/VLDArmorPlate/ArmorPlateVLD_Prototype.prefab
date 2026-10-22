@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 3743047391199466333}
   - component: {fileID: 6383814840542205413}
   m_Layer: 0
-  m_Name: ArmorPlate_Prototype
+  m_Name: ArmorPlateVLD_Prototype
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
