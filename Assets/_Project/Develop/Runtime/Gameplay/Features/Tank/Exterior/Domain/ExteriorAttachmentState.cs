@@ -4,7 +4,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 {
     public sealed class ExteriorAttachmentState
     {
-        public string CompatibleMountTypeId { get; }
+        public ExteriorMountType CompatibleMountType { get; }
         public bool RequiresWelding { get; }
 
         public ExteriorMountSlotState Slot { get; private set; }
@@ -14,18 +14,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
         public long Revision { get; private set; }
         public bool IsDestroyed { get; private set; }
 
-        public ExteriorAttachmentState(
-            string compatibleMountTypeId,
-            bool requiresWelding)
+        public ExteriorAttachmentState(ExteriorMountType compatibleMountType, bool requiresWelding)
         {
-            if (string.IsNullOrWhiteSpace(compatibleMountTypeId))
+            if (compatibleMountType == ExteriorMountType.None ||
+                !Enum.IsDefined(typeof(ExteriorMountType), compatibleMountType))
             {
-                throw new ArgumentException(
-                    "Compatible mount type ID is required.",
-                    nameof(compatibleMountTypeId));
+                throw new ArgumentOutOfRangeException(
+                    nameof(compatibleMountType),
+                    compatibleMountType,
+                    "A valid mount type is required.");
             }
 
-            CompatibleMountTypeId = compatibleMountTypeId;
+            CompatibleMountType = compatibleMountType;
             RequiresWelding = requiresWelding;
         }
 

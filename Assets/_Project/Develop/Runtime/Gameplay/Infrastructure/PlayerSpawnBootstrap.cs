@@ -7,42 +7,39 @@ using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Infrastructure
 {
-public sealed class PlayerSpawnBootstrap : MonoBehaviour
-{
-    [SerializeField] private List<Transform> _playerSpawnPoints;
-
-    private PlayerSpawner _playerSpawner;
-    private GameplayCameraRig _cameraRig;
-
-    [Inject]
-    public void Construct(PlayerSpawner playerSpawner, GameplayCameraRig cameraRig)
+    public sealed class PlayerSpawnBootstrap : MonoBehaviour
     {
-        _playerSpawner = playerSpawner;
-        _cameraRig = cameraRig;
-    }
+        [SerializeField] private List<Transform> _playerSpawnPoints;
 
-    private void Start()
-    {
-        Transform point = _playerSpawnPoints[0];
-        PlayerFacade player = _playerSpawner.Spawn(point.position, point.rotation);
-
-        if (!_cameraRig.TryBindPlayerCameraPivot(player.CameraPivot))
-        {
-            throw new InvalidOperationException("Gameplay Camera could not bind " + "to Player.CameraPivot.");
-        }
+        private PlayerSpawner _playerSpawner;
+        private GameplayCameraRig _cameraRig;
         
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        // foreach(Transform spawnPoint in _playerSpawnPoints)
-        // {
-        //     _playerSpawner.Spawn(spawnPoint.position, spawnPoint.rotation);
-        // }
-    }
 
-    private void OnDisable()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        [Inject]
+        public void Construct(PlayerSpawner playerSpawner, GameplayCameraRig cameraRig)
+        {
+            _playerSpawner = playerSpawner;
+            _cameraRig = cameraRig;
+        }
+
+        private void Start()
+        {
+            Transform point = _playerSpawnPoints[0];
+            PlayerFacade player = _playerSpawner.Spawn(point.position, point.rotation);
+
+            if (!_cameraRig.TryBindPlayerCameraPivot(player.CameraPivot))
+            {
+                throw new InvalidOperationException("Gameplay Camera could not bind " + "to Player.CameraPivot.");
+            }
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+        private void OnDisable()
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
-}
 }

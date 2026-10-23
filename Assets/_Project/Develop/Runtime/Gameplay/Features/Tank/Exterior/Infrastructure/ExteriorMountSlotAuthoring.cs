@@ -10,7 +10,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
     public sealed class ExteriorMountSlotAuthoring : MonoBehaviour, IInteractionTarget
     {
         [SerializeField] private TankRoot _owner;
-        [SerializeField] private string _mountTypeId;
+        [SerializeField] private ExteriorMountType _mountTypeId;
         [SerializeField] private Transform _placementAnchor;
 
         [Header("Installation")]

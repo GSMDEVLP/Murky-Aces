@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2bd64b34a85eadb498012beb1d80c9a1, type: 3}
-  m_Name: VLDArmorPlateAttachmentConfig
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Configs.ExteriorAttachmentConfig
-  _id: armor_plate_basic
-  _displayName: Armor Plate
-  _compatibleMountTypeId: armor_plate_hooks
+  m_Name: TurretRearContainerAttachmentConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorAttachmentConfig
+  _displayName: Container
+  _compatibleMountType: 5
   _requiresWelding: 1
-  _previewPrefab: {fileID: 1360749645656678602, guid: d512524e810fab74eb3f18bc981e82b7, type: 3}
+  _previewPrefab: {fileID: 5741679688452336067, guid: adfe4382158e94a4492558d708a61118, type: 3}
+  _weldingDuration: 2

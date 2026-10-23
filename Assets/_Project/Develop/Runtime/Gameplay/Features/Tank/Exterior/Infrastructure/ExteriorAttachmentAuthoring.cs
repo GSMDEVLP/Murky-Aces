@@ -61,7 +61,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
             }
 
             _state = new ExteriorAttachmentState(
-                _config.CompatibleMountTypeId,
+                _config.CompatibleMountType,
                 _config.RequiresWelding);
                 
             _mountBody = new ExteriorAttachmentMountBody(

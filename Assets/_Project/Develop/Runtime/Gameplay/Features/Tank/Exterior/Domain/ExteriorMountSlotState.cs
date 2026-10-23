@@ -4,7 +4,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 {
     public sealed class ExteriorMountSlotState
     {
-        public string MountTypeId { get; }
+        public ExteriorMountType MountType { get; }
 
         public ExteriorAttachmentState Attachment
         {
@@ -16,27 +16,27 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
 
         public long Revision { get; private set; }
 
-        public ExteriorMountSlotState(string mountTypeId)
+        public ExteriorMountSlotState(ExteriorMountType mountType)
         {
-            if (string.IsNullOrWhiteSpace(mountTypeId))
+            if (mountType == ExteriorMountType.None ||
+                !Enum.IsDefined(typeof(ExteriorMountType), mountType))
             {
-                throw new ArgumentException(
-                    "Mount type ID is required.",
-                    nameof(mountTypeId));
+                throw new ArgumentOutOfRangeException(
+                    nameof(mountType),
+                    mountType,
+                    "A valid mount type is required.");
             }
 
-            MountTypeId = mountTypeId;
+            MountType = mountType;
         }
+
         public bool CanAccept(ExteriorAttachmentState attachment)
         {
             return attachment != null &&
-                attachment.IsDestroyed == false &&
-                IsOccupied == false &&
-                attachment.IsInstalled == false &&
-                string.Equals(
-                    MountTypeId,
-                    attachment.CompatibleMountTypeId,
-                    StringComparison.Ordinal);
+                !attachment.IsDestroyed &&
+                !IsOccupied &&
+                !attachment.IsInstalled &&
+                MountType == attachment.CompatibleMountType;
         }
 
         internal bool TryOccupy(ExteriorAttachmentState attachment)
