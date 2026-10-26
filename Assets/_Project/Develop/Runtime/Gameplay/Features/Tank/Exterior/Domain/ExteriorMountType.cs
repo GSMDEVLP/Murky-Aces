@@ -7,6 +7,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain
         HullSideArmor = 2,
         HullSideHeavyArmor = 3,
         TurretArmor = 4,
-        TurretRearContainer = 5
+        TurretRearContainer = 5,
+        TurretHatch = 6,
+        TurretGun = 7
     }
 }

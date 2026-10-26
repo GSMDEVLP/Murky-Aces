@@ -13,6 +13,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
 
         private readonly InputAction _look;
         private readonly InputAction _interact;
+        private readonly InputAction _interactionNavigate;
+        private readonly InputAction _interactionCancel;
         private readonly InputAction _drop;
         private readonly InputAction _exitStation;
 
@@ -38,6 +40,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
 
             _look = _map.FindAction("Look", true);
             _interact = _map.FindAction("Interact", true);
+            _interactionNavigate = _map.FindAction("InteractionNavigate", true);
+            _interactionCancel = _map.FindAction("InteractionCancel", true);
             _drop = _map.FindAction("Drop", true);
             _exitStation = _map.FindAction("ExitStation", true);
         }
@@ -59,7 +63,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
                 _interact.WasPressedThisFrame(),
                 _interact.IsPressed(),
                 _interact.WasReleasedThisFrame(),
-                _drop.WasPressedThisFrame());
+                _drop.WasPressedThisFrame(),
+                _interactionNavigate.WasPerformedThisFrame()
+                    ? Math.Sign(_interactionNavigate.ReadValue<float>()) : 0,
+                _interactionCancel.WasPressedThisFrame());
         }
 
         public CommanderActionsSnapshot ReadCommanderActions()

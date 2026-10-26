@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <RestoreIgnoreFailedSources>true</RestoreIgnoreFailedSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="UnityTypeStubs.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Core/GameLoop/Abstractions/ITickable.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Abstractions/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Domain/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Application/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Exterior/Domain/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Exterior/Application/*.cs" />
+  </ItemGroup>
+</Project>

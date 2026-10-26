@@ -14,9 +14,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Infrastructure
         private bool _isRegistered;
 
         [Inject]
-        public void Construct(
-            GameLoopRegistry gameLoopRegistry,
-            List<ITankRuntimeModule> modules)
+        public void Construct(GameLoopRegistry gameLoopRegistry, List<ITankRuntimeModule> modules)
         {
             _gameLoopRegistry = gameLoopRegistry ??
                 throw new ArgumentNullException(nameof(gameLoopRegistry));

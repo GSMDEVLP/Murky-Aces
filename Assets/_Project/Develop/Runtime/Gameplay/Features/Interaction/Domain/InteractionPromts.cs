@@ -10,6 +10,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain
         Load,
         Install,
         Remove,
-        Weld
+        Weld,
+        Choose
     }
 }

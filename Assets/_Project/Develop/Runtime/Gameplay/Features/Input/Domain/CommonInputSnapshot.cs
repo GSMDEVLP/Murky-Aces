@@ -21,6 +21,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Domain
         public bool InteractReleasedThisFrame { get; }
 
         public bool DropPressedThisFrame { get; }
+        public int InteractionMenuNavigation { get; }
+        public bool InteractionMenuCancelPressed { get; }
 
         public CommonInputSnapshot(
             float lookX,
@@ -29,7 +31,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Domain
             bool interactPressedThisFrame,
             bool interactHeld,
             bool interactReleasedThisFrame,
-            bool dropPressedThisFrame)
+            bool dropPressedThisFrame,
+            int interactionMenuNavigation = 0,
+            bool interactionMenuCancelPressed = false)
         {
             LookX = lookX;
             LookY = lookY;
@@ -38,6 +42,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Domain
             InteractHeld = interactHeld;
             InteractReleasedThisFrame = interactReleasedThisFrame;
             DropPressedThisFrame = dropPressedThisFrame;
+            InteractionMenuNavigation = interactionMenuNavigation;
+            InteractionMenuCancelPressed = interactionMenuCancelPressed;
         }
     }
 }

@@ -7,8 +7,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Application
     public sealed class ExteriorRemovalCommand
     {
         private readonly IPickupReceiver _receiver;
-        private readonly IInteractable _item;
-        private readonly IHoldableItem _holdableItem;
+        private readonly IHoldableItem _item;
 
         private readonly ExteriorAttachmentState _attachment;
         private readonly ExteriorMountSlotState _slot;
@@ -24,7 +23,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Application
 
         public ExteriorRemovalCommand(
             IPickupReceiver receiver,
-            IInteractable item,
+            IHoldableItem item,
             ExteriorAttachmentState attachment,
             ExteriorMountSlotState slot,
             Func<bool> canApply,
@@ -37,9 +36,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Application
             _item = item
                 ?? throw new ArgumentNullException(nameof(item));
 
-            _holdableItem = item as IHoldableItem
-                ?? throw new ArgumentException(
-                    "Item must support carrying.", nameof(item));
 
             _attachment = attachment
                 ?? throw new ArgumentNullException(nameof(attachment));
@@ -68,7 +64,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Application
             _isUsed = true;
 
             if (_receiver.IsOccupied ||
-                _holdableItem.IsHeld ||
+                _item.IsHeld ||
                 _attachment.IsSecured ||
                 _attachment.Revision != _attachmentRevision ||
                 _slot.Revision != _slotRevision ||

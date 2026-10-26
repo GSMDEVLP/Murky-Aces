@@ -44,18 +44,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             _isInitialized = true;
         }
 
-        public bool TryReceive(IInteractable item)
+        public bool TryReceive(IHoldableItem item)
         {
             if (!_isInitialized || IsOccupied || _anchor == null)
                 return false;
 
-            if (item is not IHoldableItem holdableItem)
+            if (item == null || (item is UnityEngine.Object unityObject && unityObject == null))
                 return false;
 
-            if (!holdableItem.TryHold(_actorId, _anchor))
+            if (!item.TryHold(_actorId, _anchor))
                 return false;
 
-            _heldItem = holdableItem;
+            _heldItem = item;
             return true;
         }
 

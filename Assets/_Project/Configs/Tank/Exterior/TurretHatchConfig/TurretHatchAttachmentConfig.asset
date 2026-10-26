@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bd64b34a85eadb498012beb1d80c9a1, type: 3}
+  m_Name: TurretHatchAttachmentConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorAttachmentConfig
+  _displayName: Turret hatch
+  _compatibleMountType: 6
+  _requiresWelding: 1
+  _previewPrefab: {fileID: 5189895353633283247, guid: e2c141fbadf6dce4eb6e90735c195dc6, type: 3}
+  _weldingDuration: 2

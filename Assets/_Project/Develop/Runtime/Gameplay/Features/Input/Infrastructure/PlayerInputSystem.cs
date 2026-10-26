@@ -65,6 +65,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
             GunnerActionsSnapshot gunner = _gunnerActions.ReadGunnerActions();
             CommanderActionsSnapshot commander = _commanderActions.ReadCommanderActions();
 
+            if (_playerIntent.IsInteractionMenuOpen)
+            {
+                player = PlayerActionsSnapshot.Neutral;
+                driving = DrivingActionsSnapshot.Neutral;
+                gunner = GunnerActionsSnapshot.Neutral;
+                commander = CommanderActionsSnapshot.Neutral;
+            }
+
             UpdatePlayerIntent(common, player, deltaTime);
             UpdateDrivingIntent(driving);
             _gunnerIntent.SetActions(gunner);
@@ -102,6 +110,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
                 common.InteractPressedThisFrame,
                 common.InteractHeld,
                 common.InteractReleasedThisFrame);
+
+            _playerIntent.SetInteractionMenuInput(
+                common.InteractionMenuNavigation,
+                common.InteractionMenuCancelPressed);
 
             _playerIntent.SetDrop(
                 common.DropPressedThisFrame);

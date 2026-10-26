@@ -10,7 +10,7 @@
 | `Stations` | Занятость мест экипажа, вход/выход, адаптеры ролей и экраны |
 | `Exterior` | Детали внешнего корпуса, ячейки, совместимость и предпросмотр |
 | `Fuel` | Топливо, конфигурация и отображение |
-| `Interior` | Взаимодействие с люками и переходами внутрь танка; контракт ITankInteriorOccupant находится в Interior/Abstraction |
+| `Interior` | Infrastructure содержит проход через люк и общую цель с действиями крышки; ITankInteriorOccupant находится в Interior/Abstraction |
 | `Ammunition` | Unity-описание снаряда и переносимый предмет снаряда |
 | `Modules/GPS` | Карта, маршрут, команды GPS и экран |
 | `Modules/Radar` | Контакты, сканирование, команды радара и экран |
@@ -45,7 +45,9 @@ Exterior/
     └── ExteriorPlacementPreviewView.cs
 ```
 
-`Exterior/Application` появится при добавлении команды установки.
+`Exterior/Application` содержит команды установки, снятия и сварки. `Exterior/Abstractions` содержит порт данных preview для обычного крепления и общей цели люка.
+
+Все interactable-компоненты используют единую систему целей и действий: [Interaction/README.md](../Interaction/README.md). Самостоятельного ввода и UI-меню внутри Tank нет.
 
 Общий код танка сгруппирован отдельно:
 

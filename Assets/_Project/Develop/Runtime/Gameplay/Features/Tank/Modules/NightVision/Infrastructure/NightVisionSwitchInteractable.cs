@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -8,7 +9,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Presen
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.Infrastructure
 {
-    public sealed class NightVisionSwitchInteractable : MonoBehaviour, IInteractable
+    public sealed class NightVisionSwitchInteractable : SingleActionInteractionTarget
     {
         private TankNightVision _nightVision;
         private TankNightVisionCommands _commands;
@@ -26,17 +27,17 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.In
                 throw new ArgumentNullException(nameof(view));
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             return InteractionInfo.Press(InteractionPromts.Toggle, CanInteract(context.Actor));
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return CanInteract(context.Actor);
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (!CanInteract(context.Actor))
                 return;
@@ -46,7 +47,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.NightVision.In
                 !_nightVision.IsEnabled);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

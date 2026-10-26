@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -14,6 +16,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 
         [SerializeField]
         private LayerMask _collisionMask = ~0;
+
+        private readonly List<IInteractionAction> _actions = new List<IInteractionAction>(4);
 
         public bool TryFindTarget(
             IInteractionScope scope,
@@ -49,9 +53,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                     bool allowedByScope =
                         scope == null || scope.Allows(candidate);
 
-                    if (allowedByScope &&
-                        (!(candidate is IInteractable interactable) ||
-                        interactable.GetInteractionInfo(context).IsAvailable))
+                    if (allowedByScope)
+                        InteractionActions.CollectAvailable(candidate, context, _actions);
+
+                    if (allowedByScope && _actions.Count > 0)
                     {
                         target = candidate;
                         return true;

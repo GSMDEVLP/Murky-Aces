@@ -1,10 +1,11 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Sandbox
 {
-public sealed class TimedInteractable : MonoBehaviour, IInteractable
+public sealed class TimedInteractable : SingleActionInteractionTarget
 {
     [SerializeField] private InteractionPromts _prompt;
 
@@ -14,7 +15,7 @@ public sealed class TimedInteractable : MonoBehaviour, IInteractable
 
     private ulong? _activeInteractorId;
 
-    public InteractionInfo GetInteractionInfo(in InteractionContext context)
+    public override InteractionInfo GetInteractionInfo(in InteractionContext context)
     {
         bool available =
             isActiveAndEnabled &&
@@ -28,7 +29,7 @@ public sealed class TimedInteractable : MonoBehaviour, IInteractable
             available);
     }
 
-    public bool Begin(in InteractionContext context)
+    public override bool Begin(in InteractionContext context)
     {
         Debug.Log($"Hold Begin: {context.InteractorId}", this);
         if (!isActiveAndEnabled)
@@ -47,7 +48,7 @@ public sealed class TimedInteractable : MonoBehaviour, IInteractable
         return true;
     }
 
-    public void Complete(in InteractionContext context)
+    public override void Complete(in InteractionContext context)
     {
         Debug.Log($"Hold Complete: {context.InteractorId}", this);
         if (_activeInteractorId !=
@@ -62,7 +63,7 @@ public sealed class TimedInteractable : MonoBehaviour, IInteractable
             _visual.SetActive(!_visual.activeSelf);
     }
 
-    public void Cancel(in InteractionContext context, InteractionCancelReason reason)
+    public override void Cancel(in InteractionContext context, InteractionCancelReason reason)
     {
         Debug.Log($"Hold Cancel: {reason}", this);
         if (_activeInteractorId == context.InteractorId)
@@ -71,8 +72,9 @@ public sealed class TimedInteractable : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnDisable()
-    {
+    protected override void OnDisable()
+        {
+            base.OnDisable();
         _activeInteractorId = null;
     }
 

@@ -1,0 +1,91 @@
+Physics ray resolves the shared hatch target
+Enter through empty opening
+Exit through empty opening
+Pick up hatch lid using real carry body
+Held hatch provides Install on E
+Shared hatch target exposes placement preview
+Install hatch and release hands
+Same target offers Enter and Remove
+Action selection panel is visible
+Composite menu rejects passage provider disable/re-enable
+Menu Remove returns lid to hands
+Reinstall lid after removal
+Menu Enter works with unsealed lid
+Menu Exit works with unsealed lid
+Pick up welding tool
+Tool selects Weld without a menu
+Welding starts Hold
+Release E cancels welding
+Composite Hold rejects mounting provider disable/re-enable
+Fresh welding succeeds after provider re-enable
+Held welding tool preserves passage after welding
+Enter with held tool after welding
+Exit with held tool after welding
+Drop welding tool
+Welded hatch has one action and no removal
+Welded hatch enters directly via E
+Welded hatch exits directly via E
+Installed lid follows turret anchor
+Disable/enable preserves welded attachment
+Pick up HullFrontArmor
+Direct E installation: HullFrontArmor
+Direct E removal: HullFrontArmor
+Pick up welding tool for HullFrontArmor
+Direct E welding: HullFrontArmor
+Drop tool after HullFrontArmor
+Pick up HullSideArmor
+Direct E installation: HullSideArmor
+Direct E removal: HullSideArmor
+Pick up welding tool for HullSideArmor
+Direct E welding: HullSideArmor
+Drop tool after HullSideArmor
+Pick up HullSideHeavyArmor
+Direct E installation: HullSideHeavyArmor
+Direct E removal: HullSideHeavyArmor
+Pick up welding tool for HullSideHeavyArmor
+Direct E welding: HullSideHeavyArmor
+Drop tool after HullSideHeavyArmor
+Pick up TurretArmor
+Direct E installation: TurretArmor
+Direct E removal: TurretArmor
+Pick up welding tool for TurretArmor
+Direct E welding: TurretArmor
+Drop tool after TurretArmor
+Pick up TurretRearContainer
+Direct E installation: TurretRearContainer
+Direct E removal: TurretRearContainer
+Pick up welding tool for TurretRearContainer
+Direct E welding: TurretRearContainer
+Drop tool after TurretRearContainer
+Sandbox Hold uses the unified pipeline
+Enter for ammunition loading
+Pick up shell through E
+Load shell through E and release hands
+Exit after loading
+Station scope before entry: Driver
+Enter station through E: Driver
+Role scope permits LightsSwitchInteractable
+Toggle through E: LightsSwitchInteractable
+Role scope permits RadarSwitchInteractable
+Toggle through E: RadarSwitchInteractable
+GPS available: Driver
+GPS entry suspends world interaction: Driver
+GPS camera ready: Driver
+GPS close restores interaction: Driver
+Exit station and restore input: Driver
+Station scope before entry: Gunner
+Enter station through E: Gunner
+Role scope permits LightsSwitchInteractable
+Toggle through E: LightsSwitchInteractable
+Exit station and restore input: Gunner
+Station scope before entry: CommanderLoader
+Enter station through E: CommanderLoader
+GPS available: CommanderLoader
+GPS entry suspends world interaction: CommanderLoader
+GPS camera ready: CommanderLoader
+GPS close restores interaction: CommanderLoader
+Exit station and restore input: CommanderLoader
+Single Press toggle through the unified pipeline
+Keyboard Input System bindings: navigation, cancellation, E
+Virtual gamepad Input System bindings: D-pad, cancel and interact
+Fresh TankRoot prefab: DI instantiation, 50 typed slots, correct ownership, shared hatch and no Missing Script

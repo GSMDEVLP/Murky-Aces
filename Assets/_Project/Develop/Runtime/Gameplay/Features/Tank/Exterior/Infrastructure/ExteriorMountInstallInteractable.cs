@@ -1,4 +1,7 @@
 using UnityEngine;
+using System.Collections.Generic;
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Abstractions;
 using System;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
@@ -8,13 +11,16 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Application;
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure
 {
     [DisallowMultipleComponent]
-    public sealed class ExteriorMountInstallInteractable : MonoBehaviour, IInteractable
+    public sealed class ExteriorMountInstallInteractable : InteractionTargetBehaviour, IExteriorPlacementPreviewSource
     {
         [SerializeField] private ExteriorMountSlotAuthoring _slot;
 
         private ExteriorWeldingInteraction _welding;
         private Func<bool> _pending;
         private ulong _pendingActorId;
+        private IInteractionAction _installAction;
+        private IInteractionAction _removeAction;
+        private IInteractionAction _weldAction;
 
         public ExteriorMountSlotAuthoring Slot => _slot;
 
@@ -28,29 +34,78 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
                     this != null &&
                     isActiveAndEnabled &&
                     _slot == configuredSlot);
+
+            _installAction = new InteractionAction(
+                InteractionActionId.Install,
+                c => GetInstallInfo(c),
+                c => GetInstallInfo(c).IsAvailable && TryBeginInstallation(c),
+                c => CompletePending(c),
+                (c, reason) => CancelOperation(c, reason),
+                () => Revision);
+            _removeAction = new InteractionAction(
+                InteractionActionId.Remove,
+                c => GetRemovalInfo(c),
+                c => GetRemovalInfo(c).IsAvailable && TryBeginRemoval(c),
+                c => CompletePending(c),
+                (c, reason) => CancelOperation(c, reason),
+                () => Revision);
+            _weldAction = new InteractionAction(
+                InteractionActionId.Weld,
+                c => GetWeldingInfo(c),
+                c => GetWeldingInfo(c).IsAvailable && _welding.Begin(c),
+                c => { if (this != null) _welding.TryComplete(c); },
+                (c, reason) => CancelOperation(c, reason),
+                () => Revision);
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override void CollectActions(
+            in InteractionContext context, List<IInteractionAction> actions)
         {
-            if (_pending != null)
-            {
-                return InteractionInfo.Press(InteractionPromts.Install, false);
-            }
+            if (!IsActive || _installAction == null)
+                return;
+            actions.Add(_installAction);
+            actions.Add(_removeAction);
+            actions.Add(_weldAction);
+        }
 
-            if (_welding != null && _welding.CanHandle(context))
-            {
-                return _welding.GetInteractionInfo(context);
-            }
+        public bool TryGetPlacementPreview(in InteractionContext context,
+            out GameObject previewPrefab, out Transform placementAnchor)
+        {
+            previewPrefab = null;
+            placementAnchor = null;
+            if (!TryGetCandidate(context, out _, out var attachment))
+                return false;
+            previewPrefab = attachment.Config.PreviewPrefab;
+            placementAnchor = _slot.PlacementAnchor;
+            return previewPrefab != null && placementAnchor != null;
+        }
 
-            if (TryGetRemovalCandidate(context, out _, out _))
-            {
-                return InteractionInfo.Press(
-                    InteractionPromts.Remove);
-            }
+        private InteractionInfo GetInstallInfo(in InteractionContext context)
+        {
+            bool available = this != null && IsActive && _pending == null &&
+                !_welding.HasOperation && TryGetCandidate(context, out _, out _);
+            return InteractionInfo.Press(InteractionPromts.Install, available,
+                this != null && _slot != null ? _slot.State.Revision : 0);
+        }
 
-            return InteractionInfo.Press(
-                InteractionPromts.Install,
-                TryGetCandidate(context, out _, out _));
+        private InteractionInfo GetRemovalInfo(in InteractionContext context)
+        {
+            bool available = this != null && IsActive && _pending == null &&
+                !_welding.HasOperation && TryGetRemovalCandidate(context, out _, out _);
+            return InteractionInfo.Press(InteractionPromts.Remove, available,
+                this != null && _slot != null ? _slot.State.Revision : 0);
+        }
+
+        private InteractionInfo GetWeldingInfo(in InteractionContext context)
+        {
+            if (this == null || !IsActive || _pending != null || _welding == null)
+                return InteractionInfo.Press(InteractionPromts.Weld, false);
+
+            InteractionInfo info = _welding.GetInteractionInfo(context);
+            long revision = _slot != null ? _slot.State.Revision : 0;
+            return info.Mode == InteractionMode.Hold
+                ? InteractionInfo.Hold(info.Prompt, info.HoldDuration, info.IsAvailable, revision)
+                : InteractionInfo.Press(info.Prompt, info.IsAvailable, revision);
         }
 
         private bool TryBeginInstallation(in InteractionContext context)
@@ -104,29 +159,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
             return true;
         }
 
-        public bool Begin(in InteractionContext context)
+        private void CompletePending(in InteractionContext context)
         {
-            if (_pending != null)
-                return false;
-
-            if (_welding != null &&
-                _welding.CanHandle(context))
-            {
-                return _welding.Begin(context);
-            }
-
-            return TryBeginRemoval(context) ||
-                TryBeginInstallation(context);
-        }
-
-        public void Complete(in InteractionContext context)
-        {
-            if (_welding != null && _welding.HasOperation)
-            {
-                _welding.TryComplete(context);
-                return;
-            }
-
             if (_pending == null || context.Actor == null || context.Actor.Id != _pendingActorId)
             {
                 return;
@@ -134,11 +168,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
 
             var execute = _pending;
             _pending = null;
+            _pendingActorId = 0;
 
             execute();
         }
 
-        public void Cancel(in InteractionContext context, InteractionCancelReason reason)
+        private void CancelOperation(in InteractionContext context, InteractionCancelReason reason)
         {
             _welding?.Cancel(context);
             if (context.Actor != null &&
@@ -246,8 +281,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructur
                     _slot.PlacementAnchor);
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             _welding?.Clear();
 
             _pending = null;

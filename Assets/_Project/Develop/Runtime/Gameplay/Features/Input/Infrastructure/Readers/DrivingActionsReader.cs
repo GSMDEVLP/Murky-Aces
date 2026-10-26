@@ -18,6 +18,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
         private readonly InputAction _brake;
         private readonly InputAction _look;
         private readonly InputAction _interact;
+        private readonly InputAction _interactionNavigate;
+        private readonly InputAction _interactionCancel;
 
         public InputMapId MapId => InputMapId.Driving;
 
@@ -44,6 +46,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
             _brake = _map.FindAction("Brake", true);
             _look = _map.FindAction("Look", true);
             _interact = _map.FindAction("Interact", true);
+            _interactionNavigate = _map.FindAction("InteractionNavigate", true);
+            _interactionCancel = _map.FindAction("InteractionCancel", true);
         }
 
         public DrivingActionsSnapshot ReadDrivingActions()
@@ -75,7 +79,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
                 _interact.WasPressedThisFrame(),
                 _interact.IsPressed(),
                 _interact.WasReleasedThisFrame(),
-                false);
+                false,
+                _interactionNavigate.WasPerformedThisFrame()
+                    ? Math.Sign(_interactionNavigate.ReadValue<float>()) : 0,
+                _interactionCancel.WasPressedThisFrame());
         }
     }
 }

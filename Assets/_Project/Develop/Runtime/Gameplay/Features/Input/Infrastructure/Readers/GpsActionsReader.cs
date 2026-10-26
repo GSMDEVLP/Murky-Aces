@@ -11,6 +11,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
         private readonly PlayerInput _playerInput;
         private readonly InputActionMap _map;
         private readonly InputAction _interact;
+        private readonly InputAction _interactionNavigate;
+        private readonly InputAction _interactionCancel;
         private readonly InputAction _zoom;
         private readonly InputAction _cursorDelta;
         private readonly InputAction _selectDestination;
@@ -35,6 +37,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
 
             _map = actions.FindActionMap("GPS", true);
             _interact = _map.FindAction("Interact", true);
+            _interactionNavigate = _map.FindAction("InteractionNavigate", true);
+            _interactionCancel = _map.FindAction("InteractionCancel", true);
             _zoom = _map.FindAction("Zoom", true);
             _cursorDelta = _map.FindAction("CursorDelta", true);
             _selectDestination = _map.FindAction("SelectDestination", true);
@@ -53,7 +57,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Reader
                 _interact.WasPressedThisFrame(),
                 _interact.IsPressed(),
                 _interact.WasReleasedThisFrame(),
-                false);
+                false,
+                _interactionNavigate.WasPerformedThisFrame()
+                    ? Math.Sign(_interactionNavigate.ReadValue<float>()) : 0,
+                _interactionCancel.WasPressedThisFrame());
         }
         public float ReadZoom()
         {

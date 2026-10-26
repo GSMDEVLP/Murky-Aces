@@ -7,7 +7,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Domain;
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure
 {
     [DisallowMultipleComponent]
-    public sealed class ExteriorMountSlotAuthoring : MonoBehaviour, IInteractionTarget
+    public sealed class ExteriorMountSlotAuthoring : MonoBehaviour
     {
         [SerializeField] private TankRoot _owner;
         [SerializeField] private ExteriorMountType _mountTypeId;

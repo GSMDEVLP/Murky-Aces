@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -11,7 +12,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure
 {
-    public sealed class GpsScreenInteractable : MonoBehaviour, IInteractable, IGpsScreen
+    public sealed class GpsScreenInteractable : SingleActionInteractionTarget, IGpsScreen
     {
         [SerializeField] private CrewRoleId _role;
         [SerializeField] private Transform _viewAnchor;
@@ -54,25 +55,25 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
                     station.IsOccupiedBy(actor.Id);
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             return InteractionInfo.Press(
                 InteractionPromts.Enter,
                 CanInteract(context.Actor));
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return CanInteract(context.Actor);
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (context.Actor is IGpsSessionOwner owner)
                 owner.GpsSession.TryBegin(this, context.Actor);
         }
 
-        public void Cancel(in InteractionContext context, InteractionCancelReason reason)
+        public override void Cancel(in InteractionContext context, InteractionCancelReason reason)
         {
         }
 
@@ -94,8 +95,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastruc
                    owner.GpsSession.CanBegin(this, actor);
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
             _session?.TryForceClose();
         }
         public bool TryZoom(IInteractionActor actor, float zoomInput)

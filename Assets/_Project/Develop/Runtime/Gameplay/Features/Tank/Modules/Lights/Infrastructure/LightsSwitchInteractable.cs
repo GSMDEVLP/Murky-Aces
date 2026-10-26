@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using System;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -9,7 +10,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Presentatio
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrastructure
 {
     [DisallowMultipleComponent]
-    public sealed class LightsSwitchInteractable : MonoBehaviour, IInteractable
+    public sealed class LightsSwitchInteractable : SingleActionInteractionTarget
     {
 
         private TankLights _lights;
@@ -31,19 +32,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrast
 
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             return InteractionInfo.Press(
                 InteractionPromts.Toggle,
                 CanInteract(context.Actor));
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return CanInteract(context.Actor);
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (!CanInteract(context.Actor))
                 return;
@@ -53,7 +54,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Lights.Infrast
                 !_lights.IsEnabled);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

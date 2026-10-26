@@ -1,10 +1,11 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
 {
-    public sealed class PickupInteractable : MonoBehaviour, IInteractable, IHoldableItem
+    public sealed class PickupInteractable : SingleActionInteractionTarget, IHoldableItem
     {
         [Header("Interaction")]
         [SerializeField] private InteractionPromts _prompt;
@@ -42,7 +43,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                 _worldColliders);
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             bool available =
                 isActiveAndEnabled &&
@@ -52,15 +53,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
                 context.Actor is IPickupReceiver receiver &&
                 !receiver.IsOccupied;
 
-            return InteractionInfo.Press(_prompt, available);
+            return InteractionInfo.Press(_prompt, available, CarryRevision);
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return GetInteractionInfo(context).IsAvailable;
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (!GetInteractionInfo(context).IsAvailable)
                 return;
@@ -69,7 +70,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure
             receiver.TryReceive(this);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

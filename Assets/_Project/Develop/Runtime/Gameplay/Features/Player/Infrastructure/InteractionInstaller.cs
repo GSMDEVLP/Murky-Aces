@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -31,6 +32,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<PlayerInteractionActor>().AsSingle().WithArguments(actorId,(IPickupReceiver)_heldItemSlot);
             Container.Bind<IInteractionActor>().FromResolveGetter<PlayerInteractionActor>(actor => actor).AsSingle();
             Container.Bind<InteractionContext>().FromResolveGetter<IInteractionActor>(CreateInteractionContext).AsSingle();
+            Container.Bind<IInteractionInput>().FromResolveGetter<PlayerIntentBuffer>(intent => intent).AsSingle();
             Container.Bind<PlayerInteraction>().AsSingle();
             Container.Bind<InteractionHudView>().FromInstance(_hudView);
             Container.Bind<InteractionHudPresenter>().AsSingle();

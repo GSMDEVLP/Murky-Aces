@@ -88,7 +88,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 
         }
 
-        public bool TryReceive(IInteractable item)
+        public bool TryReceive(IHoldableItem item)
         {
             return _pickupReceiver.TryReceive(item);
         }

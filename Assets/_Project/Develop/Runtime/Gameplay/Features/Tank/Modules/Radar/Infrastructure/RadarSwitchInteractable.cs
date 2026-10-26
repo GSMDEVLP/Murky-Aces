@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using System;
 using UnityEngine;
 using Zenject;
@@ -7,7 +8,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure
 {
-    public sealed class RadarSwitchInteractable : MonoBehaviour, IInteractable
+    public sealed class RadarSwitchInteractable : SingleActionInteractionTarget
     {
         private TankRadarCommands _commands;
 
@@ -18,19 +19,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
                 throw new ArgumentNullException(nameof(commands));
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             return InteractionInfo.Press(
                 InteractionPromts.Toggle,
                 CanInteract(context.Actor));
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return CanInteract(context.Actor);
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (!CanInteract(context.Actor))
                 return;
@@ -38,7 +39,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
             _commands.TryToggle(context.Actor);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

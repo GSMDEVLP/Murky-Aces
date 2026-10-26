@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using System;
 using UnityEngine;
 using Zenject;
@@ -8,7 +9,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructure
 {
-    public sealed class CrewStationInteractable : MonoBehaviour, IInteractable
+    public sealed class CrewStationInteractable : SingleActionInteractionTarget
     {
         [SerializeField]
         private CrewStationView _stationView;
@@ -47,7 +48,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
             }
         }
 
-        public InteractionInfo GetInteractionInfo(
+        public override InteractionInfo GetInteractionInfo(
             in InteractionContext context)
         {
             bool canExit = CanExit(context.Actor);
@@ -72,7 +73,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
                 available);
         }
 
-        public bool Begin(
+        public override bool Begin(
             in InteractionContext context)
         {
             if (!isActiveAndEnabled ||
@@ -88,7 +89,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
                 context.Actor);
         }
 
-        public void Complete(
+        public override void Complete(
             in InteractionContext context)
         {
             if (_controller == null)
@@ -104,7 +105,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Infrastructur
                 context.Actor);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

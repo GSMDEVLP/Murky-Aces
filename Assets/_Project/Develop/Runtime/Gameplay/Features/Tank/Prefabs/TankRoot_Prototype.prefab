@@ -188,7 +188,6 @@ Transform:
   - {fileID: 2492835417092944836}
   - {fileID: 3728557668662234272}
   - {fileID: 4202182568591387706}
-  - {fileID: 9037397385853129064}
   - {fileID: 5840998535895913056}
   - {fileID: 5644927908718421084}
   - {fileID: 875000220235920221}
@@ -1440,7 +1439,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 693299227245823561}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -2568,7 +2567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 3681001193001161430}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -2760,7 +2759,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4807946656865314429}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -3583,7 +3582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 477822265150116839}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -5433,7 +5432,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 60651899314724290}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -7038,7 +7037,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 712941871743830465}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -8897,7 +8896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 1890239521642385958}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -9537,6 +9536,38 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &746631375482667177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8574899576672258701}
+  m_Layer: 0
+  m_Name: TankGun
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8574899576672258701
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746631375482667177}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.536, y: 3.574, z: -3.995}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7471899965484633591}
+  m_Father: {fileID: 995480771080883033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &747677980126683880
 GameObject:
   m_ObjectHideFlags: 0
@@ -10053,7 +10084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 255144178397396048}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -10155,7 +10186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4180276318839782615}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -10825,6 +10856,38 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &811007605217433575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 551670129669186848}
+  m_Layer: 0
+  m_Name: TurretHatch
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &551670129669186848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 811007605217433575}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7100798630153628399}
+  m_Father: {fileID: 995480771080883033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &812119709559321090
 GameObject:
   m_ObjectHideFlags: 0
@@ -11068,7 +11131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 8911587255967888601}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -11657,7 +11720,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5601800333822058873}
   m_Layer: 0
-  m_Name: ArmorPlateVLD
+  m_Name: HullFrontArmorPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -12623,7 +12686,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 3509108369654679370}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -13154,7 +13217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6472227028997345288}
   m_Layer: 0
-  m_Name: LeftSideHeavyArmorPlate
+  m_Name: HullLeftSideHeavyArmorPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14186,7 +14249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 8979677236170260568}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -18706,6 +18769,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1474896374438459046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1720288096646376500}
+  m_Layer: 0
+  m_Name: PlacementAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1720288096646376500
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474896374438459046}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7100798630153628399}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1478254322915421060
 GameObject:
   m_ObjectHideFlags: 0
@@ -20365,96 +20459,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1490592441104969601}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1706510863043913511
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8860483708778979273}
-  - component: {fileID: 473942545531771397}
-  - component: {fileID: 4349427724364822077}
-  m_Layer: 0
-  m_Name: Hatch_Handle_Gunner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8860483708778979273
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706510863043913511}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.49, y: -0.0000000037252903, z: 0.12899977}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 177441055746968505}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &473942545531771397
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706510863043913511}
-  m_Mesh: {fileID: 8050067394545524846, guid: b080c0827d0d60c46a8b4d38b7ed82fe, type: 3}
---- !u!23 &4349427724364822077
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706510863043913511}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 2760cc9583d9c1647b0ac50ce63c8d82, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &1708505653183550152
 GameObject:
   m_ObjectHideFlags: 0
@@ -20573,7 +20577,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1721060537496835018}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.444037, y: -0.55030096, z: 0.444037, w: 0.55030096}
+  m_LocalRotation: {x: 0.4401843, y: -0.5533876, z: 0.4401843, w: 0.5533876}
   m_LocalPosition: {x: -2.338, y: 2.729, z: -1.05}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -20581,7 +20585,7 @@ Transform:
   - {fileID: 3054183845494521297}
   - {fileID: 2228512792765984893}
   m_Father: {fileID: 6046170326568903734}
-  m_LocalEulerAnglesHint: {x: 77.8, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 77, y: -90, z: 0}
 --- !u!114 &5189596457330836466
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20608,7 +20612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 2228512792765984893}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -26238,7 +26242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 2828616704178710564}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -28051,7 +28055,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 6583834073075988089}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -30777,7 +30781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3633453337032494232}
   m_Layer: 0
-  m_Name: RightSideHeavyArmorPlate
+  m_Name: HullRightSideHeavyArmorPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32386,7 +32390,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 6567824031524260468}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -32609,7 +32613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 4693994064027306073}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -34234,7 +34238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 3851183390651713853}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -36729,7 +36733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 733587647421023558}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -38855,7 +38859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 8172646755017206881}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -39081,7 +39085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 8986626752043098132}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -39761,7 +39765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 3182430788177686043}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -39890,6 +39894,68 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &3442917371243722876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 995480771080883033}
+  - component: {fileID: 8289357233236105693}
+  m_Layer: 0
+  m_Name: Turret
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &995480771080883033
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3442917371243722876}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 450063070890622236}
+  - {fileID: 551670129669186848}
+  - {fileID: 8574899576672258701}
+  m_Father: {fileID: 5306211884453373436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1773428102 &8289357233236105693
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3442917371243722876}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: 3.2130013, y: 0, z: -1.3649997}
+  m_RotationOffsets:
+  - {x: 0, y: 90, z: 90.000015}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 5123445885514621434}
+    weight: 1
 --- !u!1 &3448029300373479885
 GameObject:
   m_ObjectHideFlags: 0
@@ -41882,7 +41948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 6104280364681061095}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -42020,6 +42086,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6046170326568903734}
+  - component: {fileID: 5427831951063413259}
   m_Layer: 0
   m_Name: TurretArmorPlate
   m_TagString: Untagged
@@ -42035,7 +42102,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3673949211089833114}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -42052,6 +42119,33 @@ Transform:
   - {fileID: 6844170247435983381}
   m_Father: {fileID: 1726772568630431431}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1773428102 &5427831951063413259
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3673949211089833114}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0, y: 0, z: 0}
+  m_RotationAtRest: {x: 0, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: 3.2130013, y: 0, z: -1.3649997}
+  m_RotationOffsets:
+  - {x: 0, y: 90, z: 90.000015}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 5123445885514621434}
+    weight: 1
 --- !u!1 &3680146807058806918
 GameObject:
   m_ObjectHideFlags: 0
@@ -43898,96 +43992,6 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 156035a06b67284479df031a7eed2362, type: 2}
   - {fileID: 2100000, guid: 242d450bf9a385f4aa281dce46652373, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &3799926931071210731
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9037397385853129064}
-  - component: {fileID: 3889559009537943611}
-  - component: {fileID: 8929992385873941358}
-  m_Layer: 0
-  m_Name: V4_Antenna
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &9037397385853129064
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3799926931071210731}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5999994, y: -1.5399997, z: 2.18}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5123445885514621434}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3889559009537943611
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3799926931071210731}
-  m_Mesh: {fileID: 5758534754792729921, guid: b080c0827d0d60c46a8b4d38b7ed82fe, type: 3}
---- !u!23 &8929992385873941358
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3799926931071210731}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 156035a06b67284479df031a7eed2362, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -45934,7 +45938,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 2008757510314452752}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -49794,7 +49798,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6388996590785163989}
   m_Layer: 0
-  m_Name: LeftSideArmorPlate
+  m_Name: HullLeftSideArmorPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -50818,6 +50822,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6978981846666598176}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4561911715986662916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2920647247767906233}
+  m_Layer: 0
+  m_Name: Hull
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2920647247767906233
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4561911715986662916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1726772568630431431}
+  m_Father: {fileID: 5306211884453373436}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4566090262031296514
 GameObject:
   m_ObjectHideFlags: 0
@@ -51724,7 +51760,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 8329975000591331129}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -54418,7 +54454,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1569587013256039084}
   m_Layer: 0
-  m_Name: RightSideArmorPlate
+  m_Name: HullRightSideArmorPlate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54514,96 +54550,6 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 6d8dda1b35a5abf47a09271e481e051f, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &4881128239728848833
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 952961201406402241}
-  - component: {fileID: 4312340223370550872}
-  - component: {fileID: 8149810981919646189}
-  m_Layer: 0
-  m_Name: Hatch_Lid_Gunner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &952961201406402241
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4881128239728848833}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.49, y: -0, z: 0.059}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 177441055746968505}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &4312340223370550872
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4881128239728848833}
-  m_Mesh: {fileID: 5134047502934777661, guid: b080c0827d0d60c46a8b4d38b7ed82fe, type: 3}
---- !u!23 &8149810981919646189
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4881128239728848833}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 2760cc9583d9c1647b0ac50ce63c8d82, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -55115,7 +55061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 3667165885506191186}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -57061,6 +57007,108 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5034918160673703646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2038195953798945831}
+  - component: {fileID: 7624204830437465719}
+  - component: {fileID: 5806807627982692564}
+  - component: {fileID: 383790591038316601}
+  - component: {fileID: 2987537915501572445}
+  m_Layer: 0
+  m_Name: ContainerPlateMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2038195953798945831
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034918160673703646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.09}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5635714250351736130}
+  - {fileID: 3647431002423188575}
+  m_Father: {fileID: 450063070890622236}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7624204830437465719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034918160673703646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcb48e762ff4dc4c9c1d3b451d7bd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountInstallInteractable
+  _slot: {fileID: 5806807627982692564}
+--- !u!114 &5806807627982692564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034918160673703646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ad893ee8d3cbe47a727410885063bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
+  _owner: {fileID: 2633657251670143667}
+  _mountTypeId: 5
+  _placementAnchor: {fileID: 5635714250351736130}
+  _tankBody: {fileID: 4908985420495970726}
+  _maxInstallLinearSpeed: 0.03
+  _maxInstallAngularSpeed: 0.01
+--- !u!114 &383790591038316601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034918160673703646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _targetBehaviour: {fileID: 7624204830437465719}
+--- !u!65 &2987537915501572445
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034918160673703646}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.5522292, y: 0.46357122, z: 0.23013797}
+  m_Center: {x: 0.04529706, y: 0.033082113, z: 0.079799384}
 --- !u!1 &5036004666706238147
 GameObject:
   m_ObjectHideFlags: 0
@@ -57164,6 +57212,7 @@ GameObject:
   - component: {fileID: 7432889146530214888}
   - component: {fileID: 2329378307809521738}
   - component: {fileID: 2313409299023060169}
+  - component: {fileID: 1029335098220242609}
   m_Layer: 0
   m_Name: TurretHatch
   m_TagString: Untagged
@@ -57221,7 +57270,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
-  _targetBehaviour: {fileID: 2329378307809521738}
+  _targetBehaviour: {fileID: 1029335098220242609}
 --- !u!114 &2329378307809521738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57264,6 +57313,20 @@ ParentConstraint:
   m_Sources:
   - sourceTransform: {fileID: 5123445885514621434}
     weight: 1
+--- !u!114 &1029335098220242609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5039969048887808989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79d4a754b9c5fdc49aaff1f024674c62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Interior.Infrastructure.TankHatchInteractionTarget
+  _passage: {fileID: 2329378307809521738}
+  _mount: {fileID: 2675650074834262384}
 --- !u!1 &5058881836031836049
 GameObject:
   m_ObjectHideFlags: 0
@@ -62258,6 +62321,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5528849787973497247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5786299909284228968}
+  m_Layer: 0
+  m_Name: PlacementAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5786299909284228968
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5528849787973497247}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7471899965484633591}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5530539984668773604
 GameObject:
   m_ObjectHideFlags: 0
@@ -64768,7 +64862,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 3942522641054447125}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -64898,6 +64992,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5785621938100204135
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5635714250351736130}
+  m_Layer: 0
+  m_Name: PlacementAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5635714250351736130
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5785621938100204135}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.09, y: -0.142, z: -0.128}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 2038195953798945831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5793011662700919168
 GameObject:
   m_ObjectHideFlags: 0
@@ -65573,7 +65698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3285051797471518356
 Transform:
   m_ObjectHideFlags: 0
@@ -67664,7 +67789,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 4350062771099672256}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -69488,6 +69613,96 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6153951815622649097
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9180969218310221258}
+  - component: {fileID: 2013735855249470157}
+  - component: {fileID: 7392304577959927741}
+  m_Layer: 0
+  m_Name: Hook_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9180969218310221258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6153951815622649097}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.288, y: 0.023, z: -0.376}
+  m_LocalScale: {x: 0.06, y: 0.09, z: 0.06}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3647431002423188575}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &2013735855249470157
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6153951815622649097}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &7392304577959927741
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6153951815622649097}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &6163507462245721658
 GameObject:
   m_ObjectHideFlags: 0
@@ -70264,7 +70479,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 8050799154327927773}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -73868,6 +74083,107 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6524277583180872469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7471899965484633591}
+  - component: {fileID: 5399634703634236412}
+  - component: {fileID: 7029271538044755019}
+  - component: {fileID: 3345500326163193472}
+  - component: {fileID: 5659423398384880518}
+  m_Layer: 0
+  m_Name: GunMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7471899965484633591
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524277583180872469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5786299909284228968}
+  m_Father: {fileID: 8574899576672258701}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5399634703634236412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524277583180872469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcb48e762ff4dc4c9c1d3b451d7bd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountInstallInteractable
+  _slot: {fileID: 7029271538044755019}
+--- !u!114 &7029271538044755019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524277583180872469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ad893ee8d3cbe47a727410885063bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
+  _owner: {fileID: 2633657251670143667}
+  _mountTypeId: 7
+  _placementAnchor: {fileID: 5786299909284228968}
+  _tankBody: {fileID: 4908985420495970726}
+  _maxInstallLinearSpeed: 0.03
+  _maxInstallAngularSpeed: 0.01
+--- !u!114 &3345500326163193472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524277583180872469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _targetBehaviour: {fileID: 5399634703634236412}
+--- !u!65 &5659423398384880518
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6524277583180872469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.32817295, y: 0.27034283, z: 0.36377773}
+  m_Center: {x: -0.0022234342, y: -0.093431816, z: 0.011121205}
 --- !u!1 &6527671265999329697
 GameObject:
   m_ObjectHideFlags: 0
@@ -74410,9 +74726,7 @@ Transform:
   m_LocalPosition: {x: -2.59, y: -1.03, z: 3.43}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8860483708778979273}
-  - {fileID: 952961201406402241}
+  m_Children: []
   m_Father: {fileID: 455101632314900512}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6593257546812468023
@@ -77012,7 +77326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 8397136465610709284}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -77564,7 +77878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 3165305752278790949}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -77783,6 +78097,39 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6835944267571322593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3647431002423188575}
+  m_Layer: 0
+  m_Name: HooksVisual
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3647431002423188575
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6835944267571322593}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.296, z: 0.469}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9180969218310221258}
+  - {fileID: 1726254507968868448}
+  m_Father: {fileID: 2038195953798945831}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6838327497027678913
 GameObject:
   m_ObjectHideFlags: 0
@@ -79775,6 +80122,107 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7014611016071535470
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7100798630153628399}
+  - component: {fileID: 2675650074834262384}
+  - component: {fileID: 2835797435760260328}
+  - component: {fileID: 1653603430082046457}
+  - component: {fileID: 609726872078096846}
+  m_Layer: 0
+  m_Name: TurretHatchMount
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7100798630153628399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014611016071535470}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.04, y: 3.409, z: -2.549}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1720288096646376500}
+  m_Father: {fileID: 551670129669186848}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2675650074834262384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014611016071535470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fcb48e762ff4dc4c9c1d3b451d7bd83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountInstallInteractable
+  _slot: {fileID: 2835797435760260328}
+--- !u!114 &2835797435760260328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014611016071535470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87ad893ee8d3cbe47a727410885063bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
+  _owner: {fileID: 2633657251670143667}
+  _mountTypeId: 6
+  _placementAnchor: {fileID: 1720288096646376500}
+  _tankBody: {fileID: 4908985420495970726}
+  _maxInstallLinearSpeed: 0.03
+  _maxInstallAngularSpeed: 0.01
+--- !u!114 &1653603430082046457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014611016071535470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba50b7f71c0e16647953cf2d01ea73a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure.InteractionTargetLink
+  _targetBehaviour: {fileID: 1029335098220242609}
+--- !u!65 &609726872078096846
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7014611016071535470}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.11415754, z: 1.0123738}
+  m_Center: {x: 0, y: -0.0029574123, z: 0.006186877}
 --- !u!1 &7021056796925751645
 GameObject:
   m_ObjectHideFlags: 0
@@ -80876,7 +81324,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 2992815819549826669}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -81338,7 +81786,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 5031230755260769596}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -81653,6 +82101,38 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7189662840544379659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 450063070890622236}
+  m_Layer: 0
+  m_Name: Container
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &450063070890622236
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7189662840544379659}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 2.79, z: -4.629999}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2038195953798945831}
+  m_Father: {fileID: 995480771080883033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7196023278719492441
 GameObject:
   m_ObjectHideFlags: 0
@@ -81837,7 +82317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 1089146008794409809}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -83937,7 +84417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4768072134618366467}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -84039,7 +84519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 4549688891837009071}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -84902,7 +85382,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7494145666941926920}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -84913,7 +85393,7 @@ Transform:
   - {fileID: 3633453337032494232}
   - {fileID: 1569587013256039084}
   - {fileID: 6046170326568903734}
-  m_Father: {fileID: 5306211884453373436}
+  m_Father: {fileID: 2920647247767906233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7494216966002258225
 GameObject:
@@ -85799,7 +86279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4635045672856126386}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -87790,7 +88270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 9157746605967453848}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -88567,7 +89047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 6692665094960669980}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -90377,7 +90857,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 1351286556307006262}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -91809,7 +92289,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1726772568630431431}
+  - {fileID: 995480771080883033}
+  - {fileID: 2920647247767906233}
   m_Father: {fileID: 1498560307844761635}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8233324350597458067
@@ -91875,7 +92356,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4075786302902743570}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -91981,6 +92462,96 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 2760cc9583d9c1647b0ac50ce63c8d82, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &8242467141146639978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1726254507968868448}
+  - component: {fileID: 6372448978813384028}
+  - component: {fileID: 6027597666308131712}
+  m_Layer: 0
+  m_Name: Hook_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1726254507968868448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8242467141146639978}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.208, y: 0.024, z: -0.376}
+  m_LocalScale: {x: 0.06, y: 0.09, z: 0.06}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3647431002423188575}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &6372448978813384028
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8242467141146639978}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &6027597666308131712
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8242467141146639978}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93453,7 +94024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_turret
+  _mountTypeId: 4
   _placementAnchor: {fileID: 6355946912889070785}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -93645,7 +94216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 3149317436223879013}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -93980,7 +94551,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side
+  _mountTypeId: 2
   _placementAnchor: {fileID: 5511752411402176663}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -94082,7 +94653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_front
+  _mountTypeId: 1
   _placementAnchor: {fileID: 6022568801186545770}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -96686,7 +97257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 8722316982280564797}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -102278,7 +102849,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 4842024106253507907}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03
@@ -104402,7 +104973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Exterior.Infrastructure.ExteriorMountSlotAuthoring
   _owner: {fileID: 2633657251670143667}
-  _mountTypeId: armor_hull_side_heavy
+  _mountTypeId: 3
   _placementAnchor: {fileID: 6331917146090929183}
   _tankBody: {fileID: 4908985420495970726}
   _maxInstallLinearSpeed: 0.03

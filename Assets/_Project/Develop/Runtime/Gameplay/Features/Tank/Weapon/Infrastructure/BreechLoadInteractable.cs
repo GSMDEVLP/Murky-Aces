@@ -1,3 +1,4 @@
+using _Project.Develop.Runtime.Gameplay.Features.Interaction.Infrastructure;
 using System;
 using UnityEngine;
 using Zenject;
@@ -8,7 +9,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 {
-    public sealed class BreechLoadInteractable : MonoBehaviour, IInteractable
+    public sealed class BreechLoadInteractable : SingleActionInteractionTarget
     {
         private TankWeaponView _weapon;
         private GunLoadingService _loading;
@@ -23,7 +24,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
                 ?? throw new ArgumentNullException(nameof(loading));
         }
 
-        public InteractionInfo GetInteractionInfo(in InteractionContext context)
+        public override InteractionInfo GetInteractionInfo(in InteractionContext context)
         {
             bool available =
                 TryGetShell(
@@ -40,12 +41,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
                 available);
         }
 
-        public bool Begin(in InteractionContext context)
+        public override bool Begin(in InteractionContext context)
         {
             return GetInteractionInfo(context).IsAvailable;
         }
 
-        public void Complete(in InteractionContext context)
+        public override void Complete(in InteractionContext context)
         {
             if (!TryGetShell(context, out IHoldableItem heldItem, out ShellItem shell))
             {
@@ -62,7 +63,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
             Destroy(shellObject);
         }
 
-        public void Cancel(
+        public override void Cancel(
             in InteractionContext context,
             InteractionCancelReason reason)
         {

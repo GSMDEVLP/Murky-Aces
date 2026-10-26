@@ -84,6 +84,11 @@ crashlytics-build.properties
 *.slnx
 *.DotSettings.user
 
+# Standalone interaction regression tests
+!Tests/Interaction/Interaction.Core.Tests.csproj
+/Tests/Interaction/bin/
+/Tests/Interaction/obj/
+
 # Unity profiler captures
 /[Pp]rofilerCaptures/
 
