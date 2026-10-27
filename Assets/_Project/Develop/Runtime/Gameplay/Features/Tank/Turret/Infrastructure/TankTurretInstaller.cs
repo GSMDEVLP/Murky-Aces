@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Infrastructure;
+using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Presentation;
@@ -18,13 +20,22 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
 
         public override void InstallBindings()
         {
-            if (_aimConfig == null || _aimConfig.IsValid == false ||
+            TankRoot owner = GetComponentInParent<TankRoot>(true);
+
+            if (owner == null ||
+                _aimConfig == null || _aimConfig.IsValid == false ||
                 _rig == null ||
                 _gunnerCameraMount == null ||
                 _gunnerEye == null)
             {
                 throw new InvalidOperationException(
                     "Turret references are missing or invalid.");
+            }
+
+            if (!_rig.transform.IsChildOf(owner.transform))
+            {
+                throw new InvalidOperationException(
+                    "Turret rig must belong to this tank.");
             }
 
             TurretAimState state = new TurretAimState(
@@ -51,6 +62,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
                     _rig,
                     _gunnerCamera,
                     zoomState);
+
+            Container.Bind<ITurretRig>()
+                .FromInstance(_rig).AsSingle();
 
             Container.Bind<GunnerZoomState>()
                 .FromInstance(zoomState).AsSingle();

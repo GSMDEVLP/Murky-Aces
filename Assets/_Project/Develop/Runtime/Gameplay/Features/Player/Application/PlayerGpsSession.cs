@@ -1,6 +1,5 @@
 using System;
 using Zenject;
-using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -18,7 +17,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private readonly PlayerIntentBuffer _playerIntent;
         private readonly DrivingIntentBuffer _drivingIntent;
         private readonly CommanderIntentBuffer _commanderIntent;
-        private readonly GpsIntentBuffer _gpsIntent;
+        private readonly PlayerGpsInputHandler _gpsInput;
         private readonly IPlayerGpsCamera  _camera;
         private readonly ICrewLocationReader _location;
         private readonly LazyInject<PlayerInteraction> _interaction;
@@ -30,7 +29,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private long _locationRevision;
         private bool _interactionWasEnabled;
         private bool _isClosing;
-        private Vector2 _cursorUv = new Vector2(0.5f, 0.5f);
 
         public bool IsActive { get; private set; }
 
@@ -49,7 +47,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             IPlayerGpsCamera camera,
             ICrewLocationReader location,
             LazyInject<PlayerInteraction> interaction,
-            GpsIntentBuffer gpsIntent)
+            PlayerGpsInputHandler gpsInput)
         {
             _inputContext = inputContext ??
                 throw new ArgumentNullException(nameof(inputContext));
@@ -72,8 +70,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             _interaction = interaction ??
                 throw new ArgumentNullException(nameof(interaction));
 
-            _gpsIntent = gpsIntent ??
-                throw new ArgumentNullException(nameof(gpsIntent));
+            _gpsInput = gpsInput ??
+                throw new ArgumentNullException(nameof(gpsInput));
         }
 
         public bool CanBegin(
@@ -129,7 +127,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             IsActive = true;
 
             screen.AttachSession(this);
-            _cursorUv = new Vector2(0.5f, 0.5f);
+            _gpsInput.ResetCursor();
             screen.HideCursor();
             interaction.SetGameplayEnabled(false);
             ResetButtons();
@@ -139,10 +137,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         public void Tick(float deltaTime)
         {
-            bool selectionRequested = _gpsIntent.ConsumeSelectionRequest();
-            bool clearRequested = _gpsIntent.ConsumeClearRequest();
-            float zoom = _gpsIntent.ConsumeZoom();
-            Vector2 cursorDelta = _gpsIntent.ConsumeCursorDelta();
+            GpsIntentSnapshot input = _gpsInput.ConsumeInput();
 
             if (!IsActive)
                 return;
@@ -184,33 +179,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             if (!IsReady)
                 return;
 
-            if (zoom != 0f)
-                _screen.TryZoom(_actor, zoom);
-
-            if (_screen.Role == CrewRoleId.CommanderLoader)
-            {
-                float sensitivity = _screen.CursorSensitivity;
-                float aspect = _screen.ScreenAspect;
-
-                _cursorUv = new Vector2(
-                    Mathf.Clamp01(
-                        _cursorUv.x +
-                        cursorDelta.x * sensitivity / aspect),
-                    Mathf.Clamp01(
-                        _cursorUv.y +
-                        cursorDelta.y * sensitivity));
-
-                _screen.TrySetCursor(_actor, _cursorUv);
-
-                if (clearRequested)
-                {
-                    _screen.TryClearRoute(_actor);
-                }
-                else if (selectionRequested)
-                {
-                    _screen.TrySelectDestination(_actor, _cursorUv);
-                }
-            }
+            _gpsInput.HandleInput(_screen, _actor, input);
         }
         public bool TryForceClose()
         {
@@ -254,7 +223,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
         private void ResetButtons()
         {
-            _gpsIntent.Clear();
+            _gpsInput.ClearInput();
             _playerIntent.ClearLook();
             _playerIntent.SuppressInteractionUntilReleased();
 

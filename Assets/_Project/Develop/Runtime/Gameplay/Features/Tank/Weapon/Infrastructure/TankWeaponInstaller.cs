@@ -2,13 +2,11 @@ using System;
 using Zenject;
 using UnityEngine;
 using System.Threading;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Infrastructure;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 {
@@ -18,7 +16,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 
         [SerializeField] private TankWeaponView _weaponView;
         [SerializeField] private GunConfig _config;
-        [SerializeField] private UnityTurretRig _rig;
         [SerializeField] private RigidbodyGunLauncher _launcher;
 
         public override void InstallBindings()
@@ -29,7 +26,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
                 _weaponView == null ||
                 _config == null ||
                 !_config.IsValid ||
-                _rig == null ||
                 _launcher == null)
             {
                 throw new InvalidOperationException(
@@ -37,7 +33,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
             }
 
             if (!_weaponView.transform.IsChildOf(owner.transform) ||
-                !_rig.transform.IsChildOf(owner.transform) ||
                 !_launcher.transform.IsChildOf(owner.transform))
             {
                 throw new InvalidOperationException(
@@ -71,17 +66,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
             Container.Bind<GunConfig>()
                 .FromInstance(_config).AsSingle();
 
-            Container.Bind<ITurretRig>()
-                .FromInstance(_rig).AsSingle();
-
             Container.Bind<IGunLauncher>()
                 .FromInstance(_launcher).AsSingle();
 
             Container.Bind<TankGun>()
                 .FromInstance(gun).AsSingle();
 
+            Container.Bind<TankFireRequestHandler>()
+                .AsSingle();
+
             Container.Bind<ITankRuntimeModule>()
-                .FromInstance(new TankWeaponModule(gun));
+                .To<TankWeaponModule>()
+                .AsCached();
         }
     }
 }

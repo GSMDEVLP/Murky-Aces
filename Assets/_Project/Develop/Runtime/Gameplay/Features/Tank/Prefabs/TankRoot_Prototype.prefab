@@ -99164,7 +99164,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure.TankWeaponInstaller
   _weaponView: {fileID: 8739959826048505849}
   _config: {fileID: 11400000, guid: 492a51ca1395b8542ba584e087298fb1, type: 2}
-  _rig: {fileID: 272370686522524971}
   _launcher: {fileID: 8783755620995953059}
 --- !u!1 &8746987345162006064
 GameObject:

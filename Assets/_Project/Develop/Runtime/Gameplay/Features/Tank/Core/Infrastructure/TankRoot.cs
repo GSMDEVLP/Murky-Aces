@@ -53,7 +53,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Infrastructure
 
         private void TryRegister()
         {
-            if (_isRegistered ||
+            if (!isActiveAndEnabled ||
+                _isRegistered ||
                 _gameLoopRegistry == null ||
                 _modules == null)
             {

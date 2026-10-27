@@ -1,6 +1,8 @@
 using Zenject;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Updaters;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Phases;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
@@ -75,10 +77,33 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<ActiveCommonActionsReader>().AsSingle();
             
             Container.Bind<PlayerIntentBuffer>().AsSingle();
+            Container.Bind<PlayerInputPolicy>().AsSingle();
             Container.Bind<DrivingIntentBuffer>().AsSingle();
             Container.Bind<CommanderIntentBuffer>().AsSingle();
             Container.Bind<GunnerIntentBuffer>().AsSingle();
             Container.Bind<GpsIntentBuffer>().AsSingle();
+
+            Container.Bind<CommonInputUpdater>().AsSingle();
+
+            Container.Bind<IInputIntentUpdater>()
+                .To<WalkingInputUpdater>()
+                .AsSingle();
+
+            Container.Bind<IInputIntentUpdater>()
+                .To<DrivingInputUpdater>()
+                .AsSingle();
+
+            Container.Bind<IInputIntentUpdater>()
+                .To<GunnerInputUpdater>()
+                .AsSingle();
+
+            Container.Bind<IInputIntentUpdater>()
+                .To<CommanderInputUpdater>()
+                .AsSingle();
+
+            Container.Bind<IInputIntentUpdater>()
+                .To<GpsInputUpdater>()
+                .AsSingle();
 
             Container.Bind<IPlayerInputContext>().To<PlayerInputContext>().AsSingle();
 
@@ -105,6 +130,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
             Container.Bind<ITankInteriorOccupant>().To<PlayerTankInteriorController>().AsSingle();
             Container.Bind<IPlayerGpsCamera>().FromInstance(_gpsCameraView).AsSingle();
+            Container.Bind<PlayerGpsInputHandler>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlayerGpsSession>().AsSingle();
         }
 

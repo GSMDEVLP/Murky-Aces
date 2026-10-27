@@ -1,8 +1,9 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Readers;
-using _Project.Develop.Runtime.Gameplay.Features.Player.Domain;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure.Updaters;
 using GameLoopTickable =
     _Project.Develop.Runtime.Core.GameLoop.Abstractions.ITickable;
 
@@ -11,122 +12,34 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Input.Infrastructure
     public sealed class PlayerInputSystem : MonoBehaviour, GameLoopTickable
     {
         [SerializeField] private float _mouseLookDegreesPerPixel = 0.15f;
-
         [SerializeField] private float _stickLookDegreesPerSecond = 180f;
 
-        private PlayerActionsReader _playerActions;
-        private DrivingActionsReader _drivingActions;
-        private GunnerActionsReader _gunnerActions;
-        private CommanderActionsReader _commanderActions;
-        private ActiveCommonActionsReader _commonActions;
-        private GpsActionsReader _gpsActions;
-
-        private PlayerIntentBuffer _playerIntent;
-        private DrivingIntentBuffer _drivingIntent;
-        private GunnerIntentBuffer _gunnerIntent;
-        private CommanderIntentBuffer _commanderIntent;
-        private GpsIntentBuffer _gpsIntent;
+        private CommonInputUpdater _commonInput;
+        private IReadOnlyList<IInputIntentUpdater> _updaters;
 
         [Inject]
         public void Construct(
-            PlayerActionsReader playerActions,
-            DrivingActionsReader drivingActions,
-            ActiveCommonActionsReader commonActions,
-            PlayerIntentBuffer playerIntent,
-            DrivingIntentBuffer drivingIntent,
-            GunnerActionsReader gunnerActions,
-            GunnerIntentBuffer gunnerIntent,
-            CommanderActionsReader commanderActions,
-            CommanderIntentBuffer commanderIntent,
-            GpsActionsReader gpsActions,
-            GpsIntentBuffer gpsIntent)
+            CommonInputUpdater commonInput,
+            List<IInputIntentUpdater> updaters)
         {
-            _playerActions = playerActions;
-            _drivingActions = drivingActions;
-            _commonActions = commonActions;
-            _playerIntent = playerIntent;
-            _drivingIntent = drivingIntent;
-            _gunnerActions = gunnerActions;
-            _gunnerIntent = gunnerIntent;
-            _commanderActions = commanderActions;
-            _commanderIntent = commanderIntent;
-            _gpsActions = gpsActions;
-            _gpsIntent = gpsIntent;
+            _commonInput = commonInput ??
+                throw new ArgumentNullException(nameof(commonInput));
+
+            if (updaters == null)
+                throw new ArgumentNullException(nameof(updaters));
+
+            _updaters = updaters.AsReadOnly();
         }
 
         public void Tick(float deltaTime)
         {
-            CommonInputSnapshot common = _commonActions.ReadCommonActions();
+            _commonInput.UpdateIntent(
+                deltaTime,
+                _mouseLookDegreesPerPixel,
+                _stickLookDegreesPerSecond);
 
-            PlayerActionsSnapshot player = _playerActions.ReadPlayerActions();
-
-            DrivingActionsSnapshot driving = _drivingActions.ReadDrivingActions();
-
-            GunnerActionsSnapshot gunner = _gunnerActions.ReadGunnerActions();
-            CommanderActionsSnapshot commander = _commanderActions.ReadCommanderActions();
-
-            if (_playerIntent.IsInteractionMenuOpen)
-            {
-                player = PlayerActionsSnapshot.Neutral;
-                driving = DrivingActionsSnapshot.Neutral;
-                gunner = GunnerActionsSnapshot.Neutral;
-                commander = CommanderActionsSnapshot.Neutral;
-            }
-
-            UpdatePlayerIntent(common, player, deltaTime);
-            UpdateDrivingIntent(driving);
-            _gunnerIntent.SetActions(gunner);
-            _commanderIntent.SetExitInput(commander.ExitPressedThisFrame, commander.ExitHeld);
-            _gpsIntent.SetZoom(_gpsActions.ReadZoom());
-            _gpsIntent.SetCursorDelta(_gpsActions.ReadCursorDelta());
-            _gpsIntent.SetSelectionInput(_gpsActions.ReadSelectionPressed(), _gpsActions.ReadSelectionHeld());
-            _gpsIntent.SetClearInput(_gpsActions.ReadClearPressed(), _gpsActions.ReadClearHeld());
-        }
-
-        private void UpdatePlayerIntent(CommonInputSnapshot common, PlayerActionsSnapshot player, float deltaTime)
-        {
-            _playerIntent.SetMovement(
-                new Vector2(
-                    player.MoveX,
-                    player.MoveY),
-                player.SprintHeld);
-
-            float lookScale =
-                common.LookIsPointerDelta
-                    ? _mouseLookDegreesPerPixel
-                    : _stickLookDegreesPerSecond *
-                      deltaTime;
-
-            _playerIntent.SetLook(
-                new Vector2(
-                    common.LookX,
-                    common.LookY) *
-                lookScale);
-
-            if (player.JumpHeld)
-                _playerIntent.RequestJump();
-
-            _playerIntent.SetInteraction(
-                common.InteractPressedThisFrame,
-                common.InteractHeld,
-                common.InteractReleasedThisFrame);
-
-            _playerIntent.SetInteractionMenuInput(
-                common.InteractionMenuNavigation,
-                common.InteractionMenuCancelPressed);
-
-            _playerIntent.SetDrop(
-                common.DropPressedThisFrame);
-        }
-
-        private void UpdateDrivingIntent(
-            DrivingActionsSnapshot driving)
-        {
-            _drivingIntent.SetDriving(
-                driving.Throttle,
-                driving.Steering,
-                driving.BrakeHeld);
-
+            for (int i = 0; i < _updaters.Count; i++)
+                _updaters[i].UpdateIntent();
         }
     }
 }

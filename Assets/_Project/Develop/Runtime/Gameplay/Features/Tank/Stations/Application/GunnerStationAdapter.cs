@@ -1,13 +1,9 @@
 using System;
-using UnityEngine;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain;
 
@@ -17,9 +13,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
     {
         private readonly TurretAimRuntime _turret;
         private readonly GunnerZoomState _zoom;
-        private readonly TankGun _gun;
-        private readonly ITurretRig _rig;
-        private readonly ITankMotionBody _motionBody;
+        private readonly TankFireRequestHandler _fire;
 
         private IGunnerIntentSource _intentSource;
         private ulong _actorId;
@@ -29,24 +23,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
         public GunnerStationAdapter(
             TurretAimRuntime turret,
             GunnerZoomState zoom,
-            TankGun gun,
-            ITurretRig rig,
-            ITankMotionBody motionBody)
+            TankFireRequestHandler fire)
         {
-            _turret = turret
-                ?? throw new ArgumentNullException(nameof(turret));
+            _turret = turret ??
+                throw new ArgumentNullException(nameof(turret));
 
-            _zoom = zoom
-                ?? throw new ArgumentNullException(nameof(zoom));
+            _zoom = zoom ??
+                throw new ArgumentNullException(nameof(zoom));
 
-            _gun = gun
-                ?? throw new ArgumentNullException(nameof(gun));
-
-            _rig = rig
-                ?? throw new ArgumentNullException(nameof(rig));
-
-            _motionBody = motionBody
-                ?? throw new ArgumentNullException(nameof(motionBody));
+            _fire = fire ??
+                throw new ArgumentNullException(nameof(fire));
         }
 
         public bool CanUse(IInteractionActor actor)
@@ -90,26 +76,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Application
                 _turret.ToggleReferenceMode();
 
             if (intent.FireRequested)
-            {
-                Pose muzzlePose = _rig.MuzzlePose;
-
-                Vector3 inheritedVelocity =
-                    _motionBody.LinearVelocity +
-                    Vector3.Cross(
-                        _motionBody.AngularVelocity,
-                        muzzlePose.position - _motionBody.Position);
-
-                _gun.TryFire(
-                    _actorId,
-                    muzzlePose,
-                    inheritedVelocity);
-            }
+                _fire.TryRequestFire(_actorId);
         }
 
         public void ClearOutput()
         {
             _turret.ClearInput();
             _zoom.Clear();
+            _fire.CancelRequest(_actorId);
         }
 
         public void Deactivate()

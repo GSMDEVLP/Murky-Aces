@@ -1,11 +1,9 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Abstraction;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Player.Presentation.GPS
 {
@@ -68,12 +66,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Presentation.GPS
                 return false;
             }
 
-            CrewLocation current = _location.Current;
-
-            if (current.Kind != CrewLocationKind.Station ||
-                (current.StationRole != CrewRoleId.Driver &&
-                 current.StationRole != CrewRoleId.CommanderLoader) ||
-                !_look.IsCockpitMode ||
+            if (!_look.IsCockpitMode ||
                 !_look.IsGameplayEnabled)
             {
                 return false;

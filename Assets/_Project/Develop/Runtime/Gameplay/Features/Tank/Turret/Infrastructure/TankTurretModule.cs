@@ -25,7 +25,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
         public void Register(GameLoopRegistry registry)
         {
             registry.RegisterGameplay(_runtime);
-            registry.RegisterPresentation(_runtime.Presentation);
             registry.RegisterPresentation(_cameraPresenter);
         }
 
@@ -34,7 +33,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Infrastructure
             _runtime.ClearInput();
             _cameraPresenter.ResetZoom();
             registry.UnregisterGameplay(_runtime);
-            registry.UnregisterPresentation(_runtime.Presentation);
             registry.UnregisterPresentation(_cameraPresenter);
         }
     }

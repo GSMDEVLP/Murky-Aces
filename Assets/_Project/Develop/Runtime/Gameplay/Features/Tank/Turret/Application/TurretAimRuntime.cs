@@ -5,13 +5,12 @@ using _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application
 {
-    public sealed partial class TurretAimRuntime : IGameplayTickable
+    public sealed class TurretAimRuntime : IGameplayTickable
     {
         private readonly TurretMechanism _mechanism;
         private readonly ITurretRig _rig;
 
         public TurretAimState State => _mechanism.State;
-        public IPresentationTickable Presentation { get; }
 
         public TurretAimRuntime(TurretMechanism mechanism, ITurretRig rig)
         {
@@ -19,8 +18,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application
                 throw new ArgumentNullException(nameof(mechanism));
             _rig = rig ??
                 throw new ArgumentNullException(nameof(rig));
-
-            Presentation = new TurretAimPresenter(this);
         }
 
         public void SetInput(float traverse, float elevation)
@@ -41,6 +38,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application
         public void Tick(float deltaTime)
         {
             _mechanism.Tick(deltaTime, _rig.HullYaw);
+
+            _rig.ApplyAngles(
+                _mechanism.State.CurrentYaw,
+                _mechanism.State.CurrentPitch);
         }
     }
 }

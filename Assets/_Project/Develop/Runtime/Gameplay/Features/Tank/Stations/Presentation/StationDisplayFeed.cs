@@ -12,6 +12,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
         [SerializeField, Min(1)] private int _height = 512;
 
         private RenderTexture _ownedTexture;
+        private bool _activationRequested;
 
         public bool IsActive =>
             isActiveAndEnabled &&
@@ -35,6 +36,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
 
         public bool TryActivate()
         {
+            _activationRequested = true;
+
             // Отключённый компонент может означать отказ модуля.
             if (!isActiveAndEnabled)
                 return false;
@@ -93,6 +96,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
 
         public void Deactivate()
         {
+            _activationRequested = false;
+            ReleaseResources();
+        }
+
+        private void ReleaseResources()
+        {
             if (_camera != null)
             {
                 _camera.enabled = false;
@@ -111,9 +120,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Stations.Presentation
             _ownedTexture = null;
         }
 
+        private void OnEnable()
+        {
+            if (_activationRequested)
+                TryActivate();
+        }
+
         private void OnDisable()
         {
-            Deactivate();
+            ReleaseResources();
         }
 
         private void OnDestroy()
