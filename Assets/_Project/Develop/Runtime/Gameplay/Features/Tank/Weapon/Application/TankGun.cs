@@ -3,7 +3,6 @@ using UnityEngine;
 using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Domain;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application
 {
@@ -23,7 +22,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application
             GunChamber chamber,
             GunLoadingService loading,
             IGunLauncher launcher,
-            GunConfig config)
+            float fireCooldown)
         {
             _tankId = tankId;
 
@@ -36,17 +35,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Application
             _launcher = launcher
                 ?? throw new ArgumentNullException(nameof(launcher));
 
-            if (config == null)
-                throw new ArgumentNullException(nameof(config));
-
-            if (!config.IsValid)
+            if (float.IsNaN(fireCooldown) ||
+                float.IsInfinity(fireCooldown) ||
+                fireCooldown <= 0f)
             {
-                throw new ArgumentException(
-                    "Gun config is invalid.",
-                    nameof(config));
+                throw new ArgumentOutOfRangeException(nameof(fireCooldown));
             }
 
-            _cooldownSeconds = config.FireCooldown;
+            _cooldownSeconds = fireCooldown;
         }
 
         public void SetEnabled(bool enabled)

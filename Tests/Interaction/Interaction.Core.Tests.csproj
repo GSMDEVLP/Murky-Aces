@@ -10,11 +10,34 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="UnityTypeStubs.cs" />
+    <Compile Include="GameplayStateChecks.cs" />
+    <Compile Include="ActorDependencyChecks.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Core/GameLoop/Abstractions/ITickable.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Abstractions/*.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Domain/*.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Interaction/Application/*.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Exterior/Domain/*.cs" />
     <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Exterior/Application/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Movement/Domain/TankMotionState.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Turret/Domain/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Enemies/KamikazeDrone/Drone/*.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Enemies/KamikazeDrone/Application/KamikazeDroneBehaviour.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Infrastructure/PlayerInteractionActor.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Abstractions/IGpsSessionOwner.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Abstractions/IPlayerGpsSession.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Abstractions/IGpsScreen.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Abstractions/IStationCapabilityProfile.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Player/Domain/StationControlContext.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Stations/Abstractions/IStationOccupant.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Stations/Domain/CrewRoleId.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Tank/Interior/Abstraction/ITankInteriorOccupant.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Crew/Abstraction/ICrewLocationReader.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Crew/Domain/CrewLocation.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Crew/Domain/CrewLocationKind.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Input/Abstractions/IStationIntentSource.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Input/Abstractions/IDrivingIntentSource.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Input/Abstractions/IGunnerIntentSource.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Input/Domain/DrivingIntentSnapshot.cs" />
+    <Compile Include="../../Assets/_Project/Develop/Runtime/Gameplay/Features/Input/Domain/GunnerIntentSnapshot.cs" />
   </ItemGroup>
 </Project>

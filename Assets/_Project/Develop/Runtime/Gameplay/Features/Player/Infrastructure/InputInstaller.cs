@@ -127,6 +127,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<IPlayerStationCapabilities>().To<PlayerStationCapabilities>().AsSingle();
             Container.Bind<PlayerStationController>().AsSingle();
             Container.Bind<IStationOccupant>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
+            Container.Bind<IStationIntentSource>().FromResolveGetter<PlayerStationController>(controller => controller).AsSingle();
             Container.Bind<IPlayerInteriorBody>().FromInstance(_interiorBody).AsSingle();
             Container.Bind<ITankInteriorOccupant>().To<PlayerTankInteriorController>().AsSingle();
             Container.Bind<IPlayerGpsCamera>().FromInstance(_gpsCameraView).AsSingle();

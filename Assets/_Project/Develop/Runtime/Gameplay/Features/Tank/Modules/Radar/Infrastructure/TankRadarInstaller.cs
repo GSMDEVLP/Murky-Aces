@@ -17,11 +17,27 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
 
         public override void InstallBindings()
         {
+            if (_config == null || !_config.IsValid)
+            {
+                throw new InvalidOperationException(
+                    "Radar config is missing or invalid.");
+            }
+
             if (_view == null || !_view.HasValidReferences)
             {
                 throw new InvalidOperationException(
                     "Radar display view or screen material is missing or invalid.");
             }
+
+            var targetTypeIds = new string[_config.TargetTypes.Count];
+
+            for (int i = 0; i < targetTypeIds.Length; i++)
+                targetTypeIds[i] = _config.TargetTypes[i].Id;
+
+            var scanSettings = new RadarScanSettings(
+                _config.Range,
+                _config.ScanInterval,
+                targetTypeIds);
 
             var radar = new TankRadar();
             radar.SetEnabled(_config.InitiallyEnabled);
@@ -39,7 +55,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastr
                     radar,
                     context.Container.Resolve<RadarTargetRegistry>(),
                     context.Container.Resolve<ITankMotionBody>(),
-                    _config,
+                    scanSettings,
                     _ownTarget != null
                         ? (ulong?)_ownTarget.TargetId
                         : null))

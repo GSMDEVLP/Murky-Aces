@@ -4,7 +4,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
 {
     public sealed class TurretMechanism
     {
-        private readonly TurretAimState _state;
         private readonly float _traverseDegreesPerSecond;
         private readonly float _elevationDegreesPerSecond;
         private readonly float _minPitch;
@@ -13,8 +12,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
         private float _traverseInput;
         private float _elevationInput;
         private float _lastHullYaw;
+        private float _currentYaw;
+        private float _targetYaw;
+        private float _currentPitch;
+        private float _targetPitch;
+        private TurretReferenceMode _referenceMode;
+        private float _worldDirection;
 
-        public TurretAimState State => _state;
+        public TurretAimState State => new TurretAimState(
+            _currentYaw, _targetYaw, _currentPitch, _targetPitch,
+            _referenceMode, _worldDirection);
 
         public TurretMechanism(
             TurretAimState state,
@@ -23,9 +30,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
             float minPitch,
             float maxPitch)
         {
-            _state = state ??
-                throw new ArgumentNullException(nameof(state));
-
             if (!IsFinite(traverseDegreesPerSecond) ||
                 traverseDegreesPerSecond <= 0f)
                 throw new ArgumentOutOfRangeException(
@@ -49,12 +53,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
             _minPitch = minPitch;
             _maxPitch = maxPitch;
 
-            _state.CurrentPitch =
-                Clamp(_state.CurrentPitch, _minPitch, _maxPitch);
-            _state.TargetPitch = _state.CurrentPitch;
+            _currentYaw = state.CurrentYaw;
+            _targetYaw = state.TargetYaw;
+            _currentPitch = Clamp(state.CurrentPitch, _minPitch, _maxPitch);
+            _targetPitch = _currentPitch;
+            _referenceMode = state.ReferenceMode;
+            _worldDirection = state.WorldDirection;
 
             _lastHullYaw = NormalizeAngle(
-                _state.WorldDirection - _state.CurrentYaw);
+                _worldDirection - _currentYaw);
         }
 
         public void SetInput(float traverse, float elevation)
@@ -79,12 +86,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
 
             _lastHullYaw = NormalizeAngle(hullYaw);
 
-            _state.TargetYaw = _state.CurrentYaw;
-            _state.WorldDirection = NormalizeAngle(
-                _lastHullYaw + _state.CurrentYaw);
+            _targetYaw = _currentYaw;
+            _worldDirection = NormalizeAngle(
+                _lastHullYaw + _currentYaw);
 
-            _state.ReferenceMode =
-                _state.ReferenceMode ==
+            _referenceMode =
+                _referenceMode ==
                 TurretReferenceMode.HullRelative
                     ? TurretReferenceMode.WorldStabilized
                     : TurretReferenceMode.HullRelative;
@@ -110,43 +117,43 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
                 _traverseDegreesPerSecond *
                 deltaTime;
 
-            if (_state.ReferenceMode ==
+            if (_referenceMode ==
                 TurretReferenceMode.WorldStabilized)
             {
-                _state.WorldDirection =
+                _worldDirection =
                     NormalizeAngle(
-                        _state.WorldDirection + yawStep);
+                        _worldDirection + yawStep);
 
-                _state.TargetYaw = NormalizeAngle(
-                    _state.WorldDirection - _lastHullYaw);
+                _targetYaw = NormalizeAngle(
+                    _worldDirection - _lastHullYaw);
             }
             else
             {
-                _state.TargetYaw =
+                _targetYaw =
                     NormalizeAngle(
-                        _state.TargetYaw + yawStep);
+                        _targetYaw + yawStep);
 
-                _state.WorldDirection =
+                _worldDirection =
                     NormalizeAngle(
-                        _lastHullYaw + _state.TargetYaw);
+                        _lastHullYaw + _targetYaw);
             }
 
-            _state.TargetPitch = Clamp(
-                _state.TargetPitch +
+            _targetPitch = Clamp(
+                _targetPitch +
                 _elevationInput *
                 _elevationDegreesPerSecond *
                 deltaTime,
                 _minPitch,
                 _maxPitch);
 
-            _state.CurrentYaw = MoveTowardsAngle(
-                _state.CurrentYaw,
-                _state.TargetYaw,
+            _currentYaw = MoveTowardsAngle(
+                _currentYaw,
+                _targetYaw,
                 _traverseDegreesPerSecond * deltaTime);
 
-            _state.CurrentPitch = MoveTowards(
-                _state.CurrentPitch,
-                _state.TargetPitch,
+            _currentPitch = MoveTowards(
+                _currentPitch,
+                _targetPitch,
                 _elevationDegreesPerSecond * deltaTime);
         }
 
@@ -155,10 +162,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Domain
             _traverseInput = 0f;
             _elevationInput = 0f;
 
-            _state.TargetYaw = _state.CurrentYaw;
-            _state.TargetPitch = _state.CurrentPitch;
-            _state.WorldDirection = NormalizeAngle(
-                _lastHullYaw + _state.CurrentYaw);
+            _targetYaw = _currentYaw;
+            _targetPitch = _currentPitch;
+            _worldDirection = NormalizeAngle(
+                _lastHullYaw + _currentYaw);
         }
 
         private static float MoveTowardsAngle(

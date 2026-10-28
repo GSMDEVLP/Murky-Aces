@@ -239,6 +239,101 @@ Transform:
   - {fileID: 1727421187}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &324773516
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 717677174574518828, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_Name
+      value: DroneRoot_Prototype
+      objectReference: {fileID: 0}
+    - target: {fileID: 717677174574518828, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 77.361855
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.000000055051373
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -14.8170805
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: _monoInstallers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      propertyPath: '_monoInstallers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 324773518}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4238276430657222112, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 324773518}
+  m_SourcePrefab: {fileID: 100100000, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+--- !u!1 &324773517 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4238276430657222112, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+  m_PrefabInstance: {fileID: 324773516}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &324773518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324773517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa2c506c54c859f40ba6941803f65546, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Infrastructure.KamikazeDroneInstaller
+  _config: {fileID: 11400000, guid: eb00a485cfafe4a4cbb8576a39ee8bda, type: 2}
+  _flightBody: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -2481,3 +2576,4 @@ SceneRoots:
   - {fileID: 1461974008}
   - {fileID: 1681732905}
   - {fileID: 662145488}
+  - {fileID: 324773516}

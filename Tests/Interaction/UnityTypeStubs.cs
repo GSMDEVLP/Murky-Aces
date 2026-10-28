@@ -3,5 +3,6 @@
 namespace UnityEngine
 {
     public class Transform { }
+    public struct Vector2 { }
     public struct Vector3 { }
 }

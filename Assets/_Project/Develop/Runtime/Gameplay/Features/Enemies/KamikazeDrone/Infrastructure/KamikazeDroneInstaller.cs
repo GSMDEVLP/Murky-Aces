@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Infrastructure
 {
@@ -19,8 +18,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Infra
             Container.Bind<KamikazeDroneConfig>().FromInstance(_config).AsSingle();
 
             Container.Bind<DroneFlightBody>().FromInstance(_flightBody).AsSingle();
-
-            Container.Bind<KamikazeDroneState>().AsSingle();
 
             Container.Bind<KamikazeDroneBehaviour>()
                 .AsSingle()

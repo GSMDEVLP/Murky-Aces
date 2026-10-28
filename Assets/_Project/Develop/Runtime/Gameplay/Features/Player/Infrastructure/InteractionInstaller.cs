@@ -23,6 +23,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
 
         public override void InstallBindings()
         {
+            Container.Bind<InteractionControl>().AsSingle();
             Container.Bind<IInteractionTargetFinder>().FromInstance(_targetFinder);
             
             ulong actorId = EntityId.ToULong(_playerFacade.GetEntityId());
@@ -36,7 +37,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
             Container.Bind<IInteractionInput>()
                 .To<PlayerInteractionInput>()
                 .AsSingle();
-            Container.Bind<PlayerInteraction>().AsSingle();
+            Container.BindInterfacesAndSelfTo<PlayerInteraction>().AsSingle();
             Container.Bind<InteractionHudView>().FromInstance(_hudView);
             Container.Bind<InteractionHudPresenter>().AsSingle();
             Container.Bind<PresentationPhase>().AsSingle();

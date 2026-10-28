@@ -1,5 +1,4 @@
 using System;
-using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Crew.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Input.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
@@ -20,7 +19,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
         private readonly PlayerGpsInputHandler _gpsInput;
         private readonly IPlayerGpsCamera  _camera;
         private readonly ICrewLocationReader _location;
-        private readonly LazyInject<PlayerInteraction> _interaction;
+        private readonly InteractionControl _interactionControl;
 
         private IGpsScreen  _screen;
         private IInteractionActor _actor;
@@ -46,7 +45,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             CommanderIntentBuffer commanderIntent,
             IPlayerGpsCamera camera,
             ICrewLocationReader location,
-            LazyInject<PlayerInteraction> interaction,
+            InteractionControl interactionControl,
             PlayerGpsInputHandler gpsInput)
         {
             _inputContext = inputContext ??
@@ -67,8 +66,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             _location = location ??
                 throw new ArgumentNullException(nameof(location));
 
-            _interaction = interaction ??
-                throw new ArgumentNullException(nameof(interaction));
+            _interactionControl = interactionControl ??
+                throw new ArgumentNullException(nameof(interactionControl));
 
             _gpsInput = gpsInput ??
                 throw new ArgumentNullException(nameof(gpsInput));
@@ -102,9 +101,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             if (!CanBegin(screen, actor))
                 return false;
 
-            PlayerInteraction interaction = _interaction.Value;
-
-            if (!interaction.IsGameplayEnabled)
+            if (!_interactionControl.IsGameplayEnabled)
                 return false;
 
             InputMapId returnMap = _inputContext.CurrentMap;
@@ -122,14 +119,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
             _actor = actor;
             _returnMap = returnMap;
             _locationRevision = _location.Revision;
-            _interactionWasEnabled = interaction.IsGameplayEnabled;
+            _interactionWasEnabled = _interactionControl.IsGameplayEnabled;
             _isClosing = false;
             IsActive = true;
 
             screen.AttachSession(this);
             _gpsInput.ResetCursor();
             screen.HideCursor();
-            interaction.SetGameplayEnabled(false);
+            _interactionControl.SetGameplayEnabled(false);
             ResetButtons();
 
             return true;
@@ -206,7 +203,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Application
 
                 ResetButtons();
 
-                _interaction.Value.SetGameplayEnabled(
+                _interactionControl.SetGameplayEnabled(
                     _interactionWasEnabled);
             }
 

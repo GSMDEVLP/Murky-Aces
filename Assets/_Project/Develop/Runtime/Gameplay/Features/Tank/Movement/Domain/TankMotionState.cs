@@ -1,13 +1,15 @@
+using System;
+
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Domain
 {
-    public sealed class TankMotionState
+    public readonly struct TankMotionState
     {
-        public float CurrentForwardSpeed { get; internal set; }
-        public float CurrentTurnSpeed { get; internal set; }
-        public bool IsBraking { get; internal set; }
-        public bool IsChangingDirection { get; internal set; }
-        public float RemainingDirectionSwitchDelay { get; internal set; }
-        public int PendingDirection { get; internal set; }
+        public float CurrentForwardSpeed { get; }
+        public float CurrentTurnSpeed { get; }
+        public bool IsBraking { get; }
+        public bool IsChangingDirection => PendingDirection != 0;
+        public float RemainingDirectionSwitchDelay { get; }
+        public int PendingDirection { get; }
 
         public int CurrentDirection
         {
@@ -23,14 +25,35 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Domain
             }
         }
 
-        public void Reset()
+        public TankMotionState(float currentForwardSpeed, float currentTurnSpeed, bool isBraking, int pendingDirection, float remainingDirectionSwitchDelay)
         {
-            CurrentForwardSpeed = 0f;
-            CurrentTurnSpeed = 0f;
-            IsBraking = false;
-            IsChangingDirection = false;
-            RemainingDirectionSwitchDelay = 0f;
-            PendingDirection = 0;
+            ValidateFinite(currentForwardSpeed, nameof(currentForwardSpeed));
+            ValidateFinite(currentTurnSpeed, nameof(currentTurnSpeed));
+            ValidateFinite(remainingDirectionSwitchDelay, nameof(remainingDirectionSwitchDelay));
+
+            if (pendingDirection < -1 || pendingDirection > 1)
+                throw new ArgumentOutOfRangeException(nameof(pendingDirection));
+
+            if (remainingDirectionSwitchDelay < 0f)
+                throw new ArgumentOutOfRangeException(nameof(remainingDirectionSwitchDelay));
+
+            if ((pendingDirection == 0 && remainingDirectionSwitchDelay != 0f) ||
+                (isBraking && pendingDirection != 0))
+            {
+                throw new ArgumentException("Inconsistent direction change state.");
+            }
+
+            CurrentForwardSpeed = currentForwardSpeed;
+            CurrentTurnSpeed = currentTurnSpeed;
+            IsBraking = isBraking;
+            PendingDirection = pendingDirection;
+            RemainingDirectionSwitchDelay = remainingDirectionSwitchDelay;
+        }
+
+        private static void ValidateFinite(float value, string parameterName)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value))
+                throw new ArgumentOutOfRangeException(parameterName);
         }
     }
 }

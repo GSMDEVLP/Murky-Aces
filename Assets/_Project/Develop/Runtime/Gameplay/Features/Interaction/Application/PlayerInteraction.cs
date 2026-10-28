@@ -6,23 +6,23 @@ using _Project.Develop.Runtime.Gameplay.Features.Interaction.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 {
-    public sealed class PlayerInteraction : ITickable
+    public sealed class PlayerInteraction : ITickable, IDisposable
     {
         private readonly IInteractionInput _input;
         private readonly IInteractionTargetFinder _targetFinder;
         private readonly InteractionContext _context;
+        private readonly InteractionControl _control;
         private readonly List<IInteractionAction> _focusedActions = new List<IInteractionAction>(4);
-        private IInteractionScope _targetScope;
         private HoldInteractionSession _activeHold;
         private InteractionActionMenu _menu;
         private bool _awaitingMenuRelease;
         private long _menuInputRevision;
-        private bool _gameplayEnabled = true;
+        private bool _isDisposed;
 
         public bool HasFocusedTarget { get; private set; }
         public IInteractionTarget FocusedTarget { get; private set; }
         public InteractionInfo FocusedInfo { get; private set; }
-        public bool IsGameplayEnabled => _gameplayEnabled;
+        public bool IsGameplayEnabled => !_isDisposed && _control.IsGameplayEnabled;
         public bool IsHolding => _activeHold != null;
         public float ActiveHoldElapsedSeconds => _activeHold?.ElapsedSeconds ?? 0f;
         public float ActiveHoldRequiredSeconds => _activeHold?.RequiredSeconds ?? 0f;
@@ -32,16 +32,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
         public int SelectedActionIndex => _menu?.SelectedIndex ?? 0;
 
         public PlayerInteraction(IInteractionInput input,
-            IInteractionTargetFinder targetFinder, InteractionContext context)
+            IInteractionTargetFinder targetFinder, InteractionContext context,
+            InteractionControl control)
         {
             _input = input ?? throw new ArgumentNullException(nameof(input));
             _targetFinder = targetFinder ?? throw new ArgumentNullException(nameof(targetFinder));
             _context = context;
+            _control = control ?? throw new ArgumentNullException(nameof(control));
+            _control.Changed += OnControlChanged;
         }
 
         public void Tick(float deltaTime)
         {
-            if (!_gameplayEnabled)
+            if (!IsGameplayEnabled)
                 return;
 
             if (_input.DropPressedThisFrame &&
@@ -89,22 +92,33 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
                 UpdateActiveHold(deltaTime);
         }
 
-        public bool TryRestrictTargetScope(IInteractionScope scope)
+        public void Dispose()
         {
-            if (scope == null) return false;
-            if (ReferenceEquals(_targetScope, scope)) return true;
-            CancelActiveInteraction(InteractionCancelReason.ContextChanged);
-            ClearFocus();
-            _targetScope = scope;
-            return true;
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+            _control.Changed -= OnControlChanged;
+            try
+            {
+                CancelActiveInteraction(InteractionCancelReason.ActorDisabled);
+            }
+            finally
+            {
+                ClearFocus();
+            }
         }
 
-        public void ClearTargetScope()
+        private void OnControlChanged()
         {
-            if (_targetScope == null) return;
-            CancelActiveInteraction(InteractionCancelReason.ContextChanged);
-            ClearFocus();
-            _targetScope = null;
+            try
+            {
+                CancelActiveInteraction(InteractionCancelReason.ContextChanged);
+            }
+            finally
+            {
+                ClearFocus();
+            }
         }
 
         public void CancelActiveInteraction(InteractionCancelReason reason)
@@ -114,15 +128,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             _activeHold = null;
             if (session != null)
                 session.Action.Cancel(_context, reason);
-        }
-
-        public void SetGameplayEnabled(bool isEnabled)
-        {
-            if (_gameplayEnabled == isEnabled) return;
-            _gameplayEnabled = isEnabled;
-            if (isEnabled) return;
-            CancelActiveInteraction(InteractionCancelReason.ContextChanged);
-            ClearFocus();
         }
 
         private void UpdateMenu(float deltaTime)
@@ -165,10 +170,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
         private void StartAction(IInteractionTarget target, IInteractionAction action)
         {
-            if (!_gameplayEnabled || target == null || !target.IsActive ||
+            if (!IsGameplayEnabled || target == null || !target.IsActive ||
                 !ReferenceEquals(FocusedTarget, target) ||
                 !InteractionActions.Contains(_focusedActions, action) ||
-                (_targetScope != null && !_targetScope.Allows(target)))
+                (_control.TargetScope != null && !_control.TargetScope.Allows(target)))
                 return;
 
             InteractionInfo info = action.GetInteractionInfo(_context);
@@ -177,15 +182,18 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
             long targetRevision = target.Revision;
             long actionRevision = action.Revision;
+            long controlRevision = _control.Revision;
             if (!action.Begin(_context))
             {
-                RefreshFocus();
+                if (IsGameplayEnabled)
+                    RefreshFocus();
                 return;
             }
 
-            if (!_gameplayEnabled || !target.IsActive || target.Revision != targetRevision ||
+            if (!IsGameplayEnabled || _control.Revision != controlRevision ||
+                !target.IsActive || target.Revision != targetRevision ||
                 action.Revision != actionRevision ||
-                (_targetScope != null && !_targetScope.Allows(target)))
+                (_control.TargetScope != null && !_control.TargetScope.Allows(target)))
             {
                 action.Cancel(_context, InteractionCancelReason.ContextChanged);
                 return;
@@ -194,7 +202,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
             if (info.Mode == InteractionMode.Press)
             {
                 action.Complete(_context);
-                if (_gameplayEnabled)
+                if (IsGameplayEnabled)
                     RefreshFocus();
                 return;
             }
@@ -232,13 +240,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Interaction.Application
 
             _activeHold = null;
             session.Action.Complete(_context);
-            if (_gameplayEnabled)
+            if (IsGameplayEnabled)
                 RefreshFocus();
         }
 
         private void RefreshFocus()
         {
-            if (!_targetFinder.TryFindTarget(_targetScope, _context, out IInteractionTarget target))
+            if (!_targetFinder.TryFindTarget(_control.TargetScope, _context, out IInteractionTarget target))
             {
                 ClearFocus();
                 return;

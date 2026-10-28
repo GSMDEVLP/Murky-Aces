@@ -39,9 +39,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Turret.Application
         {
             _mechanism.Tick(deltaTime, _rig.HullYaw);
 
-            _rig.ApplyAngles(
-                _mechanism.State.CurrentYaw,
-                _mechanism.State.CurrentPitch);
+            TurretAimState state = _mechanism.State;
+            _rig.ApplyAngles(state.CurrentYaw, state.CurrentPitch);
         }
     }
 }

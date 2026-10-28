@@ -4,7 +4,6 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Domain;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Infrastructure
 {
@@ -23,14 +22,20 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Infrastructur
                 throw new InvalidOperationException(
                     "Tank motion body is not assigned.");
 
-            TankMotionState state = new TankMotionState();
-            TankMovement movement =
-                new TankMovement(_config, state, _body);
+            var settings = new TankMovementSettings(
+                _config.ForwardMaxSpeed,
+                _config.ReverseMaxSpeed,
+                _config.ForwardAcceleration,
+                _config.ReverseAcceleration,
+                _config.TurnAcceleration,
+                _config.Deceleration,
+                _config.BrakeDeceleration,
+                _config.TurnSpeed,
+                _config.DirectionSwitchDelay);
 
-            Container.Bind<TankMovementConfig>()
-                .FromInstance(_config).AsSingle();
-            Container.Bind<TankMotionState>()
-                .FromInstance(state).AsSingle();
+            TankMovement movement =
+                new TankMovement(settings, _body);
+
             Container.Bind<ITankMotionBody>()
                 .FromInstance(_body).AsSingle();
             Container.Bind<TankMovement>()

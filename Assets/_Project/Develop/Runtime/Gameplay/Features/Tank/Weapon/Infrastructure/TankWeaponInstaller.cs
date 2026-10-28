@@ -52,7 +52,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
                 chamber,
                 loading,
                 _launcher,
-                _config);
+                _config.FireCooldown);
 
             Container.Bind<GunChamber>()
                 .FromInstance(chamber).AsSingle();
@@ -62,9 +62,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Weapon.Infrastructure
 
             Container.Bind<TankWeaponView>()
                 .FromInstance(_weaponView).AsSingle();
-
-            Container.Bind<GunConfig>()
-                .FromInstance(_config).AsSingle();
 
             Container.Bind<IGunLauncher>()
                 .FromInstance(_launcher).AsSingle();

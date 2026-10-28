@@ -126,19 +126,92 @@ static class Program
         });
         Run("Gameplay disabling cancels Hold", () => {
             var f=new Fixture();var a=f.Add(InteractionActionId.Primary,hold:true);
-            f.Frame(press:true,held:true);f.Model.SetGameplayEnabled(false);f.Frame(held:true,dt:5);
+            f.Frame(press:true,held:true);f.Control.SetGameplayEnabled(false);
+            Check(a.Cancels==1 && !f.Model.IsHolding && !f.Model.HasFocusedTarget);
+            f.Frame(held:true,dt:5);
             Check(a.Cancels==1 && a.Completes==0 && !f.Model.HasFocusedTarget);
         });
         Run("Gameplay disabling releases menu input lock", () => {
             var f=MenuFixture(out var enter,out var remove);
-            f.Frame(press:true,held:true);f.Model.SetGameplayEnabled(false);
+            f.Frame(press:true,held:true);f.Control.SetGameplayEnabled(false);
             Check(!f.Model.IsChoosingAction && !f.Input.MenuOpen);
         });
         Run("Scope transition cancels active interaction", () => {
             var f=new Fixture();var a=f.Add(InteractionActionId.Primary,hold:true);
-            f.Frame(press:true,held:true);f.Model.TryRestrictTargetScope(new DenyScope());
+            f.Frame(press:true,held:true);f.Control.TryRestrictTargetScope(new DenyScope());
+            Check(a.Cancels==1 && !f.Model.IsHolding && !f.Model.HasFocusedTarget);
             f.Frame(held:true,dt:2);
             Check(a.Cancels==1 && a.Completes==0 && !f.Model.HasFocusedTarget);
+        });
+        Run("Control configured before construction is respected", () => {
+            var input=new Input();var actor=new Actor();var target=new Target();
+            var action=new FakeAction{Id=InteractionActionId.Primary};target.Actions.Add(action);
+            var control=new InteractionControl();control.SetGameplayEnabled(false);
+            using var model=new PlayerInteraction(input,new Finder{Target=target},new InteractionContext(actor),control);
+            input.Frame(true,true,false,0,false,false);model.Tick(1);
+            Check(!model.IsGameplayEnabled && !model.HasFocusedTarget && action.Begins==0);
+            control.TryRestrictTargetScope(new DenyScope());control.SetGameplayEnabled(true);model.Tick(1);
+            Check(model.IsGameplayEnabled && !model.HasFocusedTarget && action.Begins==0);
+        });
+        Run("Unchanged control settings do not interrupt Hold", () => {
+            var f=new Fixture();var scope=new AllowScope();Check(f.Control.TryRestrictTargetScope(scope));
+            var a=f.Add(InteractionActionId.Primary,hold:true);f.Frame(press:true,held:true);
+            f.Control.SetGameplayEnabled(true);Check(f.Control.TryRestrictTargetScope(scope));
+            Check(!f.Control.TryRestrictTargetScope(null));
+            Check(f.Model.IsHolding && a.Cancels==0);
+            f.Frame(held:true,dt:1);Check(a.Completes==1);
+        });
+        Run("Clearing an active scope cancels Hold immediately", () => {
+            var f=new Fixture();f.Control.TryRestrictTargetScope(new AllowScope());
+            var a=f.Add(InteractionActionId.Primary,hold:true);f.Frame(press:true,held:true);
+            f.Control.ClearTargetScope();f.Control.ClearTargetScope();
+            Check(a.Cancels==1 && !f.Model.IsHolding && !f.Model.HasFocusedTarget);
+        });
+        Run("Interaction resumes after control is restored", () => {
+            var f=new Fixture();var a=f.Add(InteractionActionId.Primary,hold:true);
+            f.Frame(press:true,held:true);f.Control.SetGameplayEnabled(false);f.Control.SetGameplayEnabled(false);
+            f.Control.SetGameplayEnabled(true);f.Frame(released:true);
+            f.Frame(press:true,held:true,dt:1.1f);
+            Check(a.Cancels==1 && a.Completes==1 && f.Model.IsGameplayEnabled);
+        });
+        Run("Interaction controls belong to individual players", () => {
+            var f=MenuFixture(out var enter,out var remove);var other=new Fixture(f.Target,actorId:2);
+            f.Frame(press:true,held:true);other.Frame(press:true,held:true);
+            f.Control.SetGameplayEnabled(false);
+            Check(!f.Model.IsChoosingAction && !f.Input.MenuOpen);
+            Check(other.Model.IsChoosingAction && other.Input.MenuOpen && other.Model.IsGameplayEnabled);
+        });
+        Run("Control disable and restore during Begin invalidates the action", () => {
+            foreach(bool hold in new[]{false,true})
+            {
+                var f=new Fixture();var a=f.Add(InteractionActionId.Primary,hold);
+                a.OnBegin=()=>{f.Control.SetGameplayEnabled(false);f.Control.SetGameplayEnabled(true);};
+                f.Frame(press:true,held:true,dt:2);
+                Check(a.Completes==0 && a.Cancels==1 && !f.Model.IsHolding && !f.Model.HasFocusedTarget);
+            }
+        });
+        Run("Scope replacement during Begin invalidates the action even when allowed", () => {
+            var f=new Fixture();var a=f.Add(InteractionActionId.Primary);
+            a.OnBegin=()=>f.Control.TryRestrictTargetScope(new AllowScope());
+            f.Frame(press:true,held:true);
+            Check(a.Completes==0 && a.Cancels==1);
+        });
+        Run("Failed Begin cannot restore focus after control disables gameplay", () => {
+            var f=new Fixture();var a=f.Add(InteractionActionId.Primary);a.AllowBegin=false;
+            a.OnBegin=()=>f.Control.SetGameplayEnabled(false);
+            f.Frame(press:true,held:true);
+            Check(!f.Model.IsGameplayEnabled && !f.Model.HasFocusedTarget && a.Completes==0);
+        });
+        Run("Disposing interaction cancels Hold once and stops further execution", () => {
+            var f=new Fixture();var a=f.Add(InteractionActionId.Primary,hold:true);
+            f.Frame(press:true,held:true);f.Model.Dispose();f.Model.Dispose();
+            f.Control.SetGameplayEnabled(false);f.Control.SetGameplayEnabled(true);
+            f.Frame(press:true,held:true,dt:5);
+            Check(a.Cancels==1 && a.Begins==1 && a.Completes==0 && !f.Model.IsGameplayEnabled && !f.Model.HasFocusedTarget);
+        });
+        Run("Disposing interaction releases the menu input lock", () => {
+            var f=MenuFixture(out var enter,out var remove);f.Frame(press:true,held:true);
+            f.Model.Dispose();Check(!f.Model.IsChoosingAction && !f.Input.MenuOpen);
         });
         Run("Failed Begin never completes", () => {
             var f=new Fixture();var a=f.Add(InteractionActionId.Primary);a.AllowBegin=false;
@@ -146,7 +219,7 @@ static class Program
         });
         Run("Completion may disable gameplay reentrantly", () => {
             var f=new Fixture();var a=f.Add(InteractionActionId.Primary);
-            a.OnComplete=()=>f.Model.SetGameplayEnabled(false);
+            a.OnComplete=()=>f.Control.SetGameplayEnabled(false);
             f.Frame(press:true,held:true);
             Check(a.Completes==1 && !f.Model.IsGameplayEnabled && !f.Model.HasFocusedTarget);
         });
@@ -217,6 +290,8 @@ static class Program
             Check(attachment.TryRemove(slot) && attachment.TryInstall(slot));
             Check(!weld.TryExecute() && !attachment.IsSecured);
         });
+        GameplayStateChecks.Run(Run);
+        ActorDependencyChecks.Run(Run);
         Console.WriteLine($"RESULT: {passed} passed, {failures} failed.");
         return failures==0?0:1;
     }
@@ -242,11 +317,12 @@ static class Program
         public readonly Actor Actor;
         public readonly Target Target;
         public readonly Finder Finder;
+        public readonly InteractionControl Control = new();
         public readonly PlayerInteraction Model;
         public Fixture(Target target=null,ulong actorId=1)
         {
             Actor=new Actor{Id=actorId};Target=target??new Target();Finder=new Finder{Target=Target};
-            Model=new PlayerInteraction(Input,Finder,new InteractionContext(Actor));
+            Model=new PlayerInteraction(Input,Finder,new InteractionContext(Actor),Control);
         }
         public FakeAction Add(InteractionActionId id,bool hold=false)
         {
@@ -322,6 +398,7 @@ static class Program
         }
     }
     sealed class DenyScope:IInteractionScope {public bool Allows(IInteractionTarget target)=>false;}
+    sealed class AllowScope:IInteractionScope {public bool Allows(IInteractionTarget target)=>true;}
     sealed class FakeAction:IInteractionAction
     {
         public InteractionActionId Id{get;set;}

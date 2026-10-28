@@ -52,6 +52,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
         public PlayerInteractionActor(ulong id, 
             IPickupReceiver pickupReceiver, 
             IStationOccupant stationOccupant, 
+            IStationIntentSource stationIntentSource,
             IDrivingIntentSource drivingIntentSource, 
             IGunnerIntentSource gunnerIntentSource,
             ITankInteriorOccupant tankInteriorOccupant,
@@ -71,12 +72,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure
                 ?? throw new ArgumentNullException(
                     nameof(drivingIntentSource));
 
-            _stationIntentSource =
-                stationOccupant as IStationIntentSource
-                ?? throw new ArgumentException(
-                    $"{nameof(stationOccupant)} must implement " +
-                    $"{nameof(IStationIntentSource)}.",
-                    nameof(stationOccupant));
+            _stationIntentSource = stationIntentSource
+                ?? throw new ArgumentNullException(nameof(stationIntentSource));
             _tankInteriorOccupant = tankInteriorOccupant
                  ?? throw new ArgumentNullException(nameof(tankInteriorOccupant));
 

@@ -5,7 +5,6 @@ using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Domain;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Core.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Tank.Movement.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Application
@@ -27,7 +26,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Applicat
 
         public bool IsRegistered { get; private set; }
 
-        public TankRadarScanner(TankRadar radar, RadarTargetRegistry targets, ITankMotionBody body, TankRadarConfig config, ulong? ownTargetId)
+        public TankRadarScanner(
+            TankRadar radar,
+            RadarTargetRegistry targets,
+            ITankMotionBody body,
+            RadarScanSettings settings,
+            ulong? ownTargetId)
         {
             _radar = radar ??
                 throw new ArgumentNullException(nameof(radar));
@@ -38,21 +42,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Tank.Modules.Radar.Applicat
             _body = body ??
                 throw new ArgumentNullException(nameof(body));
 
-            if (config == null || !config.IsValid)
-            {
-                throw new ArgumentException(
-                    "Radar config is missing or invalid.",
-                    nameof(config));
-            }
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
 
-            _rangeSquared = config.Range * config.Range;
-            _scanInterval = config.ScanInterval;
+            _rangeSquared = settings.Range * settings.Range;
+            _scanInterval = settings.ScanInterval;
             _ownTargetId = ownTargetId;
 
-            _allowedTypes = new HashSet<string>(StringComparer.Ordinal);
-
-            foreach (RadarTargetDefinition definition in config.TargetTypes)
-                _allowedTypes.Add(definition.Id);
+            _allowedTypes = new HashSet<string>(settings.TargetTypeIds, StringComparer.Ordinal);
         }
 
         public void Register(GameLoopRegistry registry)

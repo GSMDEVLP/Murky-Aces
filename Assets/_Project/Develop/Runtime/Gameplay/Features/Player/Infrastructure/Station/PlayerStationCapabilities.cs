@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Interaction.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Movement;
@@ -12,7 +11,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
     {
         private readonly PlayerMovement _movement;
         private readonly PlayerLook _look;
-        private readonly LazyInject<PlayerInteraction> _interaction;
+        private readonly InteractionControl _interactionControl;
 
         private bool _cachedMovementEnabled;
         private bool _cachedLookEnabled;
@@ -27,7 +26,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             private set;
         }
 
-        public PlayerStationCapabilities(PlayerMovement movement, PlayerLook look, LazyInject<PlayerInteraction> interaction)
+        public PlayerStationCapabilities(PlayerMovement movement, PlayerLook look, InteractionControl interactionControl)
         {
             _movement = movement ??
                 throw new ArgumentNullException(
@@ -37,9 +36,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
                 throw new ArgumentNullException(
                     nameof(look));
 
-            _interaction = interaction ??
+            _interactionControl = interactionControl ??
                 throw new ArgumentNullException(
-                    nameof(interaction));
+                    nameof(interactionControl));
         }
 
         public bool TryApplyForStation(IStationCapabilityProfile profile, IInteractionScope interactionScope)
@@ -59,23 +58,21 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
                 return false;
             }
 
-            PlayerInteraction interaction = _interaction.Value;
-
-            CacheState(interaction);
+            CacheState();
 
             if (profile.AllowsInteraction)
             {
-                if (interaction.TryRestrictTargetScope(interactionScope) == false)
+                if (_interactionControl.TryRestrictTargetScope(interactionScope) == false)
                 {
                     return false;
                 }
 
-                interaction.SetGameplayEnabled(true);
+                _interactionControl.SetGameplayEnabled(true);
             }
             else
             {
-                interaction.ClearTargetScope();
-                interaction.SetGameplayEnabled(false);
+                _interactionControl.ClearTargetScope();
+                _interactionControl.SetGameplayEnabled(false);
             }
 
             _movement.SetGameplayEnabled(
@@ -108,12 +105,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             _look.SetGameplayEnabled(
                 _cachedLookEnabled);
 
-            PlayerInteraction interaction =
-                _interaction.Value;
+            _interactionControl.ClearTargetScope();
 
-            interaction.ClearTargetScope();
-
-            interaction.SetGameplayEnabled(
+            _interactionControl.SetGameplayEnabled(
                 _cachedInteractionEnabled);
 
             AreDisabledForStation = false;
@@ -121,7 +115,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
             return true;
         }
 
-        private void CacheState(PlayerInteraction interaction)
+        private void CacheState()
         {
             _hasCachedWalkingView =
                 _look.TryCaptureWalkingView(out _cachedWalkingView);
@@ -132,7 +126,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Player.Infrastructure.Stati
                 _look.IsGameplayEnabled;
 
             _cachedInteractionEnabled =
-                interaction.IsGameplayEnabled;
+                _interactionControl.IsGameplayEnabled;
         }
 
         public bool TryRestoreBeforeStation()

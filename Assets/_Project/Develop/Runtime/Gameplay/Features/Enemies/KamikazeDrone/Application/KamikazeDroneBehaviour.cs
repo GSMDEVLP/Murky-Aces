@@ -16,7 +16,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Appli
         private readonly float _pauseDuration;
         private readonly Random _random;
 
-        public KamikazeDroneState State { get; }
+        private KamikazeDroneMode _mode;
+        private float _speed;
+        private float _distanceTravelled;
+        private float _pauseRemaining;
+        private float _headingOffsetDegrees;
+
+        public KamikazeDroneState State => new KamikazeDroneState(
+            _mode, _speed, _distanceTravelled, _pauseRemaining, _headingOffsetDegrees);
 
         public KamikazeDroneBehaviour(
             float maxSpeed,
@@ -24,15 +31,14 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Appli
             float deceleration,
             float legDistance,
             float pauseDuration,
-            Random random,
-            KamikazeDroneState state)
+            Random random)
         {
             bool hasValidSettings =
-                maxSpeed > 0f &&
-                acceleration > 0f &&
-                deceleration > 0f &&
-                legDistance > DISTANCE_TOLERANCE &&
-                pauseDuration >= 0f;
+                IsFinite(maxSpeed) && maxSpeed > 0f &&
+                IsFinite(acceleration) && acceleration > 0f &&
+                IsFinite(deceleration) && deceleration > 0f &&
+                IsFinite(legDistance) && legDistance > DISTANCE_TOLERANCE &&
+                IsFinite(pauseDuration) && pauseDuration >= 0f;
 
             if (hasValidSettings == false)
                 throw new ArgumentException("Invalid drone patrol settings.");
@@ -44,16 +50,20 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Appli
             _pauseDuration = pauseDuration;
             _random = random ??
                 throw new ArgumentNullException(nameof(random));
-            State = state ??
-                throw new ArgumentNullException(nameof(state));
         }
 
         public void Tick(float travelledDistance, float deltaTime)
         {
+            if (!IsFinite(travelledDistance))
+                throw new ArgumentOutOfRangeException(nameof(travelledDistance));
+
+            if (!IsFinite(deltaTime))
+                throw new ArgumentOutOfRangeException(nameof(deltaTime));
+
             if (deltaTime <= 0f)
                 return;
 
-            switch (State.Mode)
+            switch (_mode)
             {
                 case KamikazeDroneMode.Patrolling:
                     TickPatrol(travelledDistance, deltaTime);
@@ -67,11 +77,11 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Appli
 
         private void TickPatrol(float travelledDistance, float deltaTime)
         {
-            State.DistanceTravelled += Math.Max(0f, travelledDistance);
+            _distanceTravelled += Math.Max(0f, travelledDistance);
 
             float remainingDistance = Math.Max(
                 0f,
-                _legDistance - State.DistanceTravelled);
+                _legDistance - _distanceTravelled);
 
             if (remainingDistance <= DISTANCE_TOLERANCE)
             {
@@ -86,46 +96,51 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Appli
             float desiredSpeed = Math.Min(_maxSpeed, brakingSpeed);
 
             float speedChange =
-                desiredSpeed > State.Speed
+                desiredSpeed > _speed
                     ? _acceleration * deltaTime
                     : _deceleration * deltaTime;
 
-            State.Speed = MoveTowards(
-                State.Speed,
+            _speed = MoveTowards(
+                _speed,
                 desiredSpeed,
                 speedChange);
 
             // Последний шаг не должен увести за конец участка.
-            State.Speed = Math.Min(
-                State.Speed,
+            _speed = Math.Min(
+                _speed,
                 remainingDistance / deltaTime);
         }
 
         private void BeginWaiting()
         {
-            State.Mode = KamikazeDroneMode.Waiting;
-            State.Speed = 0f;
-            State.PauseRemaining = _pauseDuration;
+            _mode = KamikazeDroneMode.Waiting;
+            _speed = 0f;
+            _pauseRemaining = _pauseDuration;
         }
 
         private void TickWaiting(float deltaTime)
         {
-            State.PauseRemaining = Math.Max(
+            _pauseRemaining = Math.Max(
                 0f,
-                State.PauseRemaining - deltaTime);
+                _pauseRemaining - deltaTime);
 
-            if (State.PauseRemaining > 0f)
+            if (_pauseRemaining > 0f)
                 return;
 
             float turnAngle =
                 ((float)_random.NextDouble() * 2f - 1f) *
                 MAX_TURN_ANGLE;
 
-            State.HeadingOffsetDegrees =
-                (State.HeadingOffsetDegrees + turnAngle) % FULL_TURN;
+            _headingOffsetDegrees =
+                (_headingOffsetDegrees + turnAngle) % FULL_TURN;
 
-            State.DistanceTravelled = 0f;
-            State.Mode = KamikazeDroneMode.Patrolling;
+            _distanceTravelled = 0f;
+            _mode = KamikazeDroneMode.Patrolling;
+        }
+
+        private static bool IsFinite(float value)
+        {
+            return !float.IsNaN(value) && !float.IsInfinity(value);
         }
 
         private static float MoveTowards(
