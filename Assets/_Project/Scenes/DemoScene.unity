@@ -204,6 +204,7 @@ MonoBehaviour:
   - {fileID: 17175559}
   - {fileID: 540651333}
   - {fileID: 1727421190}
+  - {fileID: 1753769663}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -237,6 +238,7 @@ Transform:
   - {fileID: 17175558}
   - {fileID: 540651334}
   - {fileID: 1727421187}
+  - {fileID: 1753769664}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &324773516
@@ -251,17 +253,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: DroneRoot_Prototype
       objectReference: {fileID: 0}
-    - target: {fileID: 717677174574518828, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 77.361855
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.000000055051373
+      value: 6.97
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -296,44 +294,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: _monoInstallers.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      propertyPath: '_monoInstallers.Array.data[0]'
+      propertyPath: '_monoInstallers.Array.data[1]'
       value: 
-      objectReference: {fileID: 324773518}
+      objectReference: {fileID: 948615759}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 4238276430657222112, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 324773518}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
---- !u!1 &324773517 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4238276430657222112, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-  m_PrefabInstance: {fileID: 324773516}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &324773518
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 324773517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa2c506c54c859f40ba6941803f65546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Infrastructure.KamikazeDroneInstaller
-  _config: {fileID: 11400000, guid: eb00a485cfafe4a4cbb8576a39ee8bda, type: 2}
-  _flightBody: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -802,6 +774,30 @@ MonoBehaviour:
   _prompt: 2
   _holdDuration: 2
   _visual: {fileID: 1282239622}
+--- !u!1 &551930183 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &551930187 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+  m_PrefabInstance: {fileID: 1681732905}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &551930188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551930183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01b73b1b2ddd8df498de4102fa9fb5a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Infrastructure.CombatTarget
+  _kind: 1
+  _positionAnchor: {fileID: 551930187}
 --- !u!1 &630284583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,6 +1216,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7691303002633797863, guid: 8aacdb0d2c7314344b93a2b45d1167d2, type: 3}
   m_PrefabInstance: {fileID: 6220012537748880657}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &948615759 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3122571753036334865, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
+  m_PrefabInstance: {fileID: 324773516}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ded44aa64b4ae904a8467f3786d5146f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Infrastructure.DroneDetectionInstaller
 --- !u!1001 &1030664906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1940,7 +1947,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 551930188}
   m_SourcePrefab: {fileID: 100100000, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
 --- !u!1 &1727421186
 GameObject:
@@ -2002,6 +2012,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Tank.Modules.GPS.Infrastructure.GpsGridMapSource
   _center: {x: 0, y: 0}
   _size: {x: 200, y: 200}
+--- !u!1 &1753769662
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1753769664}
+  - component: {fileID: 1753769663}
+  m_Layer: 0
+  m_Name: CombatTargetRegistryInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1753769663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753769662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c6d94cd416b8840becd4516d2735c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Infrastructure.CombatTargetRegistryInstaller
+--- !u!4 &1753769664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1753769662}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 301282937}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1754048515
 PrefabInstance:
   m_ObjectHideFlags: 0

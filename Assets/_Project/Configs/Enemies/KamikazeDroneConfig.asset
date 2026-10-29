@@ -11,9 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2dc7d3b91097832428d90b24d7afe1c0, type: 3}
   m_Name: KamikazeDroneConfig
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Infrastructure.KamikazeDroneConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure.KamikazeDroneConfig
   _maxSpeed: 12
   _acceleration: 6
   _deceleration: 8
-  _legDistance: 100
+  _legDistance: 30
   _pauseDuration: 5
