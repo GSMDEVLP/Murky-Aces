@@ -12,6 +12,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         private float _initialYaw;
         private bool _isInitialized;
 
+        public Vector3 Position => _rigidbody.position;
+        public Vector3 Velocity => _rigidbody.linearVelocity;
+
         private void Awake()
         {
             Initialize();
@@ -71,6 +74,24 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
 
             _rigidbody.linearVelocity = direction * speed;
             _rigidbody.MoveRotation(rotation);
+        }
+
+        public void ApplyVelocity(Vector3 velocity)
+        {
+            _rigidbody.linearVelocity = velocity;
+
+            Vector3 horizontalDirection = new Vector3(
+                velocity.x,
+                0f,
+                velocity.z);
+
+            if (horizontalDirection.sqrMagnitude > 0.000001f)
+            {
+                _rigidbody.MoveRotation(
+                    Quaternion.LookRotation(
+                        horizontalDirection,
+                        Vector3.up));
+            }
         }
 
         public void Stop()

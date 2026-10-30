@@ -4,6 +4,7 @@ using Zenject;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure
 {
@@ -24,17 +25,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
                 _config.LegDistance,
                 _config.PauseDuration);
 
-            var behaviour = new KamikazeDroneBehaviour(
+            var patrol = new KamikazeDroneBehaviour(
                 settings,
                 new System.Random(Guid.NewGuid().GetHashCode()));
 
-            var movement = new DroneMovement(behaviour, _flightBody);
-
+            Container.Bind<DroneMovementSettings>().FromInstance(settings).AsSingle();
             Container.Bind<IDroneFlightBody>().FromInstance(_flightBody).AsSingle();
-            Container.Bind<KamikazeDroneBehaviour>().FromInstance(behaviour).AsSingle();
-            Container.Bind<DroneMovement>().FromInstance(movement).AsSingle();
-            Container.Bind<IDroneRuntimeModule>()
-                .FromInstance(new DroneMovementModule(movement, _flightBody));
+            Container.Bind<KamikazeDroneBehaviour>().FromInstance(patrol).AsSingle();
+            Container.Bind<DronePursuit>().AsSingle();
+            Container.Bind<DroneBehaviour>().AsSingle();
+            Container.Bind<IDroneRuntimeModule>().To<DroneMovementModule>().AsSingle();
         }
 
         private void ValidateReferences()

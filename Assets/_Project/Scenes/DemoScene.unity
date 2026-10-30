@@ -255,7 +255,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 77.361855
+      value: -24.8
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.y
@@ -263,23 +263,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.8170805
+      value: -11.2
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.6847576
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7287709
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -287,20 +287,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 93.567
       objectReference: {fileID: 0}
     - target: {fileID: 1595897187919078845, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      propertyPath: _monoInstallers.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6033488515099050879, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-      propertyPath: '_monoInstallers.Array.data[1]'
-      value: 
-      objectReference: {fileID: 948615759}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -774,30 +766,6 @@ MonoBehaviour:
   _prompt: 2
   _holdDuration: 2
   _visual: {fileID: 1282239622}
---- !u!1 &551930183 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &551930187 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1498560307844761635, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-  m_PrefabInstance: {fileID: 1681732905}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &551930188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 551930183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01b73b1b2ddd8df498de4102fa9fb5a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Infrastructure.CombatTarget
-  _kind: 1
-  _positionAnchor: {fileID: 551930187}
 --- !u!1 &630284583
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,17 +1184,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7691303002633797863, guid: 8aacdb0d2c7314344b93a2b45d1167d2, type: 3}
   m_PrefabInstance: {fileID: 6220012537748880657}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &948615759 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3122571753036334865, guid: 23f605bd28429774c82ca17857514ce4, type: 3}
-  m_PrefabInstance: {fileID: 324773516}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ded44aa64b4ae904a8467f3786d5146f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Infrastructure.DroneDetectionInstaller
 --- !u!1001 &1030664906
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1947,10 +1904,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3495725195949595575, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
-      insertIndex: 3
-      addedObject: {fileID: 551930188}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d142e013c7d3b8749a37e222ecb1c76f, type: 3}
 --- !u!1 &1727421186
 GameObject:

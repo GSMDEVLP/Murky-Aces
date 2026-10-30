@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Application;
@@ -21,21 +20,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
 
             _sensor.Initialize(_config);
 
-            var scanner = new DroneTargetScanner(
-                Container.Resolve<CombatTargetRegistry>(),
-                _sensor,
-                _config.ScanInterval);
-
             Container.Bind<IDroneVisionSensor>()
                 .FromInstance(_sensor)
                 .AsSingle();
 
             Container.Bind<DroneTargetScanner>()
-                .FromInstance(scanner)
+                .AsSingle()
+                .WithArguments(_config.ScanInterval);
+
+            Container.Bind<DroneTargetSelector>()
                 .AsSingle();
 
             Container.Bind<IDroneRuntimeModule>()
-                .FromInstance(new DroneDetectionModule(scanner));
+                .To<DroneDetectionModule>().AsSingle();
         }
     }
 }

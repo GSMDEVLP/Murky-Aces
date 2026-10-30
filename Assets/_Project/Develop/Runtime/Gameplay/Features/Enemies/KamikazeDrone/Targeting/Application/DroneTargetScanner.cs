@@ -16,6 +16,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
         private readonly List<ICombatTarget> _detected = new();
         private float _timeUntilNextScan;
 
+        public event Action OnScanCompleted;
+
         public IReadOnlyList<ICombatTarget> DetectedTargets { get; }
 
         public DroneTargetScanner(
@@ -69,6 +71,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
                 if (_sensor.CanSee(target))
                     _detected.Add(target);
             }
+            OnScanCompleted?.Invoke();
         }
     }
 }

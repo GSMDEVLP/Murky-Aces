@@ -16,6 +16,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
         private int _blockingLayers;
         private bool _isInitialized;
 
+        public Vector3 WorldPosition => _eyes.position;
+        
         public void Initialize(DroneDetectionConfig config)
         {
             if (config == null)

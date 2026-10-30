@@ -1,20 +1,21 @@
 using System;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure
 {
     public sealed class DroneMovementModule : IDroneRuntimeModule
     {
-        private readonly DroneMovement _movement;
+        private readonly DroneBehaviour _controller;
         private readonly IDroneFlightBody _flightBody;
 
-        public DroneMovementModule(DroneMovement movement, IDroneFlightBody flightBody)
+        public DroneMovementModule(DroneBehaviour controller, IDroneFlightBody flightBody)
         {
-            _movement = movement ??
-                throw new ArgumentNullException(nameof(movement));
+            _controller = controller ??
+                throw new ArgumentNullException(nameof(controller));
+
             _flightBody = flightBody ??
                 throw new ArgumentNullException(nameof(flightBody));
         }
@@ -23,12 +24,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         {
             _flightBody.Initialize();
             _flightBody.ResetDistanceSample();
-            registry.RegisterFixedGameplay(_movement);
+
+            registry.RegisterFixedGameplay(_controller);
         }
 
         public void Unregister(GameLoopRegistry registry)
         {
-            registry.UnregisterFixedGameplay(_movement);
+            registry.UnregisterFixedGameplay(_controller);
             _flightBody.Stop();
         }
     }
