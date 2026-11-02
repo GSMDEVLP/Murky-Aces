@@ -1,22 +1,36 @@
+using System;
 using UnityEngine;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Infrastructure;
+using Zenject;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Infrastructure
 {
     [DisallowMultipleComponent]
-    public sealed class DroneDetonationBody : MonoBehaviour, IDroneDetonationBody
+    public sealed class DroneDetonationBody : MonoBehaviour, IEnemyDeathListener
     {
-        [SerializeField] private KamikazeDroneRoot _droneRoot;
+        [SerializeField] private EnemyRoot _droneRoot;
 
-        public KamikazeDroneRoot DroneRoot => _droneRoot;
+        private DroneAttack _attack;
+        private bool _isRemovalRequested;
 
-        public void CompleteDetonation()
+        public EnemyRoot DroneRoot => _droneRoot;
+
+        [Inject]
+        public void Construct(DroneAttack attack)
         {
-            GameObject drone = _droneRoot.gameObject;
+            _attack = attack ??
+                throw new ArgumentNullException(nameof(attack));
+        }
 
-            drone.SetActive(false);
-            Destroy(drone);
+        public void OnOwnerDied()
+        {
+            if (_isRemovalRequested || _attack.HasDetonated == false)
+                return;
+
+            _isRemovalRequested = true;
+            Destroy(_droneRoot.gameObject);
         }
     }
 }

@@ -19,8 +19,12 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             float pauseRemaining,
             float headingOffsetDegrees)
         {
-            if (mode != KamikazeDroneMode.Patrolling && mode != KamikazeDroneMode.Waiting)
+            if (mode != KamikazeDroneMode.Patrolling &&
+                mode != KamikazeDroneMode.Waiting &&
+                mode != KamikazeDroneMode.Turning)
+            {
                 throw new ArgumentOutOfRangeException(nameof(mode));
+            }
 
             ValidateNonNegativeFinite(speed, nameof(speed));
             ValidateNonNegativeFinite(distanceTravelled, nameof(distanceTravelled));
@@ -29,8 +33,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             if (float.IsNaN(headingOffsetDegrees) || float.IsInfinity(headingOffsetDegrees))
                 throw new ArgumentOutOfRangeException(nameof(headingOffsetDegrees));
 
-            if ((mode == KamikazeDroneMode.Waiting && speed != 0f) ||
-                (mode == KamikazeDroneMode.Patrolling && pauseRemaining != 0f))
+            if ((mode != KamikazeDroneMode.Patrolling && speed != 0f) ||
+                (mode != KamikazeDroneMode.Waiting && pauseRemaining != 0f))
             {
                 throw new ArgumentException("Inconsistent drone patrol state.");
             }

@@ -13,11 +13,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         [Header("Patrol")]
         [SerializeField, Min(0.01f)] private float _legDistance = 100f;
         [SerializeField, Min(0f)] private float _pauseDuration = 5f;
+        [SerializeField, Min(0.01f)]
+        [Tooltip("Patrol turn speed in degrees per second.")]
+        private float _turnSpeed = 60f;
 
         public float MaxSpeed => _maxSpeed;
         public float Acceleration => _acceleration;
         public float Deceleration => _deceleration;
         public float LegDistance => _legDistance;
         public float PauseDuration => _pauseDuration;
+        public float TurnSpeed => _turnSpeed;
     }
 }

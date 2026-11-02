@@ -1,0 +1,14 @@
+{
+  "running": false,
+  "stage": 2,
+  "passed": 2,
+  "failed": 1,
+  "initialFrame": 2579,
+  "currentFrame": 16199,
+  "elapsed": 72.05949,
+  "results": [
+    "PASS Full prefab creates independent contexts and registers all modules",
+    "PASS Real frames, patrol movement, flight tilt and rotor animation advance",
+    "FAIL System.Exception: Disabled body moved or sibling stopped\r\n  at DronePlayChecks.Require (System.Boolean condition, System.String message) [0x00003] in <52a3de2a8f1a4a53bc8ad591dff1aeff>:0 \r\n  at DronePlayChecks.Step () [0x00368] in <52a3de2a8f1a4a53bc8ad591dff1aeff>:0 \r\n  at DronePlayChecks.Update () [0x0006b] in <52a3de2a8f1a4a53bc8ad591dff1aeff>:0 "
+  ]
+}

@@ -11,9 +11,19 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
         private Rigidbody _rigidbody;
         private bool _originalProvidesContacts;
         private bool _hasContact;
+        private bool _isMonitoring;
 
-        private void OnEnable()
+        public void StartMonitoring()
         {
+            if (_isMonitoring)
+                return;
+
+            if (enabled == false)
+            {
+                throw new InvalidOperationException(
+                    "Drone collision sensor must be enabled.");
+            }
+
             _collider = GetComponent<Collider>();
 
             if (_collider == null || _collider.isTrigger)
@@ -21,7 +31,16 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
                     "Drone collision sensor requires a solid collider.");
 
             _rigidbody = _collider.attachedRigidbody;
+
+            if (_rigidbody == null)
+            {
+                throw new InvalidOperationException(
+                    "Drone collision sensor requires an attached Rigidbody.");
+            }
+
             _originalProvidesContacts = _collider.providesContacts;
+            _isMonitoring = true;
+
             _collider.providesContacts = true;
             _hasContact = false;
 
@@ -30,8 +49,24 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
 
         private void OnDisable()
         {
-            Physics.ContactEvent -= HandlePhysicsContacts;
+            StopMonitoring();
+        }
+
+        private void OnDestroy()
+        {
+            StopMonitoring();
+        }
+
+        public void StopMonitoring()
+        {
             _hasContact = false;
+
+            if (_isMonitoring == false)
+                return;
+
+            _isMonitoring = false;
+
+            Physics.ContactEvent -= HandlePhysicsContacts;
 
             if (_collider != null)
                 _collider.providesContacts = _originalProvidesContacts;
@@ -55,7 +90,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
             PhysicsScene scene,
             NativeArray<ContactPairHeader>.ReadOnly pairHeaders)
         {
-            if (!isActiveAndEnabled || _collider == null)
+            if (_isMonitoring == false ||
+                isActiveAndEnabled == false ||
+                _collider == null)
                 return;
 
             for (int i = 0; i < pairHeaders.Length; i++)

@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour.Application;
@@ -9,7 +10,7 @@ using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure
 {
     [DisallowMultipleComponent]
-    public sealed class KamikazeDroneInstaller : MonoInstaller
+    public sealed class DroneMovementInstaller : MonoInstaller
     {
         [SerializeField] private KamikazeDroneConfig _config;
         [SerializeField] private DroneFlightBody _flightBody;
@@ -18,12 +19,15 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         {
             ValidateReferences();
 
+            _flightBody.Initialize();
+
             var settings = new DroneMovementSettings(
                 _config.MaxSpeed,
                 _config.Acceleration,
                 _config.Deceleration,
                 _config.LegDistance,
-                _config.PauseDuration);
+                _config.PauseDuration,
+                _config.TurnSpeed);
 
             var patrol = new KamikazeDroneBehaviour(
                 settings,
@@ -34,7 +38,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             Container.Bind<KamikazeDroneBehaviour>().FromInstance(patrol).AsSingle();
             Container.Bind<DronePursuit>().AsSingle();
             Container.Bind<DroneBehaviour>().AsSingle();
-            Container.Bind<IDroneRuntimeModule>().To<DroneMovementModule>().AsSingle();
+            Container.Bind<IEnemyRuntimeModule>().WithId(EnemyModuleGroup.Gameplay).To<DroneMovementModule>().AsSingle();
         }
 
         private void ValidateReferences()
@@ -42,13 +46,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             if (_config == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(KamikazeDroneInstaller)} requires a config.");
+                    $"{nameof(DroneMovementInstaller)} requires a config.");
             }
 
             if (_flightBody == null)
             {
                 throw new InvalidOperationException(
-                    $"{nameof(KamikazeDroneInstaller)} requires a flight body.");
+                    $"{nameof(DroneMovementInstaller)} requires a flight body.");
             }
         }
     }

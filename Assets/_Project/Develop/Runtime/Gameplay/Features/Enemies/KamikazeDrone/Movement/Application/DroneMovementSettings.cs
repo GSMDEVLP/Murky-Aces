@@ -9,18 +9,21 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         public float Deceleration { get; }
         public float LegDistance { get; }
         public float PauseDuration { get; }
+        public float TurnSpeed { get; }
 
         public DroneMovementSettings(
             float maxSpeed,
             float acceleration,
             float deceleration,
             float legDistance,
-            float pauseDuration)
+            float pauseDuration,
+            float turnSpeed)
         {
             ValidatePositiveFinite(maxSpeed, nameof(maxSpeed));
             ValidatePositiveFinite(acceleration, nameof(acceleration));
             ValidatePositiveFinite(deceleration, nameof(deceleration));
             ValidatePositiveFinite(legDistance, nameof(legDistance));
+            ValidatePositiveFinite(turnSpeed, nameof(turnSpeed));
 
             if (legDistance <= 0.01f)
                 throw new ArgumentOutOfRangeException(nameof(legDistance));
@@ -33,6 +36,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             Deceleration = deceleration;
             LegDistance = legDistance;
             PauseDuration = pauseDuration;
+            TurnSpeed = turnSpeed;
         }
 
         private static void ValidatePositiveFinite(float value, string parameterName)

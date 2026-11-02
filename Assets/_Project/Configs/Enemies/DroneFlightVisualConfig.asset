@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be907efd2f21a9f43bac0abe3504fa9c, type: 3}
+  m_Name: DroneFlightVisualConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.FlightVisuals.Infrastructure.DroneFlightVisualConfig
+  _cruisePitch: 8
+  _accelerationPitch: 6
+  _brakingPitch: 16
+  _tiltResponse: 6
+  _accelerationResponse: 8

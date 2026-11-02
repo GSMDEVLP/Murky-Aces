@@ -1,14 +1,16 @@
 using System;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Infrastructure
 {
-    public sealed class DroneDetectionModule : IDroneRuntimeModule
+    public sealed class DroneDetectionModule : IEnemyRuntimeModule
     {
         private readonly DroneTargetScanner _scanner;
         private readonly DroneTargetSelector _selector;
+
+        private bool _isActive;
 
         public DroneDetectionModule(
             DroneTargetScanner scanner,
@@ -21,8 +23,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
                 throw new ArgumentNullException(nameof(selector));
         }
 
-        public void Register(GameLoopRegistry registry)
+        public void Activate(GameLoopRegistry registry)
         {
+            if (_isActive)
+                return;
+
+            _isActive = true;
+
             _scanner.Clear();
             _selector.Clear();
 
@@ -30,8 +37,13 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
             registry.RegisterGameplay(_scanner);
         }
 
-        public void Unregister(GameLoopRegistry registry)
+        public void Deactivate(GameLoopRegistry registry)
         {
+            if (_isActive == false)
+                return;
+
+            _isActive = false;
+
             registry.UnregisterGameplay(_scanner);
             _scanner.OnScanCompleted -= _selector.Refresh;
 

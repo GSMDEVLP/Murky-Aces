@@ -3,15 +3,17 @@ using _Project.Develop.Runtime.Core.GameLoop.Abstractions;
 using _Project.Develop.Runtime.Core.GameLoop.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Application;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Infrastructure
 {
-    public sealed class DroneAttackModule : IDroneRuntimeModule, IGameplayTickable
+    public sealed class DroneAttackModule : IEnemyRuntimeModule, IGameplayTickable
     {
         private readonly DroneBehaviour _behaviour;
         private readonly DroneAttack _attack;
         private readonly DroneCollisionSensor _collisionSensor;
+
+        private bool _isActive;
 
         public DroneAttackModule(
             DroneBehaviour behaviour,
@@ -28,29 +30,43 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
                 throw new ArgumentNullException(nameof(collisionSensor));
         }
 
-        public void Register(GameLoopRegistry registry)
+        public void Activate(GameLoopRegistry registry)
         {
-            _collisionSensor.ClearContact();
+            if (_isActive)
+                return;
+
+            _isActive = true;
+
+            _collisionSensor.StartMonitoring();
             _behaviour.OnAttackPointReached += HandleDetonationRequest;
             registry.RegisterGameplay(this);
         }
 
-        public void Unregister(GameLoopRegistry registry)
+        public void Deactivate(GameLoopRegistry registry)
         {
+            if (_isActive == false)
+                return;
+
+            _isActive = false;
+
             registry.UnregisterGameplay(this);
             _behaviour.OnAttackPointReached -= HandleDetonationRequest;
-            _collisionSensor.ClearContact();
+            _collisionSensor.StopMonitoring();
         }
 
         public void Tick(float deltaTime)
         {
-            if (deltaTime > 0f && _collisionSensor.ConsumeContact())
+            if (_isActive == false || deltaTime <= 0f)
+                return;
+
+            if (_collisionSensor.ConsumeContact())
                 _attack.TryDetonate();
         }
 
         private void HandleDetonationRequest()
         {
-            _attack.TryDetonate();
+            if (_isActive)
+                _attack.TryDetonate();
         }
     }
 }

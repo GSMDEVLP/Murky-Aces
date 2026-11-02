@@ -3,6 +3,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
     public enum KamikazeDroneMode
     {
         Patrolling,
-        Waiting
+        Waiting,
+        Turning
     }
 }

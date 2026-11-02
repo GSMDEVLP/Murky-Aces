@@ -1,0 +1,13 @@
+PASS Full prefab creates independent contexts and registers all modules
+PASS Real frames, patrol movement, flight tilt and rotor animation advance
+PASS Disable and re-enable stop one drone and restore each registration once
+PASS Real patrol completes pause, stationary turn and resumes movement
+PASS Detection interrupts patrol and starts real pursuit
+PASS Lost target leaves the last observed point without hidden tracking
+PASS Arrival requests one death and destroys the whole drone after callbacks
+PASS Dead re-enable preserves presentation and cannot resume movement or attack
+PASS Armed drone crosses a real trigger without detonation
+PASS Real solid contact triggers one death before arrival and deferred removal
+Stage: 10
+Frame: 21264
+Running: False

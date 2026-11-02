@@ -1,0 +1,23 @@
+{
+  "passed": 11,
+  "failed": 0,
+  "checks": [
+    "PASS Patrol cannot request detonation",
+    "PASS Detonation is one-shot including reentrant requests",
+    "PASS Already dead owner cannot detonate",
+    "PASS Sensor starts explicitly, subscribes once and restores collider flags",
+    "PASS Sensor disable and invalid activation do not leak subscriptions",
+    "PASS Attack module gates inactive calls and patrol contacts",
+    "PASS Contact death stops attack and monitoring before death listeners",
+    "PASS Attack point arrival reaches the same death pipeline",
+    "PASS Actual installers resolve one attack with no dependency cycle",
+    "PASS One drone death preserves another sensor subscription",
+    "PASS All temporary physics subscriptions are removed"
+  ],
+  "playing": false,
+  "activeSceneBefore": "Assets/_Project/Scenes/DemoScene.unity",
+  "activeSceneAfter": "Assets/_Project/Scenes/DemoScene.unity",
+  "sceneDirtyBefore": false,
+  "sceneDirtyAfter": false,
+  "pending": "Actual collision and end-of-frame destruction in Play Mode after prefab/root migration"
+}

@@ -1,7 +1,8 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targeting.Application;
 
@@ -31,7 +32,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Targe
             Container.Bind<DroneTargetSelector>()
                 .AsSingle();
 
-            Container.Bind<IDroneRuntimeModule>()
+            Container.Bind<IEnemyRuntimeModule>()
+                .WithId(EnemyModuleGroup.Gameplay)
                 .To<DroneDetectionModule>().AsSingle();
         }
     }

@@ -17,3 +17,4 @@ MonoBehaviour:
   _deceleration: 8
   _legDistance: 30
   _pauseDuration: 5
+  _turnSpeed: 60

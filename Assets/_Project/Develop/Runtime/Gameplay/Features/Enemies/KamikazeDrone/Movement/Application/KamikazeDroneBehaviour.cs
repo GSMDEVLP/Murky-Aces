@@ -14,6 +14,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         private readonly float _deceleration;
         private readonly float _legDistance;
         private readonly float _pauseDuration;
+        private readonly float _turnSpeed;
         private readonly Random _random;
 
         private KamikazeDroneMode _mode;
@@ -21,6 +22,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
         private float _distanceTravelled;
         private float _pauseRemaining;
         private float _headingOffsetDegrees;
+        private float _turnRemainingDegrees;
 
         public KamikazeDroneState State => new KamikazeDroneState(
             _mode, _speed, _distanceTravelled, _pauseRemaining, _headingOffsetDegrees);
@@ -37,6 +39,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             _deceleration = settings.Deceleration;
             _legDistance = settings.LegDistance;
             _pauseDuration = settings.PauseDuration;
+            _turnSpeed = settings.TurnSpeed;
             _random = random ??
                 throw new ArgumentNullException(nameof(random));
         }
@@ -60,6 +63,10 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
 
                 case KamikazeDroneMode.Waiting:
                     TickWaiting(deltaTime);
+                    break;
+
+                case KamikazeDroneMode.Turning:
+                    TickTurning(deltaTime);
                     break;
             }
         }
@@ -116,14 +123,43 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movem
             if (_pauseRemaining > 0f)
                 return;
 
-            float turnAngle =
+            BeginTurning();
+        }
+
+        private void BeginTurning()
+        {
+            _turnRemainingDegrees =
                 ((float)_random.NextDouble() * 2f - 1f) *
                 MAX_TURN_ANGLE;
 
-            _headingOffsetDegrees =
-                (_headingOffsetDegrees + turnAngle) % FULL_TURN;
+            _speed = 0f;
+            _pauseRemaining = 0f;
+            _mode = KamikazeDroneMode.Turning;
+        }
 
+        private void TickTurning(float deltaTime)
+        {
+            float previousRemaining = _turnRemainingDegrees;
+
+            _turnRemainingDegrees = MoveTowards(
+                _turnRemainingDegrees,
+                0f,
+                _turnSpeed * deltaTime);
+
+            float appliedTurn = previousRemaining - _turnRemainingDegrees;
+
+            _headingOffsetDegrees =
+                (_headingOffsetDegrees + appliedTurn) % FULL_TURN;
+
+            if (_turnRemainingDegrees == 0f)
+                BeginPatrolling();
+        }
+
+        private void BeginPatrolling()
+        {
             _distanceTravelled = 0f;
+            _pauseRemaining = 0f;
+            _speed = 0f;
             _mode = KamikazeDroneMode.Patrolling;
         }
 

@@ -845,6 +845,7 @@ Transform:
   - {fileID: 774399814007025699}
   - {fileID: 3212812118611441621}
   - {fileID: 9024450103359866927}
+  - {fileID: 3890840809523242994}
   m_Father: {fileID: 1595897187919078845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &263146697070704778
@@ -858,7 +859,7 @@ GameObject:
   - component: {fileID: 5435536351896414951}
   - component: {fileID: 6774618780813629313}
   m_Layer: 0
-  m_Name: KamikazeDroneInstaller
+  m_Name: DroneMovementInstaller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -890,7 +891,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa2c506c54c859f40ba6941803f65546, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure.KamikazeDroneInstaller
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Movement.Infrastructure.DroneMovementInstaller
   _config: {fileID: 11400000, guid: eb00a485cfafe4a4cbb8576a39ee8bda, type: 2}
   _flightBody: {fileID: 8843080482599434398}
 --- !u!1 &291209865742213255
@@ -1929,7 +1930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ffe10baa28fc3d448032615165abafd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Infrastructure.DroneDetonationBody
-  _droneRoot: {fileID: 5394543410776398733}
+  _droneRoot: {fileID: 2269754826329057623}
 --- !u!1 &646591106531305375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2030,8 +2031,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1595897187919078845}
   - component: {fileID: 6033488515099050879}
-  - component: {fileID: 5394543410776398733}
   - component: {fileID: 5848852333193689518}
+  - component: {fileID: 2269754826329057623}
   m_Layer: 0
   m_Name: DroneRoot_Prototype
   m_TagString: Untagged
@@ -2072,24 +2073,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Zenject::Zenject.GameObjectContext
   _scriptableObjectInstallers: []
   _monoInstallers:
+  - {fileID: 1279785486218470799}
   - {fileID: 6774618780813629313}
   - {fileID: 3122571753036334865}
   - {fileID: 6537548635729653288}
+  - {fileID: 6949907418731876658}
   _installerPrefabs: []
   _autoRun: 1
   _kernel: {fileID: 0}
---- !u!114 &5394543410776398733
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 717677174574518828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2474f4fbb43e1164a8baf1549e9762fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Infrastructure.KamikazeDroneRoot
 --- !u!54 &5848852333193689518
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2117,6 +2108,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2269754826329057623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717677174574518828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d0cdbadac3c244d8a3f4ff1dbf65c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure.EnemyRoot
 --- !u!1 &734188744865975321
 GameObject:
   m_ObjectHideFlags: 0
@@ -5218,6 +5221,38 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1716002432151417156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3612989921728931911}
+  m_Layer: 0
+  m_Name: VisualTilt
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3612989921728931911
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1716002432151417156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7794846614551629815}
+  m_Father: {fileID: 9048240383396361131}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1734714781960006148
 GameObject:
   m_ObjectHideFlags: 0
@@ -11663,6 +11698,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7794846614551629815}
+  - component: {fileID: 6115480801816322945}
   m_Layer: 0
   m_Name: DronePrototype
   m_TagString: Untagged
@@ -11971,8 +12007,30 @@ Transform:
   - {fileID: 4087541219593096824}
   - {fileID: 4790034036888380578}
   - {fileID: 7677154266336314526}
-  m_Father: {fileID: 9048240383396361131}
+  m_Father: {fileID: 3612989921728931911}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!95 &6115480801816322945
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802207201900851899}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6bc645d44d18d79438aa4980a800816d, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3825179584613372993
 GameObject:
   m_ObjectHideFlags: 0
@@ -13445,6 +13503,8 @@ Transform:
   - {fileID: 5435536351896414951}
   - {fileID: 7842166118806264662}
   - {fileID: 3467734079013360419}
+  - {fileID: 4458892436653735470}
+  - {fileID: 8079114274870640677}
   m_Father: {fileID: 1595897187919078845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4255113389571961533
@@ -14981,6 +15041,51 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4556933769194357829
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8079114274870640677}
+  - component: {fileID: 1279785486218470799}
+  m_Layer: 0
+  m_Name: EnemyCoreInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8079114274870640677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4556933769194357829}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6843872289673066478}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1279785486218470799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4556933769194357829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b236783646d16bd42ae5289fe516ea6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure.EnemyCoreInstaller
+  _root: {fileID: 2269754826329057623}
 --- !u!1 &4567971819246572715
 GameObject:
   m_ObjectHideFlags: 0
@@ -20194,6 +20299,53 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &6099786607149512482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4458892436653735470}
+  - component: {fileID: 6949907418731876658}
+  m_Layer: 0
+  m_Name: DroneFlightVisualInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4458892436653735470
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099786607149512482}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6843872289673066478}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6949907418731876658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6099786607149512482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7bdbbc57df4eea48b02389e7922aa98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.FlightVisuals.Infrastructure.DroneFlightVisualInstaller
+  _root: {fileID: 2269754826329057623}
+  _config: {fileID: 11400000, guid: 4388412ba27eb5743b60f669578eabaa, type: 2}
+  _view: {fileID: 5111991486342963871}
 --- !u!1 &6110421494003334886
 GameObject:
   m_ObjectHideFlags: 0
@@ -25656,6 +25808,52 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7621454417453648196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3890840809523242994}
+  - component: {fileID: 5111991486342963871}
+  m_Layer: 0
+  m_Name: FlightVisualRuntime
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3890840809523242994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621454417453648196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 329063092140155951}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5111991486342963871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621454417453648196}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af0d914addeebee4d93c58f4814c3668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.FlightVisuals.Presentation.DroneFlightVisualView
+  _flightFrame: {fileID: 1595897187919078845}
+  _tiltPivot: {fileID: 3612989921728931911}
 --- !u!1 &7628329451412504776
 GameObject:
   m_ObjectHideFlags: 0
@@ -30315,7 +30513,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7794846614551629815}
+  - {fileID: 3612989921728931911}
   m_Father: {fileID: 1595897187919078845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8940598159255012235

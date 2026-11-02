@@ -1,37 +1,39 @@
 using System;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Behaviour.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Application
 {
-    public sealed class DroneAttack
+    public sealed class DroneAttack : IEnemyDeathSource
     {
+        private readonly IEnemy _owner;
         private readonly DroneBehaviour _behaviour;
-        private readonly IDroneDetonationBody _body;
+
+        public event Action DeathRequested;
 
         public bool HasDetonated { get; private set; }
 
         public DroneAttack(
-            DroneBehaviour behaviour,
-            IDroneDetonationBody body)
+            IEnemy owner,
+            DroneBehaviour behaviour)
         {
+            _owner = owner ??
+                throw new ArgumentNullException(nameof(owner));
+
             _behaviour = behaviour ??
                 throw new ArgumentNullException(nameof(behaviour));
-
-            _body = body ??
-                throw new ArgumentNullException(nameof(body));
         }
 
         public bool TryDetonate()
         {
-            if (HasDetonated)
+            if (HasDetonated || _owner.IsAlive == false)
                 return false;
 
-            if (!_behaviour.AttackDestination.HasValue)
+            if (_behaviour.AttackDestination.HasValue == false)
                 return false;
 
             HasDetonated = true;
-            _body.CompleteDetonation();
+            DeathRequested?.Invoke();
 
             return true;
         }

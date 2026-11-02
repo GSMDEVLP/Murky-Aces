@@ -1,10 +1,9 @@
 using System;
 using UnityEngine;
 using Zenject;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Abstractions;
+using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure;
 using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Application;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Abstractions;
-using _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Core.Infrastructure;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attack.Infrastructure
 {
@@ -15,9 +14,9 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
 
         public override void InstallBindings()
         {
-            var context = GetComponentInParent<GameObjectContext>(true);
-            var root = context != null
-                ? context.GetComponent<KamikazeDroneRoot>()
+            GameObjectContext context = GetComponentInParent<GameObjectContext>(true);
+            EnemyRoot root = context != null
+                ? context.GetComponent<EnemyRoot>()
                 : null;
 
             if (root == null ||
@@ -46,10 +45,25 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.KamikazeDrone.Attac
                     "belonging to the drone Rigidbody.");
             }
 
-            Container.Bind<IDroneDetonationBody>().FromInstance(_body).AsSingle();
+            Container.Bind<DroneDetonationBody>()
+                .FromInstance(_body)
+                .AsSingle();
+
+            Container.Bind<IEnemyDeathListener>()
+                .To<DroneDetonationBody>()
+                .FromResolve();
+
             Container.Bind<DroneCollisionSensor>().FromInstance(_collisionSensor).AsSingle();
             Container.Bind<DroneAttack>().AsSingle();
-            Container.Bind<IDroneRuntimeModule>().To<DroneAttackModule>().AsSingle();
+
+            Container.Bind<IEnemyDeathSource>()
+                .To<DroneAttack>()
+                .FromResolve();
+
+            Container.Bind<IEnemyRuntimeModule>()
+                .WithId(EnemyModuleGroup.Gameplay)
+                .To<DroneAttackModule>()
+                .AsSingle();
         }
     }
 }
