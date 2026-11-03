@@ -9,5 +9,6 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Abstractio
         CombatTargetKind Kind { get; }
         Vector3 WorldPosition { get; }
         bool IsAvailable { get; }
+        bool IsLarge { get; }
     }
 }

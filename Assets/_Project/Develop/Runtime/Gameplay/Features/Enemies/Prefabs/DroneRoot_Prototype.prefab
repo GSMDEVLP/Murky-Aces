@@ -2030,9 +2030,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595897187919078845}
+  - component: {fileID: 2269754826329057623}
   - component: {fileID: 6033488515099050879}
   - component: {fileID: 5848852333193689518}
-  - component: {fileID: 2269754826329057623}
   m_Layer: 0
   m_Name: DroneRoot_Prototype
   m_TagString: Untagged
@@ -2059,6 +2059,18 @@ Transform:
   - {fileID: 7853744368650538093}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2269754826329057623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717677174574518828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d0cdbadac3c244d8a3f4ff1dbf65c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure.EnemyRoot
 --- !u!114 &6033488515099050879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2108,18 +2120,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2269754826329057623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 717677174574518828}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89d0cdbadac3c244d8a3f4ff1dbf65c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure.EnemyRoot
 --- !u!1 &734188744865975321
 GameObject:
   m_ObjectHideFlags: 0
@@ -13500,11 +13500,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8079114274870640677}
   - {fileID: 5435536351896414951}
   - {fileID: 7842166118806264662}
   - {fileID: 3467734079013360419}
   - {fileID: 4458892436653735470}
-  - {fileID: 8079114274870640677}
   m_Father: {fileID: 1595897187919078845}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4255113389571961533

@@ -5,7 +5,6 @@ using _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Application;
 
 namespace _Project.Develop.Runtime.Gameplay.Features.Enemies.Core.Infrastructure
 {
-    [DisallowMultipleComponent]
     public sealed class EnemyRoot : MonoBehaviour, IInitializable, IDisposable
     {
         private EnemyLifecycle _lifecycle;

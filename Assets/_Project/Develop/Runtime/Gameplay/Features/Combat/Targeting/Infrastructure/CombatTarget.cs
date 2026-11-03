@@ -12,6 +12,7 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Infrastruc
     {
         [SerializeField] private CombatTargetKind _kind;
         [SerializeField] private Transform _positionAnchor;
+        [SerializeField] private bool _isLarge;
 
         private CombatTargetRegistry _registry;
         private ulong _targetId;
@@ -28,6 +29,8 @@ namespace _Project.Develop.Runtime.Gameplay.Features.Combat.Targeting.Infrastruc
         }
 
         public CombatTargetKind Kind => _kind;
+
+        public bool IsLarge => _isLarge;
 
         public Vector3 WorldPosition =>
             _positionAnchor != null
